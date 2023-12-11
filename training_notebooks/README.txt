@@ -1,0 +1,1 @@
+This is the directory for notebooks that train models. There should be a standard code that uses either keras or pytorch.
