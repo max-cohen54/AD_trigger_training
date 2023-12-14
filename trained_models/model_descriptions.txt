@@ -1,1 +1,5 @@
 Please write short descriptions of each model you train. At minimum, list the model name, and a short description about it.
+
+40MHZ_norm_DNN.keras
+- a model trained on the 40MHZ challenge dataset pt normalized using the default settings
+
