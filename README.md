@@ -6,7 +6,7 @@ There's a directory for trained models; if you add to this, please update the te
 
 # Setup
 We have made ntuples from Enhanced Bias data, including calculation of the EB weights and running the events through a simulated L1 and HLT.
-These ntuples can be accessed from `https://cernbox.cern.ch/s/hzwVaCmvNq4xl7A`, and can be read in with python. I reccomend using SWAN,
+These ntuples can be accessed from `https://cernbox.cern.ch/s/hzwVaCmvNq4xl7A`, and can be read in with python. I recommend using SWAN,
 which makes it much easier to code in python, and provides GPUs for training neural nets. The EB data can be read in by doing something like
 
 ```
@@ -32,7 +32,6 @@ where `jets` will have shape `(N, 10, 4)`, which represents N events, keeping th
 `pass_L1_idxs` is a list of bits 0 or 1 for each event. 1 means that the event passed at least one trigger from a list of the highest rate unprescaled 
 L1 triggers. In practice, the events where this value is 1 should make up (with EB weights) a dataset that is representative of 'as seen by HLT' data.
 
-
 If you are interested in making your own ntuples, refer to `https://gitlab.cern.ch:8443/mmcohen/ntuple-dumper-x-aod-ana-helpers-minimal-example` for
 instructions on how to process datasets and create a TTree with the wanted data. One can then use `/data_pipeline/read_EB_tree.ipynb` to access the 
-data from the TTree including the simulated trigger decisions, process the EB weight xml files, and write everything to a h5 file.
+data from the TTree including the simulated trigger decisions, process the EB weight xml files, and write everything to an h5 file.
