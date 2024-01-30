@@ -35,3 +35,37 @@ L1 triggers. In practice, the events where this value is 1 should make up (with 
 If you are interested in making your own ntuples, refer to `https://gitlab.cern.ch:8443/mmcohen/ntuple-dumper-x-aod-ana-helpers-minimal-example` for
 instructions on how to process datasets and create a TTree with the wanted data. One can then use `/data_pipeline/read_EB_tree.ipynb` to access the 
 data from the TTree including the simulated trigger decisions, process the EB weight xml files, and write everything to an h5 file.
+
+
+# Information about the Enhanced Bias data
+Recent EB data gets repossessed weekly
+
+Weights are calculated for each (good) event
+
+Simulated L1 and HLT are applied and trigger decisions are saved (all with PS=1)
+
+Here’s a recent reprocessing: `https://its.cern.ch/jira/browse/ATR-28661`
+you can look at the HLT Reprocessings label to see them all
+By clicking on the Panda [task], then scroll down to the bottom Slice outputs: AOD and click the green ‘finished’ we can see the output collection was `data22_13p6TeV.00440499.physics_EnhancedBias.merge.AOD.r15247_r15248_p6016_tid36850978_00`
+
+EB weights are kept in XML files, which can be read in with a short script. 
+
+List of datasets and location of weight XMLs: `https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EnhancedBiasData`
+
+Existing c++ tool to read the weights: `https://acode-browser1.usatlas.bnl.gov/lxr/source/athena/Trigger/TrigCost/EnhancedBiasWeighter/EnhancedBiasWeighter/EnhancedBiasWeighter.h`
+
+It ended up being easier to write our own python script to read in the weights from the XML: `/data_pipeline/EB_weighter.py`
+
+Simulated L1 and HLT trigger decisions can be accessed normally through the TrigDecisionTool (or normally through xAODAnaHelpers).
+
+
+EB data (with the weights) should be representative of the “as seen by L1” data, and can therefore be used for L1 studies.
+
+
+In order to obtain “as seen by HLT” data from the EB, we compiled a large list of PS=1 L1 physics triggers with the largest rates: `https://atlas-runquery.cern.ch/query.py?q=find+r+data22_13p6TeV.periodF+%2F+show+trigkeys`
+Click ‘rates’ to see rates of the triggers
+Then we made a dataset only with events that passed one of these triggers.
+
+Later this year, some folks are planning to collect a separate dataset which is streamed only based on HLT_noalg_L1All, which would directly be the “as seen by HLT” data.
+
+
