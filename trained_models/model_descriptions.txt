@@ -1,1 +1,10 @@
 Please write short descriptions of each model you train. At minimum, list the model name, and a short description about it.
+
+40MHZ_norm_DNN.keras
+- a model trained on the 40MHZ challenge dataset pt normalized using the default settings
+
+Different_40MHZ_VAE_Models contains many variations of a VAE trained on the 40MHZ dataset used to tets model architecture and performance 
+
+
+Good_models is for specific models that are the best workign version of whatever model they are
+-40_MHZ_VAE_beta_0.83_batchnorm is a VAE trained on the 40MHZ dataset which has the same structure as the 40MHZ paper model and comperable performance (this includes a batchnorm layer on the encoder)
