@@ -7,4 +7,7 @@ Different_40MHZ_VAE_Models contains many variations of a VAE trained on the 40MH
 
 
 Good_models is for specific models that are the best workign version of whatever model they are
+
 -40_MHZ_VAE_beta_0.83_batchnorm is a VAE trained on the 40MHZ dataset which has the same structure as the 40MHZ paper model and comperable performance (this includes a batchnorm layer on the encoder)
+
+-40_MHZ_VAE_beta_0.83_batchnorm_clipped_Kl is a VAE trained on the 40MHZ dataset which has the same structure as the 40MHZ paper model and comperable performance (this includes a batchnorm layer on the encoder) but is trained with the clipped KL loss insead of the full Kl loss
