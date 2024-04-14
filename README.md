@@ -1,8 +1,9 @@
 # AD_trigger_training
 
 ## Introduction
-This repo is primaily used to train and store models for Penn/SLAC's work on developing an AD trigger. 
+This repo is primaily used to train and store models for work on developing an AD trigger originating from Penn/Slac, with now more collaborators. 
 There's a directory for trained models; if you add to this, please update the text file with a short description of what/how you trained.
+A list of h5 data files can be found in `n_tuple_locations_list.txt`, see this for information about the most recent data we've been using for training.
 
 # Setup
 We have made ntuples from Enhanced Bias data, including calculation of the EB weights and running the events through a simulated L1 and HLT.
