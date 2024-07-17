@@ -1,0 +1,79 @@
+{
+    "HLT_0": {
+        "HLT_ZZ4lep": 0.0,
+        "HLT_HHbbttHadHad": 0.0,
+        "HLT_jjJZ2": 0.0,
+        "HLT_test2": 0.00016050857912621778
+    },
+    "L1_0": {
+        "L1_HHbbttHadHad": 3e-05,
+        "L1_jjJZ2": 1e-05,
+        "L1_test2": 0.00012038143434467565
+    },
+    "HLT_1": {
+        "HLT_ZZ4lep": 0.0,
+        "HLT_HHbbttHadHad": 0.0,
+        "HLT_jjJZ2": 1.4285714285714285e-05,
+        "HLT_test2": 2.006357239077702e-05
+    },
+    "L1_1": {
+        "L1_HHbbttHadHad": 1e-05,
+        "L1_jjJZ2": 0.0,
+        "L1_test2": 0.00016170862835199282
+    },
+    "HLT_2": {
+        "HLT_ZZ4lep": 0.0,
+        "HLT_HHbbttHadHad": 0.0,
+        "HLT_jjJZ2": 0.0,
+        "HLT_test2": 4.012714478155404e-05
+    },
+    "L1_2": {
+        "L1_HHbbttHadHad": 3e-05,
+        "L1_jjJZ2": 3e-05,
+        "L1_test2": 0.00012038143434467526
+    },
+    "HLT_3": {
+        "HLT_ZZ4lep": 0.0,
+        "HLT_HHbbttHadHad": 0.0,
+        "HLT_jjJZ2": 1.4285714285714285e-05,
+        "HLT_test2": 8.025428956310817e-05
+    },
+    "L1_3": {
+        "L1_HHbbttHadHad": 2e-05,
+        "L1_jjJZ2": 1e-05,
+        "L1_test2": 0.00012038143434467523
+    },
+    "HLT_4": {
+        "HLT_ZZ4lep": 0.0,
+        "HLT_HHbbttHadHad": 0.0,
+        "HLT_jjJZ2": 1.4285714285714285e-05,
+        "HLT_test2": 0.00018057215151699428
+    },
+    "L1_4": {
+        "L1_HHbbttHadHad": 4e-05,
+        "L1_jjJZ2": 1e-05,
+        "L1_test2": 0.00016050857912623274
+    },
+    "HLT_5": {
+        "HLT_ZZ4lep": 0.0,
+        "HLT_HHbbttHadHad": 0.0,
+        "HLT_jjJZ2": 0.0,
+        "HLT_test2": 0.0001003178619538859
+    },
+    "L1_5": {
+        "L1_HHbbttHadHad": 6e-05,
+        "L1_jjJZ2": 2e-05,
+        "L1_test2": 0.00018057215151701307
+    },
+    "HLT_6": {
+        "HLT_ZZ4lep": 0.0,
+        "HLT_HHbbttHadHad": 0.0,
+        "HLT_jjJZ2": 0.0,
+        "HLT_test2": 0.0001003178619538855
+    },
+    "L1_6": {
+        "L1_HHbbttHadHad": 1e-05,
+        "L1_jjJZ2": 3e-05,
+        "L1_test2": 0.00012038143434467573
+    }
+}
