@@ -39,6 +39,11 @@ This repository contains the workflow for converting a Keras neural network mode
 - Compile HLS model
 - Build project (without C simulation)
 
+### 6. Custom modification (Need to develop a software wrapper to do all of this at once, currently is done manually)
+- change "ap_vld" to "ap_none"to remove the unnecessary signals
+- run Dylan's code to change auto generated var name to meaningful var names
+- apply bif-shifting code in side main function
+
 ## Important Settings
 
 ```python
@@ -53,6 +58,7 @@ All layers are configured for latency-optimized implementation.
 1. Ensure environment variables are set for Vitis HLS backend
 2. Run the script to perform the conversion
 3. The synthesized design will be generated in 'FiorDiLatte_Topo2A_trigger_VAE' directory
+4. Run the software custom modification wrapper (haven't been developed!)
 
 ## Notes
 
