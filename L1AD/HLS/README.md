@@ -11,6 +11,17 @@ This repository contains the workflow for converting a Keras neural network mode
 
 ## Workflow Steps
 
+### 0. Setup
+- Prepare conda environment(assume you have conda installed, otherwise you can check https://docs.conda.io/projects/conda/en/stable/user-guide/install/linux.html)
+- clone the git repo
+```
+git clone https://github.com/max-cohen54/AD_trigger_training
+cd AD_trigger_training/L1AD/HLS
+conda env create  -f latest_hls4ml_env.yml
+conda activate latest-hls4ml-env
+```
+
+	
 ### 1. Data Loading (optional)
 - Load preprocessed data from H5 file
 - Data includes various topology features and weights
@@ -38,7 +49,10 @@ This repository contains the workflow for converting a Keras neural network mode
 - Convert Keras model to HLS
 - Compile HLS model
 - Build project (without C simulation)
-
+### All step 1-5 is could be done with a single python script
+```
+python AE_2A_synthesis_FDL.py
+```
 ### 6. Custom modification (Need to develop a software wrapper to do all of this at once, currently is done manually)
 - change "ap_vld" to "ap_none"to remove the unnecessary signals
 - run Dylan's code to change auto generated var name to meaningful var names
