@@ -49,7 +49,7 @@ conda activate latest-hls4ml-env
 - Convert Keras model to HLS
 - Compile HLS model
 - Build project (without C simulation)
-All step 1-5 is could be done with a single python script
+### All step 1-5 is could be done with a single python script
 ```
 python AE_2A_synthesis_FDL.py
 ```
