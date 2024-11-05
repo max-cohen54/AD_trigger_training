@@ -17,7 +17,7 @@ This repository contains the workflow for converting a Keras neural network mode
 ```
 git clone https://github.com/max-cohen54/AD_trigger_training
 cd AD_trigger_training/L1AD/HLS
-conda env create  -f latest_hls4ml_env.yml
+conda env create -f latest_hls4ml_env.yml
 conda activate latest-hls4ml-env
 ```
 
