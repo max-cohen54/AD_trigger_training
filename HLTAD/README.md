@@ -2,13 +2,14 @@
 
 This directory is used for training and running evals for the HLT anomaly detection network. `load_and_match.py` and `ensembler_functions.py` contain useful functions for these trainings, and `example_training.ipynb` goes through an example of how to use them. There is also a function which converts the tf/keras model to ONNX after training, which is also shown in the example notebook. One such ONNX model can be found in `./onnx_models`.
 
-### Additional details
+## Additional details
 We are still testing a few different input schemes for the HLTAD network. One such scheme involves seeding with the L1AD network; accordingly, it is necessary to attain L1AD scores for each event, in order to determine which events will actually be seen by the HLT network. `load_and_match.py` does this. More specifically, it:
 1. Loads the data for the L1AD network
 2. Loads the L1AD model
 3. calculates L1AD scores for each event
 4. Loads the data for the HLTAD network
 5. Matches L1AD scores for each HLTAD event.
+
 all of this is done while also keeping track of which events were used to train the L1AD network (we don't want to accidentally run evals over those events).
 
 All of this can be done with
