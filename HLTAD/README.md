@@ -1,45 +1,58 @@
-# New Main Branch
+# HLT Algorithm Development
 
-copy readme from old branch:
+This directory is used for training and running evals for the HLT anomaly detection network. `load_and_match.py` and `ensembler_functions.py` contain useful functions for these trainings, and `example_training.ipynb` goes through an example of how to use them. There is also a function which converts the tf/keras model to ONNX after training, which is also shown in the example notebook. One such ONNX model can be found in `./onnx_models`.
 
-## Introduction
-This repo is primaily used to train and store models for work on developing an AD trigger originating from Penn/Slac, with now more collaborators. 
-There's a directory for trained models; if you add to this, please update the text file with a short description of what/how you trained.
-A list of h5 data files can be found in `n_tuple_locations_list.txt`, see this for information about the most recent data we've been using for training.
+### Additional details
+We are still testing a few different input schemes for the HLTAD network. One such scheme involves seeding with the L1AD network; accordingly, it is necessary to attain L1AD scores for each event, in order to determine which events will actually be seen by the HLT network. `load_and_match.py` does this. More specifically, it:
+1. Loads the data for the L1AD network
+2. Loads the L1AD model
+3. calculates L1AD scores for each event
+4. Loads the data for the HLTAD network
+5. Matches L1AD scores for each HLTAD event.
+all of this is done while also keeping track of which events were used to train the L1AD network (we don't want to accidentally run evals over those events).
 
-If one is interested in making their own ntuples, please refer to https://github.com/max-cohen54/ntuple-dumper/tree/main.
+All of this can be done with
+```
+import load_and_match as lam
+lam.load_and_match(save_path)
+```
+where `save_path` is the path in which the output of this is saved (such that it only has to be run once).
 
-# Setup
-We have made ntuples from Enhanced Bias data, including calculation of the EB weights and running the events through a simulated L1 and HLT.
-These ntuples are stored in `/eos/home-m/mmcohen/ntuples/`. Information about the most recent ntuples can be found in `n_tuple_locations_list.txt`.
+`ensembler_functions.py` contains the actual infrastructure of training and running evals for the HLTAD network. First, data is loaded (from the output of load_and_match). Next, one can train multiple networks with the same parameters (to ensure that results are stable). Finally, one can easily run evals. All of this can be done by running 
 
-# Information about the Enhanced Bias data
-Recent EB data gets repossessed weekly
+```
+import ensembler_functions as ef
+L1AD_rate = 1000
+target_rate = 10
+data_info = {
+    "train_data_scheme": "topo2A_train+overlap", 
+    "pt_normalization_type": "StandardScaler", 
+    "L1AD_rate": 1000
+}
 
-Weights are calculated for each (good) event
+training_info = {
+    "save_path": "./trained_models/multiple_trainings/trial_8", 
+    "dropout_p": 0.1, 
+    "L2_reg_coupling": 0.01, 
+    "latent_dim": 4, 
+    "large_network": True, 
+    "num_trainings": 10,
+    "training_weights": True
+}
 
-Simulated L1 and HLT are applied and trigger decisions are saved (all with PS=1)
+datasets, data_info = ef.load_and_preprocess(**data_info)
+training_info, data_info = ef.train_multiple_models(datasets, data_info, **training_info)
+```
+which trains ten networks, followed by
 
-Here’s a recent reprocessing: `https://its.cern.ch/jira/browse/ATR-28661`
-you can look at the HLT Reprocessings label to see them all
-By clicking on the Panda [task], then scroll down to the bottom Slice outputs: AOD and click the green ‘finished’ we can see the output collection was `data22_13p6TeV.00440499.physics_EnhancedBias.merge.AOD.r15247_r15248_p6016_tid36850978_00`
+```
+ef.process_multiple_models(
+    training_info=training_info,
+    data_info=data_info,
+    plots_path=training_info['save_path']+'/plots',
+    target_rate=target_rate,
+    L1AD_rate=L1AD_rate
+)
+```
 
-EB weights are kept in XML files, which can be read in with a short script. 
-
-List of datasets and location of weight XMLs: `https://twiki.cern.ch/twiki/bin/viewauth/Atlas/EnhancedBiasData`
-
-Existing c++ tool to read the weights: `https://acode-browser1.usatlas.bnl.gov/lxr/source/athena/Trigger/TrigCost/EnhancedBiasWeighter/EnhancedBiasWeighter/EnhancedBiasWeighter.h`
-
-It ended up being easier to write our own python script to read in the weights from the XML: `/data_pipeline/EB_weighter.py`
-
-Simulated L1 and HLT trigger decisions can be accessed normally through the TrigDecisionTool (or normally through xAODAnaHelpers).
-
-
-EB data (with the weights) should be representative of the “as seen by L1” data, and can therefore be used for L1 studies.
-
-
-In order to obtain “as seen by HLT” data from the EB, we compiled a large list of PS=1 L1 physics triggers with the largest rates: `https://atlas-runquery.cern.ch/query.py?q=find+r+data22_13p6TeV.periodF+%2F+show+trigkeys`
-Click ‘rates’ to see rates of the triggers
-Then we made a dataset only with events that passed one of these triggers.
-
-Later this year, some folks are planning to collect a separate dataset which is streamed only based on HLT_noalg_L1All, which would directly be the “as seen by HLT” data.
+which runs evals, and writes many plots to the specified path.
