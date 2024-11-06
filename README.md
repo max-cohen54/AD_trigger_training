@@ -1,7 +1,3 @@
-# New Main Branch
-
-copy readme from old branch:
-
 ## Introduction
 This repo is primaily used for training, evals, and synthesis pipeline for work on an AD trigger.
 
