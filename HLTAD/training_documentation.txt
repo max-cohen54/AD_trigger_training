@@ -13,3 +13,7 @@
 {"save_path": "./trained_models/multiple_trainings/trial_7", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": false}{"train_data_scheme": "topo2A_train+L1noalg_HLTall", "pt_normalization_type": "global_division", "L1AD_rate": 1000}
 
 {"save_path": "./trained_models/multiple_trainings/trial_8", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"train_data_scheme": "topo2A_train+overlap", "pt_normalization_type": "StandardScaler", "L1AD_rate": 1000}
+
+{"save_path": "../../../trained_models/trial_100", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"pt_normalization_type": "global_division", "L1AD_rate": 1000, "comments": "training only over run EB_482596"}
+
+{"save_path": "../../../trained_models/trial_101", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"pt_normalization_type": "global_division", "L1AD_rate": 1000, "comments": "train over combination of all three EB runs"}
