@@ -1,0 +1,186 @@
+
+
+================================================================
+== Vitis HLS Report for 'Topo2A_AD_proj'
+================================================================
+* Date:           Wed Oct 16 20:17:14 2024
+
+* Version:        2024.1 (Build 5069499 on May 21 2024)
+* Project:        Topo2A_AD_proj_prj
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: virtexuplus
+* Target device:  xcvu9p-flga2104-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+-----------+------------+
+    |  Clock |  Target  | Estimated | Uncertainty|
+    +--------+----------+-----------+------------+
+    |ap_clk  |  25.00 ns|  14.014 ns|     6.75 ns|
+    +--------+----------+-----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+-----------+-----------+-----+-----+---------+
+    |  Latency (cycles) |   Latency (absolute)  |  Interval | Pipeline|
+    |   min   |   max   |    min    |    max    | min | max |   Type  |
+    +---------+---------+-----------+-----------+-----+-----+---------+
+    |        1|        1|  25.000 ns|  25.000 ns|    1|    1|      yes|
+    +---------+---------+-----------+-----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |                                                                                    |                                                                   |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+        |                                      Instance                                      |                               Module                              |   min   |   max   |    min   |    max   | min | max |   Type  |
+        +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |call_ret1_dense_latency_ap_fixed_15_6_5_3_0_ap_fixed_38_8_5_3_0_config2_s_fu_77     |dense_latency_ap_fixed_15_6_5_3_0_ap_fixed_38_8_5_3_0_config2_s    |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret2_linear_ap_fixed_38_8_5_3_0_ap_fixed_16_6_5_3_0_linear_config3_s_fu_83     |linear_ap_fixed_38_8_5_3_0_ap_fixed_16_6_5_3_0_linear_config3_s    |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret3_normalize_ap_fixed_16_6_5_3_0_ap_fixed_32_7_5_3_0_config4_s_fu_119        |normalize_ap_fixed_16_6_5_3_0_ap_fixed_32_7_5_3_0_config4_s        |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret_relu_ap_fixed_32_7_5_3_0_ap_ufixed_15_0_4_0_0_relu_config5_s_fu_155        |relu_ap_fixed_32_7_5_3_0_ap_ufixed_15_0_4_0_0_relu_config5_s       |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret4_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_22_3_5_3_0_config6_s_fu_191   |dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_22_3_5_3_0_config6_s   |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret5_linear_ap_fixed_22_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config7_s_fu_227    |linear_ap_fixed_22_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config7_s    |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret6_normalize_ap_fixed_16_6_5_3_0_ap_fixed_26_4_5_3_0_config8_s_fu_247        |normalize_ap_fixed_16_6_5_3_0_ap_fixed_26_4_5_3_0_config8_s        |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret7_relu_ap_fixed_26_4_5_3_0_ap_ufixed_15_0_4_0_0_relu_config9_s_fu_267       |relu_ap_fixed_26_4_5_3_0_ap_ufixed_15_0_4_0_0_relu_config9_s       |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret8_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_23_3_5_3_0_config10_s_fu_287  |dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_23_3_5_3_0_config10_s  |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret9_linear_ap_fixed_23_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config11_s_fu_307   |linear_ap_fixed_23_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config11_s   |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++---------------------+---------+------+---------+---------+-----+
+|         Name        | BRAM_18K|  DSP |    FF   |   LUT   | URAM|
++---------------------+---------+------+---------+---------+-----+
+|DSP                  |        -|     -|        -|        -|    -|
+|Expression           |        -|     -|        0|        4|    -|
+|FIFO                 |        -|     -|        -|        -|    -|
+|Instance             |        -|    54|        0|    48907|    -|
+|Memory               |        -|     -|        -|        -|    -|
+|Multiplexer          |        -|     -|        0|       36|    -|
+|Register             |        -|     -|      919|        -|    -|
++---------------------+---------+------+---------+---------+-----+
+|Total                |        0|    54|      919|    48947|    0|
++---------------------+---------+------+---------+---------+-----+
+|Available SLR        |     1440|  2280|   788160|   394080|  320|
++---------------------+---------+------+---------+---------+-----+
+|Utilization SLR (%)  |        0|     2|       ~0|       12|    0|
++---------------------+---------+------+---------+---------+-----+
+|Available            |     4320|  6840|  2364480|  1182240|  960|
++---------------------+---------+------+---------+---------+-----+
+|Utilization (%)      |        0|    ~0|       ~0|        4|    0|
++---------------------+---------+------+---------+---------+-----+
+
++ Detail: 
+    * Instance: 
+    +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+----+---+-------+-----+
+    |                                      Instance                                      |                               Module                              | BRAM_18K| DSP| FF|  LUT  | URAM|
+    +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+----+---+-------+-----+
+    |call_ret1_dense_latency_ap_fixed_15_6_5_3_0_ap_fixed_38_8_5_3_0_config2_s_fu_77     |dense_latency_ap_fixed_15_6_5_3_0_ap_fixed_38_8_5_3_0_config2_s    |        0|   4|  0|  25022|    0|
+    |call_ret4_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_22_3_5_3_0_config6_s_fu_191   |dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_22_3_5_3_0_config6_s   |        0|   0|  0|  12422|    0|
+    |call_ret8_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_23_3_5_3_0_config10_s_fu_287  |dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_23_3_5_3_0_config10_s  |        0|   2|  0|   1659|    0|
+    |call_ret5_linear_ap_fixed_22_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config7_s_fu_227    |linear_ap_fixed_22_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config7_s    |        0|   0|  0|      0|    0|
+    |call_ret9_linear_ap_fixed_23_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config11_s_fu_307   |linear_ap_fixed_23_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config11_s   |        0|   0|  0|      0|    0|
+    |call_ret2_linear_ap_fixed_38_8_5_3_0_ap_fixed_16_6_5_3_0_linear_config3_s_fu_83     |linear_ap_fixed_38_8_5_3_0_ap_fixed_16_6_5_3_0_linear_config3_s    |        0|   0|  0|      0|    0|
+    |call_ret6_normalize_ap_fixed_16_6_5_3_0_ap_fixed_26_4_5_3_0_config8_s_fu_247        |normalize_ap_fixed_16_6_5_3_0_ap_fixed_26_4_5_3_0_config8_s        |        0|  16|  0|    608|    0|
+    |call_ret3_normalize_ap_fixed_16_6_5_3_0_ap_fixed_32_7_5_3_0_config4_s_fu_119        |normalize_ap_fixed_16_6_5_3_0_ap_fixed_32_7_5_3_0_config4_s        |        0|  32|  0|   1356|    0|
+    |call_ret7_relu_ap_fixed_26_4_5_3_0_ap_ufixed_15_0_4_0_0_relu_config9_s_fu_267       |relu_ap_fixed_26_4_5_3_0_ap_ufixed_15_0_4_0_0_relu_config9_s       |        0|   0|  0|   2496|    0|
+    |call_ret_relu_ap_fixed_32_7_5_3_0_ap_ufixed_15_0_4_0_0_relu_config5_s_fu_155        |relu_ap_fixed_32_7_5_3_0_ap_ufixed_15_0_4_0_0_relu_config5_s       |        0|   0|  0|   5344|    0|
+    +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+----+---+-------+-----+
+    |Total                                                                               |                                                                   |        0|  54|  0|  48907|    0|
+    +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+----+---+-------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +---------------------------+----------+----+---+----+------------+------------+
+    |       Variable Name       | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +---------------------------+----------+----+---+----+------------+------------+
+    |ap_block_pp0_stage0_01001  |       and|   0|  0|   2|           1|           1|
+    |ap_enable_pp0              |       xor|   0|  0|   2|           1|           2|
+    +---------------------------+----------+----+---+----+------------+------------+
+    |Total                      |          |   0|  0|   4|           2|           3|
+    +---------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +----------------------+----+-----------+-----+-----------+
+    |         Name         | LUT| Input Size| Bits| Total Bits|
+    +----------------------+----+-----------+-----+-----------+
+    |inputs_ap_vld_in_sig  |   9|          2|    1|          2|
+    |inputs_ap_vld_preg    |   9|          2|    1|          2|
+    |inputs_blk_n          |   9|          2|    1|          2|
+    |inputs_in_sig         |   9|          2|  660|       1320|
+    +----------------------+----+-----------+-----+-----------+
+    |Total                 |  36|          8|  663|       1326|
+    +----------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +-------------------------+-----+----+-----+-----------+
+    |           Name          |  FF | LUT| Bits| Const Bits|
+    +-------------------------+-----+----+-----+-----------+
+    |ap_CS_fsm                |    1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter1  |    1|   0|    1|          0|
+    |inputs_ap_vld_preg       |    1|   0|    1|          0|
+    |inputs_preg              |  660|   0|  660|          0|
+    |layer7_out_10_reg_1466   |   16|   0|   16|          0|
+    |layer7_out_11_reg_1471   |   16|   0|   16|          0|
+    |layer7_out_12_reg_1476   |   16|   0|   16|          0|
+    |layer7_out_13_reg_1481   |   16|   0|   16|          0|
+    |layer7_out_14_reg_1486   |   16|   0|   16|          0|
+    |layer7_out_15_reg_1491   |   16|   0|   16|          0|
+    |layer7_out_1_reg_1421    |   16|   0|   16|          0|
+    |layer7_out_2_reg_1426    |   16|   0|   16|          0|
+    |layer7_out_3_reg_1431    |   16|   0|   16|          0|
+    |layer7_out_4_reg_1436    |   16|   0|   16|          0|
+    |layer7_out_5_reg_1441    |   16|   0|   16|          0|
+    |layer7_out_6_reg_1446    |   16|   0|   16|          0|
+    |layer7_out_7_reg_1451    |   16|   0|   16|          0|
+    |layer7_out_8_reg_1456    |   16|   0|   16|          0|
+    |layer7_out_9_reg_1461    |   16|   0|   16|          0|
+    |layer7_out_reg_1416      |   16|   0|   16|          0|
+    +-------------------------+-----+----+-----+-----------+
+    |Total                    |  919|   0|  919|          0|
+    +-------------------------+-----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++----------------------+-----+-----+------------+----------------+--------------+
+|       RTL Ports      | Dir | Bits|  Protocol  |  Source Object |    C Type    |
++----------------------+-----+-----+------------+----------------+--------------+
+|ap_clk                |   in|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|ap_rst                |   in|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|ap_start              |   in|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|ap_done               |  out|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|ap_idle               |  out|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|ap_ready              |  out|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|inputs_ap_vld         |   in|    1|      ap_vld|          inputs|       pointer|
+|inputs                |   in|  660|      ap_vld|          inputs|       pointer|
+|layer11_out_0         |  out|   16|      ap_vld|   layer11_out_0|       pointer|
+|layer11_out_0_ap_vld  |  out|    1|      ap_vld|   layer11_out_0|       pointer|
+|layer11_out_1         |  out|   16|      ap_vld|   layer11_out_1|       pointer|
+|layer11_out_1_ap_vld  |  out|    1|      ap_vld|   layer11_out_1|       pointer|
+|layer11_out_2         |  out|   16|      ap_vld|   layer11_out_2|       pointer|
+|layer11_out_2_ap_vld  |  out|    1|      ap_vld|   layer11_out_2|       pointer|
++----------------------+-----+-----+------------+----------------+--------------+
+

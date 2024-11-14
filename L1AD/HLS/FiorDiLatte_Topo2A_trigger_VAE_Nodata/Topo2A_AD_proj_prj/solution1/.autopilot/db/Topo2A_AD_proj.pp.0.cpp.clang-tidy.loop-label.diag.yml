@@ -1,0 +1,715 @@
+---
+MainSourceFile:  /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+Diagnostics:     
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_1223_1:  '
+    FileOffset:      1223
+    FilePath:        /afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis_HLS/2024.1/common/technology/autopilot/etc/ap_int_base.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          817161
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_1223_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_676_1:  '
+    FileOffset:      676
+    FilePath:        /afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis_HLS/2024.1/common/technology/autopilot/etc/ap_int_ref.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          1046095
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_676_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_690_1:  '
+    FileOffset:      690
+    FilePath:        /afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis_HLS/2024.1/common/technology/autopilot/etc/ap_int_ref.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          1046563
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_690_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_704_1:  '
+    FileOffset:      704
+    FilePath:        /afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis_HLS/2024.1/common/technology/autopilot/etc/ap_int_ref.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          1047032
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_704_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_1247_1:  '
+    FileOffset:      1247
+    FilePath:        /afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis_HLS/2024.1/common/technology/autopilot/etc/ap_fixed_base.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          1331754
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_1247_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_27_1:  '
+    FileOffset:      27
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_types.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          1707821
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_27_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_40_1:  '
+    FileOffset:      40
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_types.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          1708196
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_40_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_265_1:  '
+    FileOffset:      265
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2383407
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_265_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_275_1:  '
+    FileOffset:      275
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2383794
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_275_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_286_1:  '
+    FileOffset:      286
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2384129
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_286_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_293_1:  '
+    FileOffset:      293
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2384352
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_293_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_295_2:  '
+    FileOffset:      295
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2384447
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_295_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_307_1:  '
+    FileOffset:      307
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2384811
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_307_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_309_2:  '
+    FileOffset:      309
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2384893
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_309_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_324_1:  '
+    FileOffset:      324
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2385236
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_324_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_344_1:  '
+    FileOffset:      344
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2385689
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_344_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_345_2:  '
+    FileOffset:      345
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2385734
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_345_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_360_1:  '
+    FileOffset:      360
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2386143
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_360_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_367_1:  '
+    FileOffset:      367
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_helpers.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2386356
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_367_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_31_1:  '
+    FileOffset:      31
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2389550
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_31_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_43_1:  '
+    FileOffset:      43
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2389803
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_43_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_57_1:  '
+    FileOffset:      57
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2390164
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_57_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_84_1:  '
+    FileOffset:      84
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2390980
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_84_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_114_1:  '
+    FileOffset:      114
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2391641
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_114_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_151_1:  '
+    FileOffset:      151
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2392775
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_151_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_162_1:  '
+    FileOffset:      162
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2393137
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_162_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_195_1:  '
+    FileOffset:      195
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2394040
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_195_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_209_2:  '
+    FileOffset:      209
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2394559
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_209_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_243_1:  '
+    FileOffset:      243
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2395399
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_243_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_252_2:  '
+    FileOffset:      252
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2395669
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_252_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_266_3:  '
+    FileOffset:      266
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2396193
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_266_3: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_273_1:  '
+    FileOffset:      273
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2396427
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_273_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_286_1:  '
+    FileOffset:      286
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2396787
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_286_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_323_1:  '
+    FileOffset:      323
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2397716
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_323_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_328_2:  '
+    FileOffset:      328
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2397833
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_328_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_329_3:  '
+    FileOffset:      329
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2397887
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_329_3: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_346_4:  '
+    FileOffset:      346
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2398468
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_346_4: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_359_1:  '
+    FileOffset:      359
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2398955
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_359_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_367_2:  '
+    FileOffset:      367
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2399096
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_367_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_402_1:  '
+    FileOffset:      402
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2400061
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_402_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_432_1:  '
+    FileOffset:      432
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2400698
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_432_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_451_1:  '
+    FileOffset:      451
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2401211
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_451_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_467_1:  '
+    FileOffset:      467
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2401669
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_467_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_485_1:  '
+    FileOffset:      485
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2402123
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_485_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_502_1:  '
+    FileOffset:      502
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2402510
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_502_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_519_1:  '
+    FileOffset:      519
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2402905
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_519_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_549_1:  '
+    FileOffset:      549
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2403571
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_549_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_568_1:  '
+    FileOffset:      568
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2404145
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_568_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_598_1:  '
+    FileOffset:      598
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2404811
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_598_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_617_1:  '
+    FileOffset:      617
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2405365
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_617_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_647_1:  '
+    FileOffset:      647
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2405997
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_647_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_674_1:  '
+    FileOffset:      674
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2406823
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_674_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_703_1:  '
+    FileOffset:      703
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2407441
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_703_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_724_1:  '
+    FileOffset:      724
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2408052
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_724_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_742_1:  '
+    FileOffset:      742
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2408441
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_742_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_762_1:  '
+    FileOffset:      762
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2408837
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_762_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_73_1:  '
+    FileOffset:      73
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2410913
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_73_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_80_2:  '
+    FileOffset:      80
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2411053
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_80_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_89_3:  '
+    FileOffset:      89
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2411318
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_89_3: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_98_4:  '
+    FileOffset:      98
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2411512
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_98_4: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_102_5:  '
+    FileOffset:      102
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2411605
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_102_5: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_113_6:  '
+    FileOffset:      113
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2411931
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_113_6: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_117_7:  '
+    FileOffset:      117
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2412041
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_117_7: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_141_1:  '
+    FileOffset:      141
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2413007
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_141_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_145_2:  '
+    FileOffset:      145
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2413093
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_145_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_164_1:  '
+    FileOffset:      164
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2413769
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_164_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_187_1:  '
+    FileOffset:      187
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2414701
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_187_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_190_2:  '
+    FileOffset:      190
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2414839
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_190_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_195_3:  '
+    FileOffset:      195
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2414989
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_195_3: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_199_4:  '
+    FileOffset:      199
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2415113
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_199_4: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_213_1:  '
+    FileOffset:      213
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2421032
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_213_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_222_2:  '
+    FileOffset:      222
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2421316
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_222_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_328_1:  '
+    FileOffset:      328
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2424529
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_328_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_333_2:  '
+    FileOffset:      333
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2424671
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_333_2: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_341_3:  '
+    FileOffset:      341
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_activation_stream.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2424875
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_341_3: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_88_1:  '
+    FileOffset:      88
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_batchnorm.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2452992
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_88_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_108_1:  '
+    FileOffset:      108
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_batchnorm.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2453649
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_108_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_14_1:  '
+    FileOffset:      14
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_dense_compressed.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2458066
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_14_1: '
+  - DiagnosticName:  xilinx-label-all-loops
+    Message:         'Added loop label VITIS_LOOP_74_1:  '
+    FileOffset:      74
+    FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/firmware/nnet_utils/nnet_dense_compressed.h
+    Replacements:    
+      - FilePath:        /u1/hjia625/conifer/FiorDiLatte_Topo2A_trigger_VAE/Topo2A_AD_proj_prj/solution1/.autopilot/db/Topo2A_AD_proj.pp.0.cpp
+        Offset:          2459937
+        Length:          0
+        ReplacementText: 'VITIS_LOOP_74_1: '
+...

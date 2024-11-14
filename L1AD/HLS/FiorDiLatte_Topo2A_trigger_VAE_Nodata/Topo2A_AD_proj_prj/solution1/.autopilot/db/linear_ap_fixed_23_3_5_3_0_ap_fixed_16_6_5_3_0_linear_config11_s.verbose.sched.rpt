@@ -1,0 +1,121 @@
+
+
+================================================================
+== Vitis HLS Report for 'linear_ap_fixed_23_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config11_s'
+================================================================
+* Date:           Wed Oct 16 20:17:12 2024
+
+* Version:        2024.1 (Build 5069499 on May 21 2024)
+* Project:        Topo2A_AD_proj_prj
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: virtexuplus
+* Target device:  xcvu9p-flga2104-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  25.00 ns|      0 ns|     6.75 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        N/A
+
+============================================================
++ Verbose Summary: Synthesis Manager
+============================================================
+InlineROM: 1
+ExposeGlobal: 0
+============================================================
++ Verbose Summary: CDFG Model
+============================================================
+IsTopModel: 0
+ResetActiveHigh: 1
+IsCombinational: 0
+IsDatapathOnly: 0
+HasWiredReturn: 1
+HasMFsm: 2
+HasVarLatency: 0
+IsPipeline: 1
+IsRtlPipelined: 0
+IsInstanceOverlapped: 0
+IsDontTouch: 0
+HasImplIP: 0
+IsGatedGlobalClock: 0
+
++ Individual pipeline summary: 
+  * Pipeline-0: initiation interval (II) = 1, depth = 1
+
+
+============================================================
++ Verbose Summary: Schedule
+============================================================
+* Number of FSM states : 1
+* Pipeline : 1
+  Pipeline-0 : II = 1, D = 1, States = { 1 }
+* Dataflow Pipeline: 0
+
+* FSM state transitions: 
+1 --> 
+
+* FSM state operations: 
+
+State 1 <SV = 0> <Delay = 0.00>
+ST_1 : Operation 2 [1/1] (0.00ns)   --->   "%specpipeline_ln32 = specpipeline void @_ssdm_op_SpecPipeline, i32 4294967295, i32 0, i32 0, i32 0, void @empty_0" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 2 'specpipeline' 'specpipeline_ln32' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 3 [1/1] (0.00ns)   --->   "%data_2_val_read = read i23 @_ssdm_op_Read.ap_auto.i23, i23 %data_2_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 3 'read' 'data_2_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 4 [1/1] (0.00ns)   --->   "%data_1_val_read = read i23 @_ssdm_op_Read.ap_auto.i23, i23 %data_1_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 4 'read' 'data_1_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 5 [1/1] (0.00ns)   --->   "%data_0_val_read = read i23 @_ssdm_op_Read.ap_auto.i23, i23 %data_0_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 5 'read' 'data_0_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 6 [1/1] (0.00ns)   --->   "%trunc_ln = partselect i13 @_ssdm_op_PartSelect.i13.i23.i32.i32, i23 %data_0_val_read, i32 10, i32 22" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 6 'partselect' 'trunc_ln' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 7 [1/1] (0.00ns)   --->   "%sext_ln32 = sext i13 %trunc_ln" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 7 'sext' 'sext_ln32' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 8 [1/1] (0.00ns)   --->   "%trunc_ln32_s = partselect i13 @_ssdm_op_PartSelect.i13.i23.i32.i32, i23 %data_1_val_read, i32 10, i32 22" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 8 'partselect' 'trunc_ln32_s' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 9 [1/1] (0.00ns)   --->   "%sext_ln32_1 = sext i13 %trunc_ln32_s" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 9 'sext' 'sext_ln32_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 10 [1/1] (0.00ns)   --->   "%trunc_ln32_31 = partselect i13 @_ssdm_op_PartSelect.i13.i23.i32.i32, i23 %data_2_val_read, i32 10, i32 22" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 10 'partselect' 'trunc_ln32_31' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 11 [1/1] (0.00ns)   --->   "%sext_ln32_2 = sext i13 %trunc_ln32_31" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 11 'sext' 'sext_ln32_2' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 12 [1/1] (0.00ns)   --->   "%mrv = insertvalue i48 <undef>, i16 %sext_ln32" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 12 'insertvalue' 'mrv' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 13 [1/1] (0.00ns)   --->   "%mrv_1 = insertvalue i48 %mrv, i16 %sext_ln32_1" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 13 'insertvalue' 'mrv_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 14 [1/1] (0.00ns)   --->   "%mrv_2 = insertvalue i48 %mrv_1, i16 %sext_ln32_2" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 14 'insertvalue' 'mrv_2' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 15 [1/1] (0.00ns)   --->   "%ret_ln34 = ret i48 %mrv_2" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 15 'ret' 'ret_ln34' <Predicate = true> <Delay = 0.00>
+
+
+============================================================
++ Verbose Summary: Timing violations
+============================================================
+Target clock period: 25.000ns, clock uncertainty: 6.750ns.
+
+ <State 1>: 0.000ns
+The critical path consists of the following:
+
+
+============================================================
++ Verbose Summary: Binding
+============================================================
+N/A
+* FSMD analyzer results:
+  - Output states:
+ - Input state : 
+  - Chain level:
+	State 1
+
+
+============================================================
++ Verbose Summary: Datapath Resource usage 
+============================================================
+N/A

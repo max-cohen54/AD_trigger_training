@@ -1,0 +1,173 @@
+
+
+================================================================
+== Vitis HLS Report for 'linear_ap_fixed_22_3_5_3_0_ap_fixed_16_6_5_3_0_linear_config7_s'
+================================================================
+* Date:           Wed Oct 16 20:17:12 2024
+
+* Version:        2024.1 (Build 5069499 on May 21 2024)
+* Project:        Topo2A_AD_proj_prj
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: virtexuplus
+* Target device:  xcvu9p-flga2104-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  25.00 ns|      0 ns|     6.75 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        N/A
+
+============================================================
++ Verbose Summary: Synthesis Manager
+============================================================
+InlineROM: 1
+ExposeGlobal: 0
+============================================================
++ Verbose Summary: CDFG Model
+============================================================
+IsTopModel: 0
+ResetActiveHigh: 1
+IsCombinational: 0
+IsDatapathOnly: 0
+HasWiredReturn: 1
+HasMFsm: 2
+HasVarLatency: 0
+IsPipeline: 1
+IsRtlPipelined: 0
+IsInstanceOverlapped: 0
+IsDontTouch: 0
+HasImplIP: 0
+IsGatedGlobalClock: 0
+
++ Individual pipeline summary: 
+  * Pipeline-0: initiation interval (II) = 1, depth = 1
+
+
+============================================================
++ Verbose Summary: Schedule
+============================================================
+* Number of FSM states : 1
+* Pipeline : 1
+  Pipeline-0 : II = 1, D = 1, States = { 1 }
+* Dataflow Pipeline: 0
+
+* FSM state transitions: 
+1 --> 
+
+* FSM state operations: 
+
+State 1 <SV = 0> <Delay = 0.00>
+ST_1 : Operation 2 [1/1] (0.00ns)   --->   "%specpipeline_ln32 = specpipeline void @_ssdm_op_SpecPipeline, i32 4294967295, i32 0, i32 0, i32 0, void @empty_0" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 2 'specpipeline' 'specpipeline_ln32' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 3 [1/1] (0.00ns)   --->   "%data_15_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_15_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 3 'read' 'data_15_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 4 [1/1] (0.00ns)   --->   "%data_14_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_14_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 4 'read' 'data_14_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 5 [1/1] (0.00ns)   --->   "%data_13_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_13_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 5 'read' 'data_13_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 6 [1/1] (0.00ns)   --->   "%data_12_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_12_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 6 'read' 'data_12_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 7 [1/1] (0.00ns)   --->   "%data_11_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_11_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 7 'read' 'data_11_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 8 [1/1] (0.00ns)   --->   "%data_10_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_10_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 8 'read' 'data_10_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 9 [1/1] (0.00ns)   --->   "%data_9_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_9_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 9 'read' 'data_9_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 10 [1/1] (0.00ns)   --->   "%data_8_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_8_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 10 'read' 'data_8_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 11 [1/1] (0.00ns)   --->   "%data_7_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_7_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 11 'read' 'data_7_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 12 [1/1] (0.00ns)   --->   "%data_6_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_6_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 12 'read' 'data_6_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 13 [1/1] (0.00ns)   --->   "%data_5_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_5_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 13 'read' 'data_5_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 14 [1/1] (0.00ns)   --->   "%data_4_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_4_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 14 'read' 'data_4_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 15 [1/1] (0.00ns)   --->   "%data_3_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_3_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 15 'read' 'data_3_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 16 [1/1] (0.00ns)   --->   "%data_2_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_2_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 16 'read' 'data_2_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 17 [1/1] (0.00ns)   --->   "%data_1_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_1_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 17 'read' 'data_1_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 18 [1/1] (0.00ns)   --->   "%data_0_val_read = read i22 @_ssdm_op_Read.ap_auto.i22, i22 %data_0_val" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 18 'read' 'data_0_val_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 19 [1/1] (0.00ns)   --->   "%trunc_ln = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_0_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 19 'partselect' 'trunc_ln' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 20 [1/1] (0.00ns)   --->   "%sext_ln32 = sext i13 %trunc_ln" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 20 'sext' 'sext_ln32' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 21 [1/1] (0.00ns)   --->   "%trunc_ln32_s = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_1_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 21 'partselect' 'trunc_ln32_s' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 22 [1/1] (0.00ns)   --->   "%sext_ln32_3 = sext i13 %trunc_ln32_s" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 22 'sext' 'sext_ln32_3' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 23 [1/1] (0.00ns)   --->   "%trunc_ln32_32 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_2_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 23 'partselect' 'trunc_ln32_32' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 24 [1/1] (0.00ns)   --->   "%sext_ln32_4 = sext i13 %trunc_ln32_32" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 24 'sext' 'sext_ln32_4' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 25 [1/1] (0.00ns)   --->   "%trunc_ln32_33 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_3_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 25 'partselect' 'trunc_ln32_33' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 26 [1/1] (0.00ns)   --->   "%sext_ln32_5 = sext i13 %trunc_ln32_33" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 26 'sext' 'sext_ln32_5' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 27 [1/1] (0.00ns)   --->   "%trunc_ln32_34 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_4_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 27 'partselect' 'trunc_ln32_34' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 28 [1/1] (0.00ns)   --->   "%sext_ln32_6 = sext i13 %trunc_ln32_34" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 28 'sext' 'sext_ln32_6' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 29 [1/1] (0.00ns)   --->   "%trunc_ln32_35 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_5_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 29 'partselect' 'trunc_ln32_35' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 30 [1/1] (0.00ns)   --->   "%sext_ln32_7 = sext i13 %trunc_ln32_35" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 30 'sext' 'sext_ln32_7' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 31 [1/1] (0.00ns)   --->   "%trunc_ln32_36 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_6_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 31 'partselect' 'trunc_ln32_36' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 32 [1/1] (0.00ns)   --->   "%sext_ln32_8 = sext i13 %trunc_ln32_36" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 32 'sext' 'sext_ln32_8' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 33 [1/1] (0.00ns)   --->   "%trunc_ln32_37 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_7_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 33 'partselect' 'trunc_ln32_37' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 34 [1/1] (0.00ns)   --->   "%sext_ln32_9 = sext i13 %trunc_ln32_37" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 34 'sext' 'sext_ln32_9' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 35 [1/1] (0.00ns)   --->   "%trunc_ln32_38 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_8_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 35 'partselect' 'trunc_ln32_38' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 36 [1/1] (0.00ns)   --->   "%sext_ln32_10 = sext i13 %trunc_ln32_38" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 36 'sext' 'sext_ln32_10' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 37 [1/1] (0.00ns)   --->   "%trunc_ln32_39 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_9_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 37 'partselect' 'trunc_ln32_39' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 38 [1/1] (0.00ns)   --->   "%sext_ln32_11 = sext i13 %trunc_ln32_39" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 38 'sext' 'sext_ln32_11' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 39 [1/1] (0.00ns)   --->   "%trunc_ln32_40 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_10_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 39 'partselect' 'trunc_ln32_40' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 40 [1/1] (0.00ns)   --->   "%sext_ln32_12 = sext i13 %trunc_ln32_40" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 40 'sext' 'sext_ln32_12' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 41 [1/1] (0.00ns)   --->   "%trunc_ln32_41 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_11_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 41 'partselect' 'trunc_ln32_41' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 42 [1/1] (0.00ns)   --->   "%sext_ln32_13 = sext i13 %trunc_ln32_41" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 42 'sext' 'sext_ln32_13' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 43 [1/1] (0.00ns)   --->   "%trunc_ln32_42 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_12_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 43 'partselect' 'trunc_ln32_42' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 44 [1/1] (0.00ns)   --->   "%sext_ln32_14 = sext i13 %trunc_ln32_42" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 44 'sext' 'sext_ln32_14' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 45 [1/1] (0.00ns)   --->   "%trunc_ln32_43 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_13_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 45 'partselect' 'trunc_ln32_43' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 46 [1/1] (0.00ns)   --->   "%sext_ln32_15 = sext i13 %trunc_ln32_43" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 46 'sext' 'sext_ln32_15' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 47 [1/1] (0.00ns)   --->   "%trunc_ln32_44 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_14_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 47 'partselect' 'trunc_ln32_44' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 48 [1/1] (0.00ns)   --->   "%sext_ln32_16 = sext i13 %trunc_ln32_44" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 48 'sext' 'sext_ln32_16' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 49 [1/1] (0.00ns)   --->   "%trunc_ln32_45 = partselect i13 @_ssdm_op_PartSelect.i13.i22.i32.i32, i22 %data_15_val_read, i32 9, i32 21" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 49 'partselect' 'trunc_ln32_45' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 50 [1/1] (0.00ns)   --->   "%sext_ln32_17 = sext i13 %trunc_ln32_45" [firmware/nnet_utils/nnet_activation.h:32]   --->   Operation 50 'sext' 'sext_ln32_17' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 51 [1/1] (0.00ns)   --->   "%mrv = insertvalue i256 <undef>, i16 %sext_ln32" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 51 'insertvalue' 'mrv' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 52 [1/1] (0.00ns)   --->   "%mrv_1 = insertvalue i256 %mrv, i16 %sext_ln32_3" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 52 'insertvalue' 'mrv_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 53 [1/1] (0.00ns)   --->   "%mrv_2 = insertvalue i256 %mrv_1, i16 %sext_ln32_4" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 53 'insertvalue' 'mrv_2' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 54 [1/1] (0.00ns)   --->   "%mrv_3 = insertvalue i256 %mrv_2, i16 %sext_ln32_5" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 54 'insertvalue' 'mrv_3' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 55 [1/1] (0.00ns)   --->   "%mrv_4 = insertvalue i256 %mrv_3, i16 %sext_ln32_6" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 55 'insertvalue' 'mrv_4' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 56 [1/1] (0.00ns)   --->   "%mrv_5 = insertvalue i256 %mrv_4, i16 %sext_ln32_7" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 56 'insertvalue' 'mrv_5' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 57 [1/1] (0.00ns)   --->   "%mrv_6 = insertvalue i256 %mrv_5, i16 %sext_ln32_8" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 57 'insertvalue' 'mrv_6' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 58 [1/1] (0.00ns)   --->   "%mrv_7 = insertvalue i256 %mrv_6, i16 %sext_ln32_9" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 58 'insertvalue' 'mrv_7' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 59 [1/1] (0.00ns)   --->   "%mrv_8 = insertvalue i256 %mrv_7, i16 %sext_ln32_10" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 59 'insertvalue' 'mrv_8' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 60 [1/1] (0.00ns)   --->   "%mrv_9 = insertvalue i256 %mrv_8, i16 %sext_ln32_11" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 60 'insertvalue' 'mrv_9' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 61 [1/1] (0.00ns)   --->   "%mrv_10 = insertvalue i256 %mrv_9, i16 %sext_ln32_12" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 61 'insertvalue' 'mrv_10' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 62 [1/1] (0.00ns)   --->   "%mrv_11 = insertvalue i256 %mrv_10, i16 %sext_ln32_13" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 62 'insertvalue' 'mrv_11' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 63 [1/1] (0.00ns)   --->   "%mrv_12 = insertvalue i256 %mrv_11, i16 %sext_ln32_14" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 63 'insertvalue' 'mrv_12' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 64 [1/1] (0.00ns)   --->   "%mrv_13 = insertvalue i256 %mrv_12, i16 %sext_ln32_15" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 64 'insertvalue' 'mrv_13' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 65 [1/1] (0.00ns)   --->   "%mrv_14 = insertvalue i256 %mrv_13, i16 %sext_ln32_16" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 65 'insertvalue' 'mrv_14' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 66 [1/1] (0.00ns)   --->   "%mrv_15 = insertvalue i256 %mrv_14, i16 %sext_ln32_17" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 66 'insertvalue' 'mrv_15' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 67 [1/1] (0.00ns)   --->   "%ret_ln34 = ret i256 %mrv_15" [firmware/nnet_utils/nnet_activation.h:34]   --->   Operation 67 'ret' 'ret_ln34' <Predicate = true> <Delay = 0.00>
+
+
+============================================================
++ Verbose Summary: Timing violations
+============================================================
+Target clock period: 25.000ns, clock uncertainty: 6.750ns.
+
+ <State 1>: 0.000ns
+The critical path consists of the following:
+
+
+============================================================
++ Verbose Summary: Binding
+============================================================
+N/A
+* FSMD analyzer results:
+  - Output states:
+ - Input state : 
+  - Chain level:
+	State 1
+
+
+============================================================
++ Verbose Summary: Datapath Resource usage 
+============================================================
+N/A

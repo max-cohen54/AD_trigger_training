@@ -1,0 +1,176 @@
+{
+  "0": {
+    "basicblocks": 1,
+    "calls": "4 1 7 5 8 9 2 10 3 11",
+    "file": "Topo2A_AD_proj.cpp",
+    "fileloc": 6,
+    "instructions": 211,
+    "name": "Topo2A_AD_proj",
+    "total_instructions": 8330
+  },
+  "1": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 28,
+    "instructions": 129,
+    "loads": {
+      "L": 32
+    },
+    "name": "linear<ap_fixed<38, 8, AP_TRN, AP_WRAP, 0>, ap_fixed<16, 6, AP_TRN, AP_WRAP, 0>, linear_config3>",
+    "stores": {
+      "L": 32
+    },
+    "total_instructions": 129
+  },
+  "10": {
+    "basicblocks": 113,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 39,
+    "instructions": 753,
+    "loads": {
+      "L": 16
+    },
+    "name": "relu<ap_fixed<26, 4, AP_TRN, AP_WRAP, 0>, ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, relu_config9>",
+    "stores": {
+      "L": 32
+    },
+    "total_instructions": 753
+  },
+  "11": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 28,
+    "instructions": 16,
+    "loads": {
+      "L": 3
+    },
+    "name": "linear<ap_fixed<23, 3, AP_TRN, AP_WRAP, 0>, ap_fixed<16, 6, AP_TRN, AP_WRAP, 0>, linear_config11>",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 16
+  },
+  "2": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_batchnorm.h",
+    "fileloc": 31,
+    "instructions": 162,
+    "loads": {
+      "L": 16
+    },
+    "name": "normalize<ap_fixed<16, 6, AP_TRN, AP_WRAP, 0>, ap_fixed<26, 4, AP_TRN, AP_WRAP, 0>, config8>",
+    "stores": {
+      "L": 16
+    },
+    "total_instructions": 162
+  },
+  "3": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_dense_latency.h",
+    "fileloc": 13,
+    "instructions": 291,
+    "loads": {
+      "L": 16
+    },
+    "name": "dense_latency<ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, ap_fixed<23, 3, AP_TRN, AP_WRAP, 0>, config10>",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 291
+  },
+  "4": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_dense_latency.h",
+    "fileloc": 13,
+    "instructions": 2770,
+    "loads": {
+      "L": 44
+    },
+    "name": "dense_latency<ap_fixed<15, 6, AP_TRN, AP_WRAP, 0>, ap_fixed<38, 8, AP_TRN, AP_WRAP, 0>, config2>",
+    "stores": {
+      "L": 32
+    },
+    "total_instructions": 2770
+  },
+  "5": {
+    "basicblocks": 225,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 39,
+    "instructions": 1505,
+    "loads": {
+      "L": 32
+    },
+    "name": "relu<ap_fixed<32, 7, AP_TRN, AP_WRAP, 0>, ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, relu_config5>",
+    "stores": {
+      "L": 64
+    },
+    "total_instructions": 1505
+  },
+  "6": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 28,
+    "instructions": 19,
+    "loads": {
+      "L": 3
+    },
+    "name": "linear<ap_fixed<23, 3, AP_TRN, AP_WRAP, 0>, ap_fixed<16, 6, AP_TRN, AP_WRAP, 0>, linear_config11>",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 19
+  },
+  "7": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_batchnorm.h",
+    "fileloc": 31,
+    "instructions": 290,
+    "loads": {
+      "L": 32
+    },
+    "name": "normalize<ap_fixed<16, 6, AP_TRN, AP_WRAP, 0>, ap_fixed<32, 7, AP_TRN, AP_WRAP, 0>, config4>",
+    "stores": {
+      "L": 32
+    },
+    "total_instructions": 290
+  },
+  "8": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_dense_latency.h",
+    "fileloc": 13,
+    "instructions": 2122,
+    "loads": {
+      "L": 32
+    },
+    "name": "dense_latency<ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, ap_fixed<22, 3, AP_TRN, AP_WRAP, 0>, config6>",
+    "stores": {
+      "L": 16
+    },
+    "total_instructions": 2122
+  },
+  "9": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 28,
+    "instructions": 81,
+    "loads": {
+      "L": 16
+    },
+    "name": "linear<ap_fixed<22, 3, AP_TRN, AP_WRAP, 0>, ap_fixed<16, 6, AP_TRN, AP_WRAP, 0>, linear_config7>",
+    "stores": {
+      "L": 16
+    },
+    "total_instructions": 81
+  }
+}
