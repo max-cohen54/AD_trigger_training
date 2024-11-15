@@ -217,7 +217,7 @@ def plot_efficiencies(results, bkg_type, save_path, target_rate=10, eff_type='AS
 
 
 # -----------------------------------------------------------------------------------------
-def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD_rate=1000, comments=None):
+def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD_rate=1000, pt_thresholds=[50, 0, 0, 0], comments=None):
     """
     Loads and preprocesses the training and signal data.
 
@@ -225,6 +225,7 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
         train_data_scheme: one of the strings defined below. Defines what data is used for training.
         pt_normalization_type: None, or one of the strings defined below. Defines how pt normalization is done.
         L1AD_rate: the pure rate at which the L1AD algo operates at. Used to calculate which events are L1Seeded.
+        pt_thresholds: thresholds for which to zero out objects with pt below that value. [jet_threshold, electron_threshold, muon_threshold, photon_threshold].
         Comments: None or string. Any comments about the data / run that are worth noting down in the training documentation file.
 
     Returns:
@@ -242,13 +243,8 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
 
     # -------------------
 
-    # # load data
-    # datasets = load_subdicts_from_h5('./h5_ntuples')
-    # del datasets['EB']
-    # datasets['EB_test'] = datasets.pop('EB_test2')
-
     # Load data
-    datasets = load_subdicts_from_h5('./h5_ntuples/11-5-2024')
+    datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/11-14-2024')
 
     # -------------------
     
@@ -342,44 +338,46 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     #     datasets[tag]['raw_L1_pt'] = np.copy(dict['L1_data'][:, :, 0])
     # #------
 
-    # Zero out electrons below 8GeV
+    # Zero out jets
     for tag, dict in datasets.items():
         
-        HLT_lowpt_mask = dict['HLT_data'][:, 6:9, 0] < 8
-        dict['HLT_data'][:, 6:9][HLT_lowpt_mask] = 0
-    
-        
-        L1_lowpt_mask = dict['L1_data'][:, 6:9, 0] < 5
-        dict['L1_data'][:, 6:9][L1_lowpt_mask] = 0
-
-    # Zero out jets below 50GeV
-    for tag, dict in datasets.items():
-        
-        HLT_lowpt_mask = dict['HLT_data'][:, :6, 0] < 50
+        HLT_lowpt_mask = dict['HLT_data'][:, :6, 0] < pt_thresholds[0]
         dict['HLT_data'][:, :6][HLT_lowpt_mask] = 0
     
         
-        L1_lowpt_mask = dict['L1_data'][:, :6, 0] < 50
+        L1_lowpt_mask = dict['L1_data'][:, :6, 0] < pt_thresholds[0]
         dict['L1_data'][:, :6][L1_lowpt_mask] = 0
 
-    # Zero out muons below 3GeV
+    # Zero out electrons
     for tag, dict in datasets.items():
         
-        HLT_lowpt_mask = dict['HLT_data'][:, 9:12, 0] < 3
+        HLT_lowpt_mask = dict['HLT_data'][:, 6:9, 0] < pt_thresholds[1]
+        dict['HLT_data'][:, 6:9][HLT_lowpt_mask] = 0
+    
+        
+        L1_lowpt_mask = dict['L1_data'][:, 6:9, 0] < pt_thresholds[1]
+        dict['L1_data'][:, 6:9][L1_lowpt_mask] = 0
+
+
+
+    # Zero out muons
+    for tag, dict in datasets.items():
+        
+        HLT_lowpt_mask = dict['HLT_data'][:, 9:12, 0] < pt_thresholds[2]
         dict['HLT_data'][:, 9:12][HLT_lowpt_mask] = 0
     
         
-        L1_lowpt_mask = dict['L1_data'][:, 9:12, 0] < 3
+        L1_lowpt_mask = dict['L1_data'][:, 9:12, 0] < pt_thresholds[2]
         dict['L1_data'][:, 9:12][L1_lowpt_mask] = 0
 
-    # Zero out photons below 10GeV (taus for L1 objects)
+    # Zero out photons (taus for L1 objects)
     for tag, dict in datasets.items():
         
-        HLT_lowpt_mask = dict['HLT_data'][:, 12:15, 0] < 10
+        HLT_lowpt_mask = dict['HLT_data'][:, 12:15, 0] < pt_thresholds[3]
         dict['HLT_data'][:, 12:15][HLT_lowpt_mask] = 0
     
         
-        L1_lowpt_mask = dict['L1_data'][:, 12:15, 0] < 10
+        L1_lowpt_mask = dict['L1_data'][:, 12:15, 0] < pt_thresholds[3]
         dict['L1_data'][:, 12:15][L1_lowpt_mask] = 0
 
     # -------------------
@@ -391,7 +389,7 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
         for tag, dict in datasets.items():
             for label, data in dict.items():
                 if label.endswith('data'):
-                    # sum of the pt and E in each event
+                    # sum of the pt in each event
                     sum_pt = np.sum(data[:, :, 0], axis=1, keepdims=True)
             
                     # If the sum is 0, set the sum to 1 to avoid division by 0
@@ -460,7 +458,8 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     data_info = {
         'train_data_scheme': train_data_scheme,
         'pt_normalization_type': pt_normalization_type,
-        'L1AD_rate': L1AD_rate
+        'L1AD_rate': L1AD_rate,
+        'pt_thresholds': pt_thresholds
     }
     if comments is not None:
         data_info['comments'] = comments
@@ -865,7 +864,7 @@ def plot_l1Seeded(dataset, TSE_save_path=None, ASE_save_path=None, MiSE_save_pat
         skip_tags = 'EB_train', 'EB_val'
 
     # Calculate L1AD threshold for target L1AD_rate
-    L1AD_threshold, L1_total_rate = find_threshold(scores=dataset['EB_train']['topo2A_AD_scores'], weights=dataset['EB_train']['weights'], hlt_pass=dataset['EB_train']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
+    L1AD_threshold, L1_total_rate = find_threshold(scores=dataset['EB_test']['topo2A_AD_scores'], weights=dataset['EB_test']['weights'], hlt_pass=dataset['EB_test']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
     # now recalculate L1Seeded items with the threshold
     for tag, dict in dataset.items():
         dict['L1Seeded2'] = (dict['topo2A_AD_scores'] >= L1AD_threshold)
@@ -971,7 +970,7 @@ def plot_l1All(dataset, TSE_save_path=None, ASE_save_path=None, bkg_type='HLT', 
         skip_tags = 'EB_train', 'EB_val'
 
     # Calculate L1AD threshold for target L1AD_rate
-    L1AD_threshold, L1AD_total_rate = find_threshold(scores=dataset['EB_train']['topo2A_AD_scores'], weights=dataset['EB_train']['weights'], hlt_pass=dataset['EB_train']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
+    L1AD_threshold, L1AD_total_rate = find_threshold(scores=dataset['EB_test']['topo2A_AD_scores'], weights=dataset['EB_test']['weights'], hlt_pass=dataset['EB_test']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
 
     # now recalculate L1Seeded items with the threshold
     for tag, dict in dataset.items():
@@ -1064,7 +1063,7 @@ def l1Seeded_ROC_curve(dataset, save_path=None, model_version=0, obj_type='HLT',
         plt.rcParams['axes.linewidth'] = 2.4
     
     # Calculate the L1 seeded events using the expected L1AD rate
-    L1AD_threshold, total_L1AD_rate = find_threshold(scores=dataset['EB_train']['topo2A_AD_scores'], weights=dataset['EB_train']['weights'], hlt_pass=dataset['EB_train']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
+    L1AD_threshold, total_L1AD_rate = find_threshold(scores=dataset['EB_test']['topo2A_AD_scores'], weights=dataset['EB_test']['weights'], hlt_pass=dataset['EB_test']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
 
     # now recalculate L1Seeded items with the threshold
     for tag, dict in dataset.items():
@@ -1160,7 +1159,7 @@ def l1All_ROC_curve(dataset, save_path=None, model_version=0, obj_type='HLT',  L
         plt.rcParams['axes.linewidth'] = 2.4
     
     # Calculate the L1 AD threshold for the target rate
-    L1AD_threshold, total_L1AD_rate = find_threshold(scores=dataset['EB_train']['topo2A_AD_scores'], weights=dataset['EB_train']['weights'], hlt_pass=dataset['EB_train']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
+    L1AD_threshold, total_L1AD_rate = find_threshold(scores=dataset['EB_test']['topo2A_AD_scores'], weights=dataset['EB_test']['weights'], hlt_pass=dataset['EB_test']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
 
     # now recalculate L1Seeded items with the threshold
     for tag, dict in dataset.items():
@@ -1238,7 +1237,7 @@ def plot_l1Seeded_pileup_efficiency(dataset, save_path=None, model_version=None,
     '''
     
     # Calculate the L1 seeded events using the expected L1AD rate
-    L1AD_threshold, total_L1AD_rate = find_threshold(scores=dataset['EB_train']['topo2A_AD_scores'], weights=dataset['EB_train']['weights'], hlt_pass=dataset['EB_train']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
+    L1AD_threshold, total_L1AD_rate = find_threshold(scores=dataset['EB_test']['topo2A_AD_scores'], weights=dataset['EB_test']['weights'], hlt_pass=dataset['EB_test']['passL1'], target_rate=L1AD_rate, incoming_rate=40e6)
 
     # now recalculate L1Seeded items with the threshold
     for tag, dict in dataset.items():

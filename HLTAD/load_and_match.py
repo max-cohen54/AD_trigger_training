@@ -9,6 +9,8 @@ import tensorflow as tf
 import tarfile
 from tensorflow.keras.models import load_model
 from qkeras import QActivation, QDense, QConv2D, QBatchNormalization
+from qkeras.utils import _add_supported_quantized_objects
+import math
 
 
 # Infrastructure for loading topo2A data: ---------------------------------------------------------------------
@@ -23,41 +25,33 @@ def has_duplicates(arr):
 
 # ---------------------------------------------------------------------
 def load_and_process_normal_data(file_name):
-    """
-    Loads the EB data from 'file_name' for use in the L1AD network.
-    """
-    
     with h5py.File(file_name, 'r') as hf:
         nmuon, nLRjet, nSRjet, negamma, netau, njtau = 4, 6, 6, 4, 4, 4
+        phi_res = 128/(2*math.pi)
 
-        def load_and_scale(dataset, n_objects, scale_factor=10/1024, eta_factor=10/16, phi_factor = 10/8):
+        def load_and_scale(dataset, n_objects, scale_factor=10, eta_factor=10, phi_factor = phi_res):
             data = hf[dataset][:, 0:n_objects, :]
             data[:, :, 0] *= scale_factor  # Scale the pT value
-            data[:, :, 1] *= eta_factor  # Scale the eta value
-            data[:, :, 2] *= phi_factor  # Scale the phi value
+            data[:, :, 1] *= eta_factor  # Scale the angle value
+            data[:, :, 2] *= phi_factor  # Scale the angle value
             return data.reshape(-1, 3 * n_objects)
 
         L1_jFexSR_jets = load_and_scale('L1_jFexSR_jets', nSRjet)
         L1_jFexLR_jets = load_and_scale('L1_jFexLR_jets', nLRjet)
         L1_egammas = load_and_scale('L1_egammas', negamma)
-        L1_muons = load_and_scale('L1_muons', nmuon, scale_factor=10000/64)  # Specific scaling for muons
+        L1_muons = load_and_scale('L1_muons', nmuon, scale_factor=10000)  # Specific scaling for muons
         L1_eFex_taus = load_and_scale('L1_eFex_taus', netau)
         L1_jFex_taus = load_and_scale('L1_jFex_taus', njtau)
 
         L1_MET = hf['L1_MET'][:]
-        L1_MET[:, 0] *= 10/8192
-        L1_MET[:, 2] *= 10/8
+        L1_MET[:, 0] *= 10
+        L1_MET[:, 2] *= phi_res
 
         pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
         pass_HLT_unprescaled = hf["pass_HLT_unprescaled"][:]
         EB_weights = hf["EB_weights"][:]
         event_id_signal = hf['event_number'][:]
         run_id_signal = hf['run_number'][:]
-
-        if has_duplicates(event_id_signal):
-            print("event index show up more than once!!!")
-        else:
-            print("event index looks good :)")
 
         # Reformat L1_MET
         L1_MET_fixed = np.zeros((L1_MET.shape[0], 2))
@@ -74,7 +68,7 @@ def load_and_process_normal_data(file_name):
         def fill_median(array):
             for i in range(array.shape[1]):
                 median_value = np.nanmedian(array[:, i])
-                array[np.isnan(array[:, i]), i] = 0  # median_value
+                array[np.isnan(array[:, i]), i] = 0#median_value
             return array
 
         Topo_2A = fill_median(Topo_2A)
@@ -87,30 +81,27 @@ def load_and_process_normal_data(file_name):
 
 # ---------------------------------------------------------------------
 def load_and_process_anomalous_data(file_name):
-    """
-    Loads the MC data from 'file_name' for use in the L1AD network.
-    """
     with h5py.File(file_name, 'r') as hf:
         nmuon, nLRjet, nSRjet, negamma, netau, njtau = 4, 6, 6, 4, 4, 4
-        print(hf.keys())
+        phi_res = 128/(2*math.pi)
 
-        def load_and_scale(dataset, n_objects, scale_factor=10/1024, eta_factor=10/16, phi_factor = 10/8):
+        def load_and_scale(dataset, n_objects, scale_factor=10, eta_factor=10, phi_factor = phi_res):
             data = hf[dataset][:, 0:n_objects, :]
             data[:, :, 0] *= scale_factor  # Scale the pT value
-            data[:, :, 1] *= eta_factor  # Scale the eta value
-            data[:, :, 2] *= phi_factor  # Scale the phi value
+            data[:, :, 1] *= eta_factor  # Scale the angle value
+            data[:, :, 2] *= phi_factor  # Scale the angle value
             return data.reshape(-1, 3 * n_objects)
 
         L1_jFexSR_jets = load_and_scale('L1_jFexSR_jets', nSRjet)
         L1_jFexLR_jets = load_and_scale('L1_jFexLR_jets', nLRjet)
         L1_egammas = load_and_scale('L1_egammas', negamma)
-        L1_muons = load_and_scale('L1_muons', nmuon, scale_factor=10000/64)  # Specific scaling for muons
+        L1_muons = load_and_scale('L1_muons', nmuon, scale_factor=10000)  # Specific scaling for muons
         L1_eFex_taus = load_and_scale('L1_eFex_taus', netau)
         L1_jFex_taus = load_and_scale('L1_jFex_taus', njtau)
 
         L1_MET = hf['L1_MET'][:]
-        L1_MET[:, 0] *= 10/8192
-        L1_MET[:, 2] *= 10/8
+        L1_MET[:, 0] *= 10
+        L1_MET[:, 2] *= phi_res
 
         pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
 
@@ -129,7 +120,7 @@ def load_and_process_anomalous_data(file_name):
         def fill_median(array):
             for i in range(array.shape[1]):
                 median_value = np.nanmedian(array[:, i])
-                array[np.isnan(array[:, i]), i] = 0  # median_value
+                array[np.isnan(array[:, i]), i] = 0#median_value
             return array
 
         Topo_2A = fill_median(Topo_2A)
@@ -141,36 +132,19 @@ def load_and_process_anomalous_data(file_name):
 
 
 # ---------------------------------------------------------------------
-def load_model_from_targz(targz_path, model_name):
-    """
-    Loads the L1AD model from a tar file. 
+def apply_power_of_2_scaling(X):
+    result = [8, 4, 5, 7, 3, 4, 6, 3, 3, 5, 2, 3, 4, 2, 2, 4, 1, 2, 7, 4, 5, 6, 2, 4, 4, 2, 3, 3, 1, 3, 5, 2, 4, 3, 1, 3, 1, 0, 1, -1, -2, -1, 6, 5]
+    # Apply the scaling using 2 raised to the power of the result
+    X_scaled = X / (2.0 ** np.array(result))
+    return X_scaled
+# ---------------------------------------------------------------------
 
-    Args:
-        targz_path: path in which the model is stored
-        model_name: name of the model which is stored
 
-    Returns:
-        model which has been loaded.
-    """
-    with tarfile.open(targz_path, 'r:gz') as tar:
-        tar.extractall(path='temp_model')
-    
-    model_path = os.path.join('temp_model', model_name)
-    custom_objects = {
-        'QDense': QDense,
-        'QActivation': QActivation,
-        'QBatchNormalization': QBatchNormalization
-    }
-    model = load_model(model_path, custom_objects=custom_objects)
-    
-    # Clean up the temporary directory
-    for root, dirs, files in os.walk('temp_model', topdown=False):
-        for name in files:
-            os.remove(os.path.join(root, name))
-        for name in dirs:
-            os.rmdir(os.path.join(root, name))
-    os.rmdir('temp_model')
-    
+# ---------------------------------------------------------------------
+def load_l1AD_model(model_path):
+    co = {}
+    _add_supported_quantized_objects(co)
+    model = tf.keras.models.load_model(model_path, custom_objects=co)
     return model
 # ---------------------------------------------------------------------
 
@@ -305,20 +279,25 @@ def load_and_match(save_path):
     tags_to_combine = [tag for tag in topo2A_datasets.keys() if tag.startswith('EB')]
     topo2A_datasets = combine_data(topo2A_datasets, tags_to_combine=tags_to_combine, new_tag='EB')
     # --------------------------------------------------------------------------------------------------
+
+    # Bitshift all the topo2A data ---------------------------------------------------------------------
+    for tag, data_dict in topo2A_datasets.items():
+        data_dict['data'] = apply_power_of_2_scaling(data_dict['data'])
+    # --------------------------------------------------------------------------------------------------
+
+
     print('topo2A data loaded.')
 
     print('Initializing topo2A model...')
     # Load the topo2A network --------------------------------------------------------------------------
-    targz_path = './trained_models/software_model_BESTOFLONGRUN.tar.gz'  # Replace with the actual path to your .tar.gz file
-    model_name = '2A_AE_model_V9_BESTOFLONGRUN'
-    model = load_model_from_targz(targz_path, model_name)
+    model_path = '/eos/home-m/mmcohen/ntuples/FiorDiLatte_FoldBN.keras'
+    model = load_l1AD_model(model_path)
     # --------------------------------------------------------------------------------------------------
 
     
 
     print('Model initialized. Starting topo2A inference')
     # Run all events through the network ---------------------------------------------------------------
-    runNum_eventNum_to_AD_score = {}
 
     for tag, data_dict in topo2A_datasets.items():
         predictions = model.predict(data_dict['data'], verbose=0)
@@ -484,6 +463,10 @@ def load_and_match(save_path):
 
     print('Begin data saving sequence...')
     save_subdicts_to_h5(datasets, save_path)
+
+    os.makedirs(save_path + '/topo2A_datasets', exist_ok=True)
+    save_subdicts_to_h5(topo2A_datasets, save_path + '/topo2A_datasets')
+
     print('Data saved successfully.')
     
     print('\n\npowering down... goodbye.')
