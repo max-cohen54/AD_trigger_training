@@ -14,48 +14,12 @@ We are still testing a few different input schemes for the HLTAD network. One su
 
 all of this is done while also keeping track of which events were used to train the L1AD network (we don't want to accidentally run evals over those events).
 
-All of this can be done with
-```
-import load_and_match as lam
-lam.load_and_match(save_path)
-```
-where `save_path` is the path in which the output of this is saved (such that it only has to be run once).
+### Loading the data
 
-`ensembler_functions.py` contains the actual infrastructure of training and running evals for the HLTAD network. First, data is loaded (from the output of load_and_match). Next, one can train multiple networks with the same parameters (to ensure that results are stable). Finally, one can easily run evals. All of this can be done by running 
+First, we'll have to load the L1AD model and calculate L1AD scores. The newest version of the L1AD model requires a few modifications to qkeras; it might thus be easiest to set up the conda environment in `l1AD_softwarew_env.yml`, and edit qkeras locally. After setting up the environment, navigate to the qkeras folder, and follow `https://github.com/google/qkeras/pull/74/files`. You only need to modify `qkeras/__init__.py`, add `qkeras/qdense_batchnorm.py`, and modify `qkeras/utils.py`.
 
-```
-import ensembler_functions as ef
-L1AD_rate = 1000
-target_rate = 10
-data_info = {
-    "train_data_scheme": "topo2A_train+overlap", 
-    "pt_normalization_type": "StandardScaler", 
-    "L1AD_rate": 1000
-}
+Once this is done, you can run `run_lam.py` with the appropriate paths, which will load the L1AD model, and run inference over all events to get L1AD scores. It also saves these results to the specified path, so it only has to be run once.
 
-training_info = {
-    "save_path": "./trained_models/multiple_trainings/trial_8", 
-    "dropout_p": 0.1, 
-    "L2_reg_coupling": 0.01, 
-    "latent_dim": 4, 
-    "large_network": True, 
-    "num_trainings": 10,
-    "training_weights": True
-}
+### Training and Evals
 
-datasets, data_info = ef.load_and_preprocess(**data_info)
-training_info, data_info = ef.train_multiple_models(datasets, data_info, **training_info)
-```
-which trains ten networks and updates the training documentation text folder with the info. Next, we can run
-
-```
-ef.process_multiple_models(
-    training_info=training_info,
-    data_info=data_info,
-    plots_path=training_info['save_path']+'/plots',
-    target_rate=target_rate,
-    L1AD_rate=L1AD_rate
-)
-```
-
-which runs evals, and writes many plots to the specified path.
+`ensembler_functions.py` contains the actual infrastructure of training and running evals for the HLTAD network. First, data is loaded (from the output of `run_lam.py`). Next, one can train multiple networks with the same parameters (to ensure that results are stable). Finally, one can easily run evals. An example of this can be found in `example_training.ipynb`.
