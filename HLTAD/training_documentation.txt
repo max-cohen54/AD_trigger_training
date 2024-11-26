@@ -13,3 +13,19 @@
 {"save_path": "./trained_models/multiple_trainings/trial_7", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": false}{"train_data_scheme": "topo2A_train+L1noalg_HLTall", "pt_normalization_type": "global_division", "L1AD_rate": 1000}
 
 {"save_path": "./trained_models/multiple_trainings/trial_8", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"train_data_scheme": "topo2A_train+overlap", "pt_normalization_type": "StandardScaler", "L1AD_rate": 1000}
+
+{"save_path": "/eos/home-m/mmcohen/ad_trigger_development/trained_models/trial_103", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": True, "num_trainings": 8,"training_weights": True}{"train_data_scheme": "topo2A_train", "pt_normalization_type": "global_division", "L1AD_rate": 1000,"pt_thresholds": [50, 0, 0, 0],"comments": "new L1AD model"}
+
+{"save_path": "/eos/home-m/mmcohen/ad_trigger_development/trained_models/trial_104", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"train_data_scheme": "topo2A_train", "pt_normalization_type": "global_division", "L1AD_rate": 1000, "pt_thresholds": [0, 0, 0, 0], "comments": "new L1AD model"}
+
+{"save_path": "/eos/home-m/mmcohen/ad_trigger_development/trained_models/trial_105", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"train_data_scheme": "topo2A_train", "pt_normalization_type": "global_division", "L1AD_rate": 1000, "pt_thresholds": [20, 0, 0, 0], "comments": "new L1AD model"}
+
+{"save_path": "/eos/home-m/mmcohen/ad_trigger_development/trained_models/trial_106", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"train_data_scheme": "topo2A_train", "pt_normalization_type": "global_division", "L1AD_rate": 1000, "pt_thresholds": [20, 10, 10, 10], "comments": "new L1AD model"}
+
+{"save_path": "/eos/home-m/mmcohen/ad_trigger_development/trained_models/trial_107", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"train_data_scheme": "topo2A_train", "pt_normalization_type": "global_division", "L1AD_rate": 1000, "pt_thresholds": [50, 50, 50, 50], "comments": "new L1AD model"}
+
+{"save_path": "/eos/home-m/mmcohen/ad_trigger_development/trained_models/trial_108", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"train_data_scheme": "topo2A_train", "pt_normalization_type": "global_division", "L1AD_rate": 1000, "pt_thresholds": [50, 30, 30, 30], "comments": "new L1AD model"}
+
+{"save_path": "/eos/home-m/mmcohen/ad_trigger_development/trained_models/trial_108", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"train_data_scheme": "topo2A_train", "pt_normalization_type": "global_division", "L1AD_rate": 1000, "pt_thresholds": [50, 30, 30, 30], "comments": "new L1AD model"}
+
+{"save_path": "/eos/home-m/mmcohen/ad_trigger_development/trained_models/trial_109", "dropout_p": 0.1, "L2_reg_coupling": 0.01, "latent_dim": 4, "large_network": true, "num_trainings": 10, "training_weights": true}{"train_data_scheme": "topo2A_train", "pt_normalization_type": "global_division", "L1AD_rate": 1000, "pt_thresholds": [50, 20, 20, 20], "comments": "new L1AD model"}
