@@ -1,0 +1,69 @@
+Backend: Vitis
+ClockPeriod: 25
+ClockUncertainty: 27%
+HLSConfig:
+  LayerName:
+    dense1:
+      Precision:
+        bias: ap_fixed<5,1>
+        result: ap_fixed<38,8>
+        weight: ap_fixed<5,1>
+      Strategy: Latency
+      Trace: true
+    dense1_linear:
+      Precision:
+        result: fixed<16,6>
+      Strategy: Latency
+      Trace: true
+    dense2:
+      Precision:
+        bias: ap_fixed<5,1>
+        result: ap_fixed<22,3>
+        weight: ap_fixed<5,1>
+      Strategy: Latency
+      Trace: true
+    dense2_linear:
+      Precision:
+        result: fixed<16,6>
+      Strategy: Latency
+      Trace: true
+    inputs:
+      Precision:
+        result: ap_fixed<15,6>
+      Strategy: Latency
+      Trace: true
+    relu1:
+      Precision:
+        result: ufixed<15,0,RND_CONV,SAT>
+      Strategy: Latency
+      Trace: true
+    relu2:
+      Precision:
+        result: ufixed<15,0,RND_CONV,SAT>
+      Strategy: Latency
+      Trace: true
+    z_mean:
+      Precision:
+        bias: ap_fixed<6,2>
+        result: ap_fixed<23,3>
+        weight: ap_fixed<6,2>
+      Strategy: Latency
+      Trace: true
+    z_mean_linear:
+      Precision:
+        result: fixed<16,6>
+      Strategy: Latency
+      Trace: true
+  Model:
+    BramFactor: 1000000000
+    Precision: fixed<16,6>
+    ReuseFactor: 1
+    Strategy: Latency
+    TraceOutput: false
+IOType: io_parallel
+KerasModel: !keras_model 'FiorDiLatte_DenseBN_Topo2A_trigger_VAE/keras_model.h5'
+OutputDir: FiorDiLatte_DenseBN_Topo2A_trigger_VAE
+Part: xcvu9p-flga2104-2-e
+ProjectName: Topo2A_AD_proj
+Stamp: 8128C79b
+Version: 1.0.0
