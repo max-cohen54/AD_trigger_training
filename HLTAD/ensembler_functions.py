@@ -183,7 +183,17 @@ def plot_efficiencies(results, bkg_type, save_path, target_rate=10, eff_type='AS
     tags = [tag for tag in results.keys() if tag != 'EB_test']
     hlt_effs = [results[tag]['HLT_efficiency'] for tag in tags]
     combined_effs = [results[tag]['Combined_efficiency'] for tag in tags]
-    efficiency_gains = [(combined - hlt) / hlt * 100 for hlt, combined in zip(hlt_effs, combined_effs)]
+    
+    
+    #efficiency_gains = [(combined - hlt) / hlt * 100 for hlt, combined in zip(hlt_effs, combined_effs)]
+    efficiency_gains = []
+    for hlt, combined in zip(hlt_effs, combined_effs):
+        gain = (combined - hlt) / hlt
+        if np.isfinite(gain):
+            efficiency_gains.append(gain * 100)
+        else:
+            efficiency_gains.append(999)  # Replace infinities with a large value
+    
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6), gridspec_kw={'width_ratios': [3, 1]})
     y = np.arange(len(tags))
@@ -203,7 +213,22 @@ def plot_efficiencies(results, bkg_type, save_path, target_rate=10, eff_type='AS
     for i, gain in enumerate(efficiency_gains):
         ax2.text(gain + 0.5, y[i], f'{gain:.4f}%', va='center', color='black')
 
-    ax2.set_xlim(0, np.max(efficiency_gains)+2)
+    # Set x axis limit -------------------------------------------
+    # Convert to a NumPy array for easier manipulation
+    valid_efficiency_gains = np.array(efficiency_gains)
+    
+    if valid_efficiency_gains.size > 0:
+        # Check if 999 exists and find the next-highest value
+        if 999 in valid_efficiency_gains:
+            max_limit = np.sort(valid_efficiency_gains[valid_efficiency_gains < 999])[-1] + 2
+        else:
+            max_limit = np.max(valid_efficiency_gains) + 2
+    
+        ax2.set_xlim(0, max_limit)
+    else:
+        ax2.set_xlim(0, 2)  # Fallback if no valid values exist
+    # -------------------------------------------------------------
+    
     ax2.set_xlabel('Efficiency Gain (%)', fontsize=15)
     ax2.set_title('Relative Efficiency Gain', fontsize=15)
     ax2.set_yticks(y)
@@ -244,7 +269,7 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     # -------------------
 
     # Load data
-    datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/11-14-2024')
+    datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/12-13-2024')
 
     # -------------------
     
@@ -284,7 +309,28 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     # now combine the other EB runs into EB_test
     tags_to_combine = [key for key in datasets.keys() if "EB" in key and key != 'EB_train']
     datasets = combine_data(datasets, tags_to_combine=tags_to_combine, new_tag='EB_test')
+
+    # -------------------
+    
+    # Recalculate the L1AD threshold and L1Seeded events, this time using the newly created 'EB_test' data
+    L1AD_threshold, L1AD_total_rate = find_threshold(
+        scores=datasets['EB_test']['topo2A_AD_scores'], 
+        weights=datasets['EB_test']['weights'], 
+        hlt_pass=datasets['EB_test']['passL1'], # for pure rate, the event should pass L1AD, but not passL1. 
+        target_rate=L1AD_rate, 
+        incoming_rate=40e6
+    )
+    # now recalculate L1Seeded items with the threshold
+    for tag, dict in datasets.items():
+        dict['L1Seeded'] = (dict['topo2A_AD_scores'] >= L1AD_threshold)
+    
     # ------------------- 
+    
+    # save raw data
+    for tag, data_dict in datasets.items():
+        datasets[tag]['raw_HLT_data'] = np.copy(data_dict['HLT_data'])
+        datasets[tag]['raw_L1_data'] = np.copy(data_dict['L1_data'])
+    # -------------------
     
     # Change phi --> delta phi between leading jet
     for tag, dict in datasets.items():
@@ -331,12 +377,6 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
                 data[MET_nan, -1, :] = 0
 
     # -------------------
-
-    # save pts
-    # for tag, dict in datasets.items():
-    #     datasets[tag]['raw_HLT_pt'] = np.copy(dict['HLT_data'][:, :, 0])
-    #     datasets[tag]['raw_L1_pt'] = np.copy(dict['L1_data'][:, :, 0])
-    # #------
 
     # Zero out jets
     for tag, dict in datasets.items():
@@ -1588,9 +1628,9 @@ def save_datasets_with_AD_scores(datasets: dict, training_info: dict, save_dir: 
         if tag in skip_tags: continue
     
         dict['HLT_model_outputs'] = HLT_AE.predict(dict['HLT_data'], verbose=0)
-        dict['HLT_latent_reps'] = HLT_encoder.predict(dict['HLT_data'])
+        dict['HLT_latent_reps'] = HLT_encoder.predict(dict['HLT_data'], verbose=0)
         dict['L1_model_outputs'] = L1_AE.predict(dict['L1_data'], verbose=0)
-        dict['L1_latent_reps'] = L1_encoder.predict(dict['L1_data'])
+        dict['L1_latent_reps'] = L1_encoder.predict(dict['L1_data'], verbose=0)
 
     # Calculate the AD scores
     for tag, dict in datasets.items():
@@ -1730,3 +1770,204 @@ def compare_tf_with_onnx(datasets: dict, training_info: dict, model_version, onn
 
     return datasets
 # -----------------------------------------------------------------------------------------
+
+def load_and_inference(data_info, training_info, model_version=0):
+    datasets, data_info = load_and_preprocess(**data_info)
+    
+    # Unpack training info
+    save_path = training_info['save_path']
+    dropout_p = training_info['dropout_p']
+    L2_reg_coupling = training_info['L2_reg_coupling']
+    latent_dim = training_info['latent_dim']
+    large_network = training_info['large_network']
+    num_trainings = training_info['num_trainings']
+
+    # Load the model
+    HLT_AE, HLT_encoder, L1_AE, L1_encoder = initialize_model(
+        input_dim=datasets['EB_train']['HLT_data'].shape[1],
+        dropout_p=dropout_p,
+        L2_reg_coupling=L2_reg_coupling,
+        latent_dim=latent_dim,
+        large_network=large_network,
+        saved_model_path=save_path,
+        save_version=model_version
+    )
+
+    # Pass the data through the model
+    skip_tags = ['EB_train', 'EB_val']
+    for tag, dict in datasets.items():
+        if tag in skip_tags: continue
+    
+        dict['HLT_model_outputs'] = HLT_AE.predict(dict['HLT_data'], verbose=0)
+        #dict['HLT_latent_reps'] = HLT_encoder.predict(dict['HLT_data'], verbose=0)
+        dict['L1_model_outputs'] = L1_AE.predict(dict['L1_data'], verbose=0)
+        #dict['L1_latent_reps'] = L1_encoder.predict(dict['L1_data'], verbose=0)
+
+    # Calculate the AD scores
+    for tag, dict in datasets.items():
+        if tag in skip_tags: continue
+    
+        dict['HLT_AD_scores'] = MSE_AD_score(dict['HLT_data'], dict['HLT_model_outputs'])
+        dict['L1_AD_scores'] = MSE_AD_score(dict['L1_data'], dict['L1_model_outputs'])
+
+    del datasets['EB_train']
+    del datasets['EB_val']
+    return datasets
+
+def compare_two_models(data_info_1, training_info_1, data_info_2, training_info_2, plots_path, obj_types=['HLT', 'L1'], model_versions=[0, 0], trigger_schemes=['l1Seeded', 'l1All'], model_names=['model_1', 'model_2'], L1AD_rate=1000, target_rate=10):
+    """
+    Compares two models by generating plots of leading jet pt distributions and 2D histograms of AD scores.
+
+    This function processes datasets from two models, calculates thresholds, and generates plots to compare
+    the performance of the models based on their anomaly detection (AD) scores.
+
+    Args:
+        data_info_1 (dict): Information required to load and preprocess the first dataset.
+        training_info_1 (dict): Training details for the first model.
+        data_info_2 (dict): Information required to load and preprocess the second dataset.
+        training_info_2 (dict): Training details for the second model.
+        plots_path (str): Directory path where the plots will be saved.
+        obj_types (list of str): List of object types for each model, e.g., ['HLT', 'L1'].
+        model_versions (list of int): List of model versions to load for each dataset.
+        trigger_schemes (list of str): List of trigger schemes, either 'l1Seeded' or 'l1All', for each model.
+        model_names (list of str): Names of the models for labeling plots.
+        L1AD_rate (int): Target L1 anomaly detection rate.
+        target_rate (int): Target rate for the HLT anomaly detection.
+
+    Raises:
+        ValueError: If any element in trigger_schemes is not 'l1Seeded' or 'l1All'.
+
+    Generates:
+        - Histograms of leading jet pt for each tag from both models.
+        - 2D histograms of AD scores for all events, events with passAD_idxs1, and events with passAD_idxs2 for each tag.
+    """
+
+
+    plt.rcParams['axes.linewidth'] = 2
+
+    if not all(scheme in ['l1Seeded', 'l1All'] for scheme in trigger_schemes):
+        raise ValueError("Both elements of trigger_schemes must be either 'l1Seeded' or 'l1All'")
+
+    datasets = [load_and_inference(data_info_1, training_info_1, model_versions[0]),
+                load_and_inference(data_info_2, training_info_2, model_versions[1])]
+
+    plotting_data = {
+        'data1': [],
+        'data2': [],
+        'weights1': [],
+        'weights2': [],
+        'tags': [],
+        'passAD_idxs1': [],
+        'passAD_idxs2': []
+    }
+
+    for i, (dataset, obj_type, trigger_scheme) in enumerate(zip(datasets, obj_types, trigger_schemes)):
+        # Calculate L1AD threshold
+        L1AD_threshold, L1_total_rate = find_threshold(
+            scores=dataset['EB_test']['topo2A_AD_scores'], 
+            weights=dataset['EB_test']['weights'], 
+            hlt_pass=dataset['EB_test']['passL1'], 
+            target_rate=L1AD_rate, 
+            incoming_rate=40e6
+        )
+
+        # Recalculate L1Seeded items with the threshold
+        for tag, data_dict in dataset.items():
+            data_dict['L1Seeded2'] = (data_dict['topo2A_AD_scores'] >= L1AD_threshold)
+
+        # Determine indices based on the trigger scheme
+        if trigger_scheme == 'l1Seeded':
+            idxs = dataset['EB_test']['L1Seeded2']
+        else:  # 'l1All'
+            idxs = dataset['EB_test']['L1Seeded2'] | dataset['EB_test']['passL1']
+
+        # Calculate HLTAD threshold
+        HLTAD_threshold, HLT_total_rate = find_threshold(
+            scores=dataset['EB_test'][f'{obj_type}_AD_scores'][idxs], 
+            weights=dataset['EB_test']['weights'][idxs], 
+            hlt_pass=dataset['EB_test']['passHLT'][idxs], 
+            target_rate=target_rate, 
+            incoming_rate=L1_total_rate
+        )
+
+        for tag, data_dict in dataset.items():
+            # Calculate indices
+            seed_idxs = data_dict['L1Seeded2'] if trigger_scheme == 'l1Seeded' else (data_dict['L1Seeded2'] | data_dict['passL1'])
+            passAD_idxs = (data_dict[f'{obj_type}_AD_scores'] >= HLTAD_threshold) & seed_idxs
+
+            # Collect data and weights
+            data = np.reshape(data_dict[f'raw_{obj_type}_data'], newshape=(-1, 16, 3))[passAD_idxs]
+            weights = data_dict['weights'][passAD_idxs]
+            
+            # Append to plotting data
+            plotting_data[f'data{i+1}'].append(data)
+            # print for some checks:
+            print(f'data{i+1} shape: {data.shape}')
+            print(f'tag: {tag}')
+            print(f'tag index: {np.where(plotting_data["tags"] == tag)}')
+            plotting_data[f'weights{i+1}'].append(weights)
+            if tag not in plotting_data['tags']:
+                plotting_data['tags'].append(tag)
+            plotting_data[f'passAD_idxs{i+1}'].append(passAD_idxs)
+
+    # Plot leading jet pt for each tag from each of the two models
+    for j, tag in enumerate(plotting_data['tags']):
+        for obj_name, obj_idx in zip(['jet', 'el', 'muon', 'photon'], [0, 6, 9, 12]):
+            data1 = plotting_data['data1'][j]
+            data2 = plotting_data['data2'][j]
+            weights1 = plotting_data['weights1'][j]
+            weights2 = plotting_data['weights2'][j]
+    
+            leading_jet_pt1 = np.clip(data1[:, obj_idx, 0], a_min=0, a_max=2000)
+            leading_jet_pt2 = np.clip(data2[:, obj_idx, 0], a_min=0, a_max=2000)
+            bins = np.linspace(0, 300, 20)
+    
+            plt.figure(figsize=(10, 6))
+            plt.hist(leading_jet_pt1, bins=bins, weights=weights1, density=True, alpha=0.5, label=f'{model_names[0]}', fill=False, linewidth=3, histtype='step')
+            plt.hist(leading_jet_pt2, bins=bins, weights=weights2, density=True, alpha=0.5, label=f'{model_names[1]}', fill=False, linewidth=3, histtype='step')
+    
+            plt.xlabel('Leading Jet pt')
+            plt.ylabel('Density')
+            plt.title(f'Leading {obj_name} pt Distribution for {tag}')
+            plt.legend()
+            plt.grid(True)
+            plt.savefig(f"{plots_path}/{tag}_leading_{obj_name}_pt.png")
+            plt.close()
+
+    # Extract AD scores and create 2D histograms for each tag
+    for j, tag in enumerate(plotting_data['tags']):
+        ad_scores1 = np.clip(datasets[0][tag][f'{obj_types[0]}_AD_scores'], a_min=0, a_max=30)
+        ad_scores2 = np.clip(datasets[1][tag][f'{obj_types[1]}_AD_scores'], a_min=0, a_max=30)
+
+        # 1. Over all events for the current tag
+        plt.figure(figsize=(10, 6))
+        plt.hist2d(ad_scores1, ad_scores2, bins=35, density=True, cmap='viridis')
+        plt.colorbar(label='Density')
+        plt.xlabel(f'{model_names[0]} AD Scores')
+        plt.ylabel(f'{model_names[1]} AD Scores')
+        plt.title(f'2D Histogram of AD Scores for All Events - {tag}')
+        plt.grid(True)
+        plt.savefig(f"{plots_path}/{tag}_all_events_ad_scores.png")
+        plt.close()
+
+        # 2. Over events with passAD_idxs1 for the current tag
+        plt.figure(figsize=(10, 6))
+        plt.hist2d(ad_scores1[plotting_data['passAD_idxs1'][j]], ad_scores2[plotting_data['passAD_idxs1'][j]], bins=20, density=True, cmap='viridis')
+        plt.colorbar(label='Density')
+        plt.xlabel(f'{model_names[0]} AD Scores')
+        plt.ylabel(f'{model_names[1]} AD Scores')
+        plt.title(f'2D Histogram of AD Scores for Events with passAD_idxs1 - {tag}')
+        plt.grid(True)
+        plt.savefig(f"{plots_path}/{tag}_passAD_idxs1_ad_scores.png")
+        plt.close()
+
+        # 3. Over events with passAD_idxs2 for the current tag
+        plt.figure(figsize=(10, 6))
+        plt.hist2d(ad_scores1[plotting_data['passAD_idxs2'][j]], ad_scores2[plotting_data['passAD_idxs2'][j]], bins=20, density=True, cmap='viridis')
+        plt.colorbar(label='Density')
+        plt.xlabel(f'{model_names[0]} AD Scores')
+        plt.ylabel(f'{model_names[1]} AD Scores')
+        plt.title(f'2D Histogram of AD Scores for Events with passAD_idxs2 - {tag}')
+        plt.grid(True)
+        plt.savefig(f"{plots_path}/{tag}_passAD_idxs2_ad_scores.png")
+        plt.close()
