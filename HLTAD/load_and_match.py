@@ -274,6 +274,23 @@ def load_and_match(save_path):
         }
     # --------------------------------------------------------------------------------------------------
 
+
+
+    # Load the topo2A MC23e data ----------------------------------------------------------------------
+    MC_path = '/eos/home-m/mmcohen/ntuples/MC23e_12-10-2024/'
+    for filename in os.listdir(MC_path):
+        if filename.startswith('N') or filename.startswith('.'): continue
+    
+        dataset_tag = 'mc23e_'+(filename.split('_12')[0]).split('C_')[1]
+    
+        Topo_2A, _, _, pass_L1 = load_and_process_anomalous_data(MC_path+filename)
+    
+        topo2A_datasets[dataset_tag] = {
+            'data': Topo_2A[0:100000]
+        }
+    # --------------------------------------------------------------------------------------------------
+    
+
     
     # Combine all the EB data into one sub-dir ---------------------------------------------------------
     tags_to_combine = [tag for tag in topo2A_datasets.keys() if tag.startswith('EB')]
@@ -350,6 +367,59 @@ def load_and_match(save_path):
             if len(HLT_objects) > 100000:
                 datasets[dataset_tag] = {key: value[:100000] for key, value in datasets[dataset_tag].items()}
     # --------------------------------------------------------------------------------------------------
+
+
+
+    # Load MC23e data -------------------------------------------------------------------------------------
+    data_path = '/eos/home-m/mmcohen/ntuples/MC23e_12-10-2024/'
+
+    for filename in os.listdir(data_path):
+    
+        if filename.startswith('N') or filename.startswith('.'): continue
+    
+        dataset_tag = 'mc23e_'+(filename.split('_12')[0]).split('C_')[1]
+        
+        with h5py.File(data_path+filename, 'r') as hf:
+            HLT_jets = hf['HLT_jets'][:]
+            L1_jFexSR_jets = hf['L1_jFexSR_jets'][:]
+            L1_jFexLR_jets = hf['L1_jFexLR_jets'][:]
+            HLT_electrons = hf['HLT_electrons'][:]
+            LRT_electrons = hf['LRT_electrons'][:]
+            L1_egammas = hf['L1_egammas'][:]
+            HLT_muons = hf['HLT_muons'][:]
+            LRT_muons = hf['LRT_muons'][:]
+            L1_muons = hf['L1_muons'][:]
+            L1_eFex_taus = hf['L1_eFex_taus'][:]
+            L1_jFex_taus = hf['L1_jFex_taus'][:]
+            HLT_photons = hf['HLT_photons'][:]
+            HLT_MET = hf['HLT_MET'][:].reshape(-1, 1, 3)  # Broadcasting MET
+            L1_MET = hf['L1_MET'][:].reshape(-1, 1, 3)
+            pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
+            pass_HLT_unprescaled = hf["pass_HLT_unprescaled"][:]
+            event_number = hf["event_number"][:]
+            run_number = hf["run_number"][:]
+            mu = hf["mu"][:]
+    
+            HLT_objects = np.concatenate([HLT_jets[:, :6, [0, 2, 3]], HLT_electrons[:, :3, :], HLT_muons[:, :3, :], HLT_photons[:, :3, :], HLT_MET], axis=1)
+            L1_objects = np.concatenate([L1_jFexSR_jets[:, :6, :], L1_egammas[:, :3, :], L1_muons[:, :3, :], L1_eFex_taus[:, :3, :], L1_MET], axis=1)
+            
+            datasets[dataset_tag] = {
+                'HLT_data': HLT_objects,
+                'L1_data': L1_objects,
+                'passL1': pass_L1_unprescaled==1,
+                'passHLT': pass_HLT_unprescaled==1,
+                'weights': np.ones(len(HLT_objects)),
+                'topo2A_AD_scores': topo2A_datasets[dataset_tag]['topo2A_AD_scores'],
+                'event_numbers': event_number,
+                'run_numbers': run_number,
+                'pileups': mu
+            }
+    
+            if len(HLT_objects) > 100000:
+                datasets[dataset_tag] = {key: value[:100000] for key, value in datasets[dataset_tag].items()}
+    # --------------------------------------------------------------------------------------------------
+
+    
 
 
     # Load my EB data ----------------------------------------------------------------------------------
