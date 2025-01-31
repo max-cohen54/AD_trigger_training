@@ -1,0 +1,388 @@
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:28351:7: warning: Added loop label VITIS_LOOP_1223_1:   [xilinx-label-all-loops]
+      for (i = 0; i < __N - 1; ++i) {
+      ^~~
+      VITIS_LOOP_1223_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:28351:7: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:29325:5: warning: Added loop label VITIS_LOOP_676_1:   [xilinx-label-all-loops]
+    for (unsigned i = low; i != high; ++i) {
+    ^~~
+    VITIS_LOOP_676_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:29325:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:29339:5: warning: Added loop label VITIS_LOOP_690_1:   [xilinx-label-all-loops]
+    for (unsigned i = low; i != high; ++i) {
+    ^~~
+    VITIS_LOOP_690_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:29339:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:29353:5: warning: Added loop label VITIS_LOOP_704_1:   [xilinx-label-all-loops]
+    for (unsigned i = low; i != high; ++i) {
+    ^~~
+    VITIS_LOOP_704_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:29353:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:30970:7: warning: Added loop label VITIS_LOOP_1247_1:   [xilinx-label-all-loops]
+      for (i = 0; i < __N - 1; ++i) {
+      ^~~
+      VITIS_LOOP_1247_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:30970:7: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:32953:9: warning: Added loop label VITIS_LOOP_27_1:   [xilinx-label-all-loops]
+        for (unsigned i = 0; i < N; i++) {
+        ^~~
+        VITIS_LOOP_27_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:32953:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:32966:9: warning: Added loop label VITIS_LOOP_40_1:   [xilinx-label-all-loops]
+        for (size_t i = 0; i < N; i++) {
+        ^~~
+        VITIS_LOOP_40_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:32966:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55897:5: warning: Added loop label VITIS_LOOP_265_1:   [xilinx-label-all-loops]
+    for (typename std::vector<src_T>::const_iterator i = in_begin; i != in_end; ++i) {
+    ^~~
+    VITIS_LOOP_265_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55897:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55907:5: warning: Added loop label VITIS_LOOP_275_1:   [xilinx-label-all-loops]
+    for (auto i = 0; i < SIZE; i++)
+    ^~~
+    VITIS_LOOP_275_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55907:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55918:5: warning: Added loop label VITIS_LOOP_286_1:   [xilinx-label-all-loops]
+    for (int i = 0; i < SIZE; i++) {
+    ^~~
+    VITIS_LOOP_286_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55918:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55925:5: warning: Added loop label VITIS_LOOP_293_1:   [xilinx-label-all-loops]
+    for (int i = 0; i < SIZE / res_T::size; i++) {
+    ^~~
+    VITIS_LOOP_293_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55925:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55927:9: warning: Added loop label VITIS_LOOP_295_2:   [xilinx-label-all-loops]
+        for (int j = 0; j < res_T::size; j++) {
+        ^~~
+        VITIS_LOOP_295_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55927:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55939:5: warning: Added loop label VITIS_LOOP_307_1:   [xilinx-label-all-loops]
+    for (int i = 0; i < SIZE / data_T::size; i++) {
+    ^~~
+    VITIS_LOOP_307_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55939:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55941:9: warning: Added loop label VITIS_LOOP_309_2:   [xilinx-label-all-loops]
+        for (int j = 0; j < data_T::size; j++) {
+        ^~~
+        VITIS_LOOP_309_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55941:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55956:5: warning: Added loop label VITIS_LOOP_324_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < nrows; ii++) {
+    ^~~
+    VITIS_LOOP_324_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55956:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55976:5: warning: Added loop label VITIS_LOOP_344_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < nrows; ii++) {
+    ^~~
+    VITIS_LOOP_344_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55976:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55977:9: warning: Added loop label VITIS_LOOP_345_2:   [xilinx-label-all-loops]
+        for (int jj = 0; jj < ncols; jj++) {
+        ^~~
+        VITIS_LOOP_345_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55977:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55992:5: warning: Added loop label VITIS_LOOP_360_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_IN; ii++) {
+    ^~~
+    VITIS_LOOP_360_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55992:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55999:5: warning: Added loop label VITIS_LOOP_367_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_IN; ii++) {
+    ^~~
+    VITIS_LOOP_367_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:55999:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56122:2: warning: Added loop label VITIS_LOOP_31_1:   [xilinx-label-all-loops]
+ for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+ ^~~
+ VITIS_LOOP_31_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56122:2: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56134:5: warning: Added loop label VITIS_LOOP_43_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_43_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56134:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56148:5: warning: Added loop label VITIS_LOOP_57_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_57_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56148:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56175:5: warning: Added loop label VITIS_LOOP_84_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_TABLE; ii++) {
+    ^~~
+    VITIS_LOOP_84_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56175:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56205:5: warning: Added loop label VITIS_LOOP_114_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_114_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56205:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56242:5: warning: Added loop label VITIS_LOOP_151_1:   [xilinx-label-all-loops]
+    for (unsigned i = 0; i < CONFIG_T::table_size; i++) {
+    ^~~
+    VITIS_LOOP_151_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56242:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56253:5: warning: Added loop label VITIS_LOOP_162_1:   [xilinx-label-all-loops]
+    for (unsigned i = 0; i < CONFIG_T::table_size; i++) {
+    ^~~
+    VITIS_LOOP_162_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56253:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56286:5: warning: Added loop label VITIS_LOOP_195_1:   [xilinx-label-all-loops]
+    for (unsigned i = 0; i < CONFIG_T::n_in; i++) {
+    ^~~
+    VITIS_LOOP_195_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56286:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56300:5: warning: Added loop label VITIS_LOOP_209_2:   [xilinx-label-all-loops]
+    for (unsigned i = 0; i < CONFIG_T::n_in; i++) {
+    ^~~
+    VITIS_LOOP_209_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56300:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56334:5: warning: Added loop label VITIS_LOOP_243_1:   [xilinx-label-all-loops]
+    for (unsigned i = 0; i < CONFIG_T::n_in; i++) {
+    ^~~
+    VITIS_LOOP_243_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56334:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56343:5: warning: Added loop label VITIS_LOOP_252_2:   [xilinx-label-all-loops]
+    for (unsigned i = 0; i < CONFIG_T::n_in; i++) {
+    ^~~
+    VITIS_LOOP_252_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56343:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56357:5: warning: Added loop label VITIS_LOOP_266_3:   [xilinx-label-all-loops]
+    for (unsigned i = 0; i < CONFIG_T::n_in; i++) {
+    ^~~
+    VITIS_LOOP_266_3: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56357:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56364:5: warning: Added loop label VITIS_LOOP_273_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_TABLE; ii++) {
+    ^~~
+    VITIS_LOOP_273_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56364:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56377:5: warning: Added loop label VITIS_LOOP_286_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_TABLE; ii++) {
+    ^~~
+    VITIS_LOOP_286_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56377:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56414:5: warning: Added loop label VITIS_LOOP_323_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_323_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56414:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56419:5: warning: Added loop label VITIS_LOOP_328_2:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_328_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56419:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56420:9: warning: Added loop label VITIS_LOOP_329_3:   [xilinx-label-all-loops]
+        for (int jj = 0; jj < CONFIG_T::n_in; jj++) {
+        ^~~
+        VITIS_LOOP_329_3: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56420:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56437:5: warning: Added loop label VITIS_LOOP_346_4:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_346_4: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56437:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56450:5: warning: Added loop label VITIS_LOOP_359_1:   [xilinx-label-all-loops]
+    for (int i = 0; i < CONFIG_T::n_in; i++) {
+    ^~~
+    VITIS_LOOP_359_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56450:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56458:5: warning: Added loop label VITIS_LOOP_367_2:   [xilinx-label-all-loops]
+    for (int i = 1; i < CONFIG_T::n_in; i++) {
+    ^~~
+    VITIS_LOOP_367_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56458:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56493:5: warning: Added loop label VITIS_LOOP_402_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_TABLE; ii++) {
+    ^~~
+    VITIS_LOOP_402_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56493:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56523:5: warning: Added loop label VITIS_LOOP_432_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_432_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56523:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56542:2: warning: Added loop label VITIS_LOOP_451_1:   [xilinx-label-all-loops]
+ for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+ ^~~
+ VITIS_LOOP_451_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56542:2: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56558:5: warning: Added loop label VITIS_LOOP_467_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_467_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56558:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56576:5: warning: Added loop label VITIS_LOOP_485_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_485_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56576:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56593:5: warning: Added loop label VITIS_LOOP_502_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_502_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56593:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56610:5: warning: Added loop label VITIS_LOOP_519_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_TABLE; ii++) {
+    ^~~
+    VITIS_LOOP_519_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56610:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56640:5: warning: Added loop label VITIS_LOOP_549_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_549_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56640:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56659:5: warning: Added loop label VITIS_LOOP_568_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_TABLE; ii++) {
+    ^~~
+    VITIS_LOOP_568_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56659:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56689:5: warning: Added loop label VITIS_LOOP_598_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_598_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56689:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56708:5: warning: Added loop label VITIS_LOOP_617_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_TABLE; ii++) {
+    ^~~
+    VITIS_LOOP_617_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56708:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56738:5: warning: Added loop label VITIS_LOOP_647_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_647_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56738:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56765:5: warning: Added loop label VITIS_LOOP_674_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < N_TABLE; ii++) {
+    ^~~
+    VITIS_LOOP_674_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56765:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56794:5: warning: Added loop label VITIS_LOOP_703_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_703_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56794:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56815:5: warning: Added loop label VITIS_LOOP_724_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_724_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56815:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56833:5: warning: Added loop label VITIS_LOOP_742_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_742_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56833:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56853:5: warning: Added loop label VITIS_LOOP_762_1:   [xilinx-label-all-loops]
+    for (int ii = 0; ii < CONFIG_T::n_in; ii++) {
+    ^~~
+    VITIS_LOOP_762_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56853:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56949:9: warning: Added loop label VITIS_LOOP_73_1:   [xilinx-label-all-loops]
+        for (int i = 0; i < N / data_T::size; i++) {
+        ^~~
+        VITIS_LOOP_73_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56949:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56956:13: warning: Added loop label VITIS_LOOP_80_2:   [xilinx-label-all-loops]
+            for (int j = 0; j < data_T::size; j++) {
+            ^~~
+            VITIS_LOOP_80_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56956:13: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56965:9: warning: Added loop label VITIS_LOOP_89_3:   [xilinx-label-all-loops]
+        for (int i = 0; i < N / data_T::size; i++) {
+        ^~~
+        VITIS_LOOP_89_3: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56965:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56974:13: warning: Added loop label VITIS_LOOP_98_4:   [xilinx-label-all-loops]
+            for (int j = 0; j < pack_diff; j++) {
+            ^~~
+            VITIS_LOOP_98_4: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56974:13: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56978:17: warning: Added loop label VITIS_LOOP_102_5:   [xilinx-label-all-loops]
+                for (int k = 0; k < res_T::size; k++) {
+                ^~~
+                VITIS_LOOP_102_5: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56978:17: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56989:9: warning: Added loop label VITIS_LOOP_113_6:   [xilinx-label-all-loops]
+        for (int i = 0; i < N / data_T::size; i++) {
+        ^~~
+        VITIS_LOOP_113_6: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56989:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56993:13: warning: Added loop label VITIS_LOOP_117_7:   [xilinx-label-all-loops]
+            for (int j = 0; j < data_T::size; j++) {
+            ^~~
+            VITIS_LOOP_117_7: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:56993:13: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57017:9: warning: Added loop label VITIS_LOOP_141_1:   [xilinx-label-all-loops]
+        for (int j = 0; j < n_dupl; j++) {
+        ^~~
+        VITIS_LOOP_141_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57017:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57021:13: warning: Added loop label VITIS_LOOP_145_2:   [xilinx-label-all-loops]
+            for (int k = 0; k < res_T::size; k++) {
+            ^~~
+            VITIS_LOOP_145_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57021:13: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57040:9: warning: Added loop label VITIS_LOOP_164_1:   [xilinx-label-all-loops]
+        for (int k = 0; k < res_T::size; k++) {
+        ^~~
+        VITIS_LOOP_164_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57040:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57063:2: warning: Added loop label VITIS_LOOP_187_1:   [xilinx-label-all-loops]
+ for (int i = 0; i < CONFIG_T::height * CONFIG_T::width / data_T::size; i++) {
+ ^~~
+ VITIS_LOOP_187_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57063:2: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57066:9: warning: Added loop label VITIS_LOOP_190_2:   [xilinx-label-all-loops]
+        for (int j = 0; j < data_T::size; j++) {
+        ^~~
+        VITIS_LOOP_190_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57066:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57071:5: warning: Added loop label VITIS_LOOP_195_3:   [xilinx-label-all-loops]
+    for (int i = 0; i < CONFIG_T::height * CONFIG_T::width / res_T::size; i++) {
+    ^~~
+    VITIS_LOOP_195_3: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57071:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57075:9: warning: Added loop label VITIS_LOOP_199_4:   [xilinx-label-all-loops]
+        for (int j = 0; j < res_T::size; j++) {
+        ^~~
+        VITIS_LOOP_199_4: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57075:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57289:9: warning: Added loop label VITIS_LOOP_213_1:   [xilinx-label-all-loops]
+        for (unsigned j = 0; j < data_T::size; j++) {
+        ^~~
+        VITIS_LOOP_213_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57289:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57298:9: warning: Added loop label VITIS_LOOP_222_2:   [xilinx-label-all-loops]
+        for (unsigned j = 0; j < data_T::size; j++) {
+        ^~~
+        VITIS_LOOP_222_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57298:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57404:5: warning: Added loop label VITIS_LOOP_328_1:   [xilinx-label-all-loops]
+    for (int i = 0; i < CONFIG_T::n_in / res_T::size; i++) {
+    ^~~
+    VITIS_LOOP_328_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57404:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57409:9: warning: Added loop label VITIS_LOOP_333_2:   [xilinx-label-all-loops]
+        for (int i = 0; i < res_T::size; i++) {
+        ^~~
+        VITIS_LOOP_333_2: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57409:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57417:9: warning: Added loop label VITIS_LOOP_341_3:   [xilinx-label-all-loops]
+        for (int i = 1; i < res_T::size; i++) {
+        ^~~
+        VITIS_LOOP_341_3: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:57417:9: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:58008:9: error: Invalid Directive: for current device, mul + fabric is invalid combination for bind_op [clang-diagnostic-error]
+#pragma HLS bind_op variable=mult op=mul impl=fabric latency=0
+        ^
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:58356:5: warning: Added loop label VITIS_LOOP_14_1:   [xilinx-label-all-loops]
+    for (unsigned k = 0; k < CONFIG_T::n_out; k++) {
+    ^~~
+    VITIS_LOOP_14_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:58356:5: note: FIX-IT applied suggested code changes
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:58416:9: warning: Added loop label VITIS_LOOP_74_1:   [xilinx-label-all-loops]
+        for (int im = 0; im < CONFIG_T::n_out; im++) {
+        ^~~
+        VITIS_LOOP_74_1: 
+/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/.autopilot/db/Topo2A_AD_proj.pp.0.cpp:58416:9: note: FIX-IT applied suggested code changes

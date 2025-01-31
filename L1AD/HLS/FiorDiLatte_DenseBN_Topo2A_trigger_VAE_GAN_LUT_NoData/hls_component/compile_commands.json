@@ -1,0 +1,28 @@
+[
+  {
+    "directory": "/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component",
+    "arguments": [
+      "/afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis_HLS/2024.1/vcxx/libexec/clang++",
+      "-fhls",
+      "-hls-syn-headers-dir=/afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis_HLS/2024.1/common/technology/autopilot",
+      "",
+      "-std=c++0x",
+      "-c",
+      "/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/firmware/Topo2A_AD_proj.cpp"
+    ],
+    "file": "/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/firmware/Topo2A_AD_proj.cpp"
+  },
+  {
+    "directory": "/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component",
+    "arguments": [
+      "/afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis_HLS/2024.1/vcxx/libexec/clang++",
+      "-fhls-tb",
+      "-hls-sim-headers-dir=/afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis_HLS/2024.1/include",
+      "",
+      "-std=c++0x",
+      "-c",
+      "/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/Topo2A_AD_proj_test.cpp"
+    ],
+    "file": "/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/Topo2A_AD_proj_test.cpp"
+  }
+]

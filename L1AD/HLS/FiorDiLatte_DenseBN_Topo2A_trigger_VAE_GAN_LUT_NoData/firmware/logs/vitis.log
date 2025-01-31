@@ -1,0 +1,3 @@
+14:18:15 INFO  : updated workspace path: 
+14:18:15 INFO  : bash, -c, source /afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis/2024.1/tps/lnx64/lopper-1.1.0/env/bin/activate && python /afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis/2024.1/data/embeddedsw/scripts/pyesw//repo.py -st  /afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vitis/2024.1/data/embeddedsw && deactivate
+14:18:26 INFO  : created .gitignore file for the project /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData

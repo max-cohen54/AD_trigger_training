@@ -1,0 +1,478 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Sat Jan 25 15:11:33 2025
+# Process ID: 1654802
+# Current directory: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.runs/bd_0_hls_inst_0_synth_1
+# Command line: vivado -log bd_0_hls_inst_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source bd_0_hls_inst_0.tcl
+# Log file: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.runs/bd_0_hls_inst_0_synth_1/bd_0_hls_inst_0.vds
+# Journal file: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.runs/bd_0_hls_inst_0_synth_1/vivado.jou
+# Running On        :rdsrv413
+# Platform          :Ubuntu
+# Operating System  :Ubuntu 20.04.6 LTS
+# Processor Detail  :AMD Ryzen 9 7900X3D 12-Core Processor
+# CPU Frequency     :3000.000 MHz
+# CPU Physical cores:12
+# CPU Logical cores :24
+# Host memory       :66550 MB
+# Swap memory       :2147 MB
+# Total Virtual     :68697 MB
+# Available Virtual :28510 MB
+#-----------------------------------------------------------
+source bd_0_hls_inst_0.tcl -notrace
+INFO: Dispatch client connection id - 35297
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vivado/2024.1/data/ip'.
+INFO: [IP_Flow 19-6924] IPCACHE: Running cache check for IP inst: bd_0_hls_inst_0
+Command: synth_design -top bd_0_hls_inst_0 -part xcvu9p-flga2104-2-e -directive sdx_optimization_effort_high -incremental_mode off -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcvu9p'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcvu9p'
+INFO: [Common 17-1540] The version limit for your license is '2024.12' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for new releases.
+INFO: [Device 21-403] Loading part xcvu9p-flga2104-2-e
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 1654812
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2986.020 ; gain = 405.801 ; free physical = 9024 ; free virtual = 25021
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'bd_0_hls_inst_0' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ip/bd_0_hls_inst_0/synth/bd_0_hls_inst_0.v:53]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_3s_22_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_3s_22_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_3s_22_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_3s_22_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_4ns_23_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_4ns_23_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_4ns_23_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_4ns_23_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_3ns_22_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_3ns_22_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_3ns_22_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_3ns_22_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_5ns_24_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_5ns_24_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_5ns_24_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_5ns_24_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_7s_26_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_7s_26_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_7s_26_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_7s_26_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_6ns_25_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_6ns_25_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_6ns_25_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_6ns_25_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_5s_24_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_5s_24_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_5s_24_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_5s_24_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_4s_23_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_4s_23_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_4s_23_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_4s_23_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_6s_25_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_6s_25_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_6s_25_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_6s_25_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_2s_21_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_2s_21_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_2s_21_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_2s_21_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_19s_8s_27_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_8s_27_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_19s_8s_27_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_19s_8s_27_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_3ns_17_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_3ns_17_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_3ns_17_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_3ns_17_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_4s_19_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_4s_19_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_4s_19_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_4s_19_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_5s_20_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_5s_20_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_5s_20_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_5s_20_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_3s_18_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_3s_18_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_3s_18_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_3s_18_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_4ns_18_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_4ns_18_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_4ns_18_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_4ns_18_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_5ns_19_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_5ns_19_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_5ns_19_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_5ns_19_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_2s_17_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_2s_17_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_2s_17_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_2s_17_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_6ns_20_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_6ns_20_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_6ns_20_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_6ns_20_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_7s_22_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_7s_22_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_7s_22_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_7s_22_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_6s_21_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_6s_21_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_6s_21_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_6s_21_1_1.v:5]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_mul_15ns_7ns_21_1_1' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_7ns_21_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_mul_15ns_7ns_21_1_1' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_mul_15ns_7ns_21_1_1.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Topo2A_AD_proj_linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s' [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj_linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj_linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'Topo2A_AD_proj' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ipshared/cb0d/hdl/verilog/Topo2A_AD_proj.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'bd_0_hls_inst_0' (0#1) [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ip/bd_0_hls_inst_0/synth/bd_0_hls_inst_0.v:53]
+WARNING: [Synth 8-7129] Port ap_rst in module Topo2A_AD_proj_linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ap_rst in module Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ap_rst in module Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ap_rst in module Topo2A_AD_proj_linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ap_rst in module Topo2A_AD_proj_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ap_rst in module Topo2A_AD_proj_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ap_rst in module Topo2A_AD_proj_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[31] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[30] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[29] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[28] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[27] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[26] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[25] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[24] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[23] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[22] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[21] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[20] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[19] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_0[18] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[31] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[30] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[29] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[28] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[27] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[26] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[25] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[24] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[23] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[22] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[21] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[20] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[19] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[18] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[17] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_0[16] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[31] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[30] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[29] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[28] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[27] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[26] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[25] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[24] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[23] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[22] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[21] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[20] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[19] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[18] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[17] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_0[16] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[31] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[30] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[29] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[28] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[27] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[26] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[25] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[24] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[23] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[22] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[21] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[20] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[19] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_1[18] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[31] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[30] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[29] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[28] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[27] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[26] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[25] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[24] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[23] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[22] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[21] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[20] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[19] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[18] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[17] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_eta_1[16] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[31] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[30] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[29] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[28] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[27] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[26] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[25] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[24] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[23] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[22] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[21] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[20] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[19] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[18] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[17] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_phi_1[16] in module Topo2A_AD_proj is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_jet_pt_2[31] in module Topo2A_AD_proj is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 3131.957 ; gain = 551.738 ; free physical = 8900 ; free virtual = 24904
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 3131.957 ; gain = 551.738 ; free physical = 8900 ; free virtual = 24904
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 3131.957 ; gain = 551.738 ; free physical = 8900 ; free virtual = 24904
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.05 . Memory (MB): peak = 3131.957 ; gain = 0.000 ; free physical = 8833 ; free virtual = 24838
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ip/bd_0_hls_inst_0/constraints/Topo2A_AD_proj_ooc.xdc] for cell 'inst'
+Finished Parsing XDC File [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.gen/sources_1/bd/bd_0/ip/bd_0_hls_inst_0/constraints/Topo2A_AD_proj_ooc.xdc] for cell 'inst'
+Parsing XDC File [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.runs/bd_0_hls_inst_0_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.runs/bd_0_hls_inst_0_synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3276.363 ; gain = 0.000 ; free physical = 8803 ; free virtual = 24812
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.24 ; elapsed = 00:00:00.06 . Memory (MB): peak = 3276.363 ; gain = 0.000 ; free physical = 8802 ; free virtual = 24811
+INFO: [Designutils 20-5008] Incremental synthesis strategy off
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 3276.363 ; gain = 696.145 ; free physical = 8800 ; free virtual = 24809
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xcvu9p-flga2104-2-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 3284.367 ; gain = 704.148 ; free physical = 8800 ; free virtual = 24809
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = SOFT for inst. (constraint file  /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.runs/bd_0_hls_inst_0_synth_1/dont_touch.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 3284.367 ; gain = 704.148 ; free physical = 8800 ; free virtual = 24809
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 3284.367 ; gain = 704.148 ; free physical = 8796 ; free virtual = 24808
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	  22 Input   19 Bit       Adders := 2     
+	  17 Input   19 Bit       Adders := 4     
+	  14 Input   19 Bit       Adders := 3     
+	  28 Input   19 Bit       Adders := 1     
+	  13 Input   19 Bit       Adders := 1     
+	  11 Input   19 Bit       Adders := 2     
+	  20 Input   19 Bit       Adders := 2     
+	  29 Input   19 Bit       Adders := 2     
+	  21 Input   19 Bit       Adders := 2     
+	  18 Input   19 Bit       Adders := 2     
+	  16 Input   19 Bit       Adders := 3     
+	  31 Input   19 Bit       Adders := 2     
+	  12 Input   19 Bit       Adders := 1     
+	  25 Input   19 Bit       Adders := 2     
+	  19 Input   19 Bit       Adders := 1     
+	  23 Input   19 Bit       Adders := 1     
+	  43 Input   19 Bit       Adders := 1     
+	   2 Input   18 Bit       Adders := 59    
+	   3 Input   18 Bit       Adders := 6     
+	   4 Input   18 Bit       Adders := 1     
+	   2 Input   17 Bit       Adders := 61    
+	   2 Input   16 Bit       Adders := 76    
+	   5 Input   14 Bit       Adders := 1     
+	   7 Input   14 Bit       Adders := 1     
+	   4 Input   13 Bit       Adders := 1     
+	   2 Input   13 Bit       Adders := 1     
+	  12 Input   12 Bit       Adders := 1     
+	  10 Input   12 Bit       Adders := 2     
+	   6 Input   12 Bit       Adders := 4     
+	   5 Input   12 Bit       Adders := 5     
+	   7 Input   12 Bit       Adders := 2     
+	   4 Input   12 Bit       Adders := 2     
+	   9 Input   12 Bit       Adders := 1     
+	   3 Input   12 Bit       Adders := 1     
+	   2 Input   12 Bit       Adders := 1     
+	   6 Input   11 Bit       Adders := 1     
+	   2 Input   11 Bit       Adders := 7     
+	   4 Input   11 Bit       Adders := 4     
+	   3 Input   11 Bit       Adders := 7     
+	   7 Input   11 Bit       Adders := 1     
+	   5 Input   11 Bit       Adders := 1     
+	   3 Input   10 Bit       Adders := 9     
+	   2 Input   10 Bit       Adders := 14    
+	   8 Input   10 Bit       Adders := 1     
+	   5 Input   10 Bit       Adders := 1     
+	   4 Input   10 Bit       Adders := 4     
+	   6 Input   10 Bit       Adders := 3     
+	   2 Input    9 Bit       Adders := 29    
+	   3 Input    9 Bit       Adders := 17    
+	   4 Input    9 Bit       Adders := 2     
+	   6 Input    9 Bit       Adders := 3     
+	   7 Input    9 Bit       Adders := 1     
+	   5 Input    9 Bit       Adders := 1     
+	  12 Input    9 Bit       Adders := 1     
+	   2 Input    8 Bit       Adders := 44    
+	   4 Input    8 Bit       Adders := 3     
+	   3 Input    8 Bit       Adders := 12    
+	   2 Input    7 Bit       Adders := 42    
+	   4 Input    7 Bit       Adders := 2     
+	   3 Input    7 Bit       Adders := 2     
+	   2 Input    6 Bit       Adders := 28    
+	   3 Input    6 Bit       Adders := 1     
+	   2 Input    5 Bit       Adders := 2     
++---XORs : 
+	   2 Input      1 Bit         XORs := 49    
++---Multipliers : 
+	               8x19  Multipliers := 5     
+	               7x19  Multipliers := 18    
+	               6x19  Multipliers := 30    
+	               4x19  Multipliers := 64    
+	               5x19  Multipliers := 61    
+	               3x19  Multipliers := 36    
+	               7x16  Multipliers := 9     
+	               2x19  Multipliers := 28    
+	               6x16  Multipliers := 31    
+	               8x16  Multipliers := 1     
+	               4x16  Multipliers := 61    
+	               5x16  Multipliers := 59    
+	               3x16  Multipliers := 34    
+	               2x16  Multipliers := 30    
++---Muxes : 
+	   2 Input   15 Bit        Muxes := 96    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 6840 (col length:120)
+BRAMs: 4320 (col length: RAMB18 360 RAMB36 180)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:19 ; elapsed = 00:00:40 . Memory (MB): peak = 3312.301 ; gain = 732.082 ; free physical = 572 ; free virtual = 16308
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:23 ; elapsed = 00:00:43 . Memory (MB): peak = 3563.684 ; gain = 983.465 ; free physical = 545 ; free virtual = 16164
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:23 ; elapsed = 00:00:44 . Memory (MB): peak = 3572.684 ; gain = 992.465 ; free physical = 600 ; free virtual = 16211
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:25 ; elapsed = 00:00:48 . Memory (MB): peak = 3605.531 ; gain = 1025.312 ; free physical = 442 ; free virtual = 15241
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:28 ; elapsed = 00:00:51 . Memory (MB): peak = 3619.945 ; gain = 1039.727 ; free physical = 448 ; free virtual = 15231
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:28 ; elapsed = 00:00:51 . Memory (MB): peak = 3619.945 ; gain = 1039.727 ; free physical = 448 ; free virtual = 15231
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:29 ; elapsed = 00:00:52 . Memory (MB): peak = 3619.945 ; gain = 1039.727 ; free physical = 446 ; free virtual = 15229
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:29 ; elapsed = 00:00:52 . Memory (MB): peak = 3619.945 ; gain = 1039.727 ; free physical = 447 ; free virtual = 15230
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:29 ; elapsed = 00:00:52 . Memory (MB): peak = 3619.945 ; gain = 1039.727 ; free physical = 447 ; free virtual = 15230
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:29 ; elapsed = 00:00:52 . Memory (MB): peak = 3619.945 ; gain = 1039.727 ; free physical = 447 ; free virtual = 15230
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |CARRY8 |  3877|
+|2     |LUT1   |  2788|
+|3     |LUT2   | 11073|
+|4     |LUT3   |  8750|
+|5     |LUT4   |  9200|
+|6     |LUT5   |  2446|
+|7     |LUT6   |  2681|
++------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:29 ; elapsed = 00:00:52 . Memory (MB): peak = 3619.945 ; gain = 1039.727 ; free physical = 447 ; free virtual = 15230
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 769 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:29 ; elapsed = 00:00:53 . Memory (MB): peak = 3619.945 ; gain = 895.320 ; free physical = 10380 ; free virtual = 25163
+Synthesis Optimization Complete : Time (s): cpu = 00:00:31 ; elapsed = 00:00:54 . Memory (MB): peak = 3619.945 ; gain = 1039.727 ; free physical = 10384 ; free virtual = 25159
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.19 ; elapsed = 00:00:00.18 . Memory (MB): peak = 3619.945 ; gain = 0.000 ; free physical = 10381 ; free virtual = 25156
+INFO: [Netlist 29-17] Analyzing 3877 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3628.391 ; gain = 0.000 ; free physical = 10433 ; free virtual = 25209
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 94df5099
+INFO: [Common 17-83] Releasing license: Synthesis
+84 Infos, 100 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:39 ; elapsed = 00:01:03 . Memory (MB): peak = 3628.391 ; gain = 2095.430 ; free physical = 10433 ; free virtual = 25209
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 12897.456; main = 2771.232; forked = 10315.115
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 18409.059; main = 3628.395; forked = 14789.109
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.17 ; elapsed = 00:00:00.07 . Memory (MB): peak = 3652.402 ; gain = 0.000 ; free physical = 10424 ; free virtual = 25211
+INFO: [Common 17-1381] The checkpoint '/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.runs/bd_0_hls_inst_0_synth_1/bd_0_hls_inst_0.dcp' has been generated.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP bd_0_hls_inst_0, cache-ID = 7170430017e3838a
+INFO: [Coretcl 2-1174] Renamed 44 cell refs.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.18 ; elapsed = 00:00:00.06 . Memory (MB): peak = 3652.402 ; gain = 0.000 ; free physical = 10299 ; free virtual = 25150
+INFO: [Common 17-1381] The checkpoint '/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/verilog/project.runs/bd_0_hls_inst_0_synth_1/bd_0_hls_inst_0.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file bd_0_hls_inst_0_utilization_synth.rpt -pb bd_0_hls_inst_0_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sat Jan 25 15:12:49 2025...
