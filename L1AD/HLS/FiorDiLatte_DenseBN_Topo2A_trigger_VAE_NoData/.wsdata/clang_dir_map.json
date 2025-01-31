@@ -1,0 +1,9 @@
+{
+  "workspaceRoot": "/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE",
+  "mapping": {
+    "firmware/Topo2A_AD_proj.cpp": "hls_component",
+    "tb_data": "hls_component",
+    "Topo2A_AD_proj_test.cpp": "hls_component",
+    "firmware/weights": "hls_component"
+  }
+}

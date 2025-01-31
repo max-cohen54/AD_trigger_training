@@ -50,6 +50,7 @@ conda activate latest-hls4ml-env
 - Compile HLS model
 - Build project (without C simulation)
 ### All step 1-5 is could be done with a single python script
+Following script assume you have successfuly load Xilinx License.
 ```
 python AE_2A_synthesis_FDL.py
 ```
