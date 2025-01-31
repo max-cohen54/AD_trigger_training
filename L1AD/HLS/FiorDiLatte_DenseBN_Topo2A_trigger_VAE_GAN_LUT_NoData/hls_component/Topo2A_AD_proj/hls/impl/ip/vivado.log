@@ -1,0 +1,87 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Sat Jan 25 15:11:04 2025
+# Process ID: 1654618
+# Current directory: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip
+# Command line: vivado -notrace -mode batch -source run_ippack.tcl
+# Log file: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip/vivado.log
+# Journal file: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip/vivado.jou
+# Running On        :rdsrv413
+# Platform          :Ubuntu
+# Operating System  :Ubuntu 20.04.6 LTS
+# Processor Detail  :AMD Ryzen 9 7900X3D 12-Core Processor
+# CPU Frequency     :3000.000 MHz
+# CPU Physical cores:12
+# CPU Logical cores :24
+# Host memory       :66550 MB
+# Swap memory       :2147 MB
+# Total Virtual     :68697 MB
+# Available Virtual :29278 MB
+#-----------------------------------------------------------
+source run_ippack.tcl -notrace
+INFO: calling package_hls_ip ip_types=vitis sysgen json_file=/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/hls_data.json outdir=/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip srcdir=/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls sort_interfaces_ports=false
+INFO: Copied 1 ipmisc file(s) to /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip/misc
+INFO: Copied 30 verilog file(s) to /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip/hdl/verilog
+INFO: Copied 30 vhdl file(s) to /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip/hdl/vhdl
+INFO: Import ports from HDL: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip/hdl/vhdl/Topo2A_AD_proj.vhd (Topo2A_AD_proj)
+INFO: Add ap_ctrl interface ap_ctrl
+INFO: Add reset interface ap_rst
+INFO: Add data interface in_jet_pt_0
+INFO: Add data interface in_jet_eta_0
+INFO: Add data interface in_jet_phi_0
+INFO: Add data interface in_jet_pt_1
+INFO: Add data interface in_jet_eta_1
+INFO: Add data interface in_jet_phi_1
+INFO: Add data interface in_jet_pt_2
+INFO: Add data interface in_jet_eta_2
+INFO: Add data interface in_jet_phi_2
+INFO: Add data interface in_jet_pt_3
+INFO: Add data interface in_jet_eta_3
+INFO: Add data interface in_jet_phi_3
+INFO: Add data interface in_jet_pt_4
+INFO: Add data interface in_jet_eta_4
+INFO: Add data interface in_jet_phi_4
+INFO: Add data interface in_jet_pt_5
+INFO: Add data interface in_jet_eta_5
+INFO: Add data interface in_jet_phi_5
+INFO: Add data interface in_etau_pt_0
+INFO: Add data interface in_etau_eta_0
+INFO: Add data interface in_etau_phi_0
+INFO: Add data interface in_etau_pt_1
+INFO: Add data interface in_etau_eta_1
+INFO: Add data interface in_etau_phi_1
+INFO: Add data interface in_etau_pt_2
+INFO: Add data interface in_etau_eta_2
+INFO: Add data interface in_etau_phi_2
+INFO: Add data interface in_etau_pt_3
+INFO: Add data interface in_etau_eta_3
+INFO: Add data interface in_etau_phi_3
+INFO: Add data interface in_mu_pt_0
+INFO: Add data interface in_mu_eta_0
+INFO: Add data interface in_mu_phi_0
+INFO: Add data interface in_mu_pt_1
+INFO: Add data interface in_mu_eta_1
+INFO: Add data interface in_mu_phi_1
+INFO: Add data interface in_mu_pt_2
+INFO: Add data interface in_mu_eta_2
+INFO: Add data interface in_mu_phi_2
+INFO: Add data interface in_mu_pt_3
+INFO: Add data interface in_mu_eta_3
+INFO: Add data interface in_mu_phi_3
+INFO: Add data interface in_met_pt_0
+INFO: Add data interface in_met_phi_0
+INFO: Add data interface layer9_out_0
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/afs/slac.stanford.edu/g/reseng/vol39/xilinx/2024.1/Vivado/2024.1/data/ip'.
+INFO: Add data interface layer9_out_1
+INFO: Add data interface layer9_out_2
+INFO: Calling post_process_vitis to specialize IP
+INFO: Calling post_process_sysgen to specialize IP
+Generating sysgen info xml from json file
+INFO: Created IP /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip/component.xml
+INFO: Created IP archive /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/Topo2A_AD_proj/hls/impl/ip/xilinx_com_hls_Topo2A_AD_proj_1_0.zip
+INFO: [Common 17-206] Exiting Vivado at Sat Jan 25 15:11:15 2025...

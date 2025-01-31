@@ -1,0 +1,3 @@
+relativeroot=/u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component
+original_argv=--mode hls --impl --config /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_LUT_NoData/hls_component/hls_config.cfg --work_dir Topo2A_AD_proj 
+

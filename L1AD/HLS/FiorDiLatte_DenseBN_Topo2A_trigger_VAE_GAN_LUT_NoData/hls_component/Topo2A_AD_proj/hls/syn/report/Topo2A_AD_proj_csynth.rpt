@@ -1,0 +1,177 @@
+
+
+================================================================
+== Vitis HLS Report for 'Topo2A_AD_proj'
+================================================================
+* Date:           Sat Jan 25 15:10:47 2025
+
+* Version:        2024.1 (Build 5069499 on May 21 2024)
+* Project:        Topo2A_AD_proj
+* Solution:       hls (Vivado IP Flow Target)
+* Product family: virtexuplus
+* Target device:  xcvu9p-flga2104-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+-----------+------------+
+    |  Clock |  Target  | Estimated | Uncertainty|
+    +--------+----------+-----------+------------+
+    |ap_clk  |  25.00 ns|  19.860 ns|     6.75 ns|
+    +--------+----------+-----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |                                                                                    |                                                                   |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+        |                                      Instance                                      |                               Module                              |   min   |   max   |    min   |    max   | min | max |   Type  |
+        +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |call_ret1_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s_fu_463  |dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s  |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468      |relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s      |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret3_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s_fu_504   |dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s   |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret4_linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s_fu_540   |linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s   |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s_fu_560       |relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s      |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580   |dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s   |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |call_ret6_linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s_fu_600   |linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s   |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++---------------------+---------+------+---------+---------+-----+
+|         Name        | BRAM_18K|  DSP |    FF   |   LUT   | URAM|
++---------------------+---------+------+---------+---------+-----+
+|DSP                  |        -|     -|        -|        -|    -|
+|Expression           |        -|     -|        -|        -|    -|
+|FIFO                 |        -|     -|        -|        -|    -|
+|Instance             |        -|     0|        0|   188486|    -|
+|Memory               |        -|     -|        -|        -|    -|
+|Multiplexer          |        -|     -|        -|        -|    -|
+|Register             |        -|     -|        -|        -|    -|
++---------------------+---------+------+---------+---------+-----+
+|Total                |        0|     0|        0|   188486|    0|
++---------------------+---------+------+---------+---------+-----+
+|Available SLR        |     1440|  2280|   788160|   394080|  320|
++---------------------+---------+------+---------+---------+-----+
+|Utilization SLR (%)  |        0|     0|        0|       47|    0|
++---------------------+---------+------+---------+---------+-----+
+|Available            |     4320|  6840|  2364480|  1182240|  960|
++---------------------+---------+------+---------+---------+-----+
+|Utilization (%)      |        0|     0|        0|       15|    0|
++---------------------+---------+------+---------+---------+-----+
+
++ Detail: 
+    * Instance: 
+    +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+----+---+--------+-----+
+    |                                      Instance                                      |                               Module                              | BRAM_18K| DSP| FF|   LUT  | URAM|
+    +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+----+---+--------+-----+
+    |call_ret1_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s_fu_463  |dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s  |        0|   0|  0|  120567|    0|
+    |call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580   |dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s   |        0|   0|  0|   10688|    0|
+    |call_ret3_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s_fu_504   |dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s   |        0|   0|  0|   53295|    0|
+    |call_ret6_linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s_fu_600   |linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s   |        0|   0|  0|       0|    0|
+    |call_ret4_linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s_fu_540   |linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s   |        0|   0|  0|       0|    0|
+    |call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468      |relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s      |        0|   0|  0|    2624|    0|
+    |call_ret_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s_fu_560       |relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s      |        0|   0|  0|    1312|    0|
+    +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+----+---+--------+-----+
+    |Total                                                                               |                                                                   |        0|   0|  0|  188486|    0|
+    +------------------------------------------------------------------------------------+-------------------------------------------------------------------+---------+----+---+--------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    N/A
+
+    * Multiplexer: 
+    N/A
+
+    * Register: 
+    N/A
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++---------------+-----+-----+------------+----------------+--------------+
+|   RTL Ports   | Dir | Bits|  Protocol  |  Source Object |    C Type    |
++---------------+-----+-----+------------+----------------+--------------+
+|ap_start       |   in|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|ap_done        |  out|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|ap_idle        |  out|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|ap_ready       |  out|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|ap_rst         |   in|    1|  ap_ctrl_hs|  Topo2A_AD_proj|  return value|
+|in_jet_pt_0    |   in|   32|     ap_none|     in_jet_pt_0|        scalar|
+|in_jet_eta_0   |   in|   32|     ap_none|    in_jet_eta_0|        scalar|
+|in_jet_phi_0   |   in|   32|     ap_none|    in_jet_phi_0|        scalar|
+|in_jet_pt_1    |   in|   32|     ap_none|     in_jet_pt_1|        scalar|
+|in_jet_eta_1   |   in|   32|     ap_none|    in_jet_eta_1|        scalar|
+|in_jet_phi_1   |   in|   32|     ap_none|    in_jet_phi_1|        scalar|
+|in_jet_pt_2    |   in|   32|     ap_none|     in_jet_pt_2|        scalar|
+|in_jet_eta_2   |   in|   32|     ap_none|    in_jet_eta_2|        scalar|
+|in_jet_phi_2   |   in|   32|     ap_none|    in_jet_phi_2|        scalar|
+|in_jet_pt_3    |   in|   32|     ap_none|     in_jet_pt_3|        scalar|
+|in_jet_eta_3   |   in|   32|     ap_none|    in_jet_eta_3|        scalar|
+|in_jet_phi_3   |   in|   32|     ap_none|    in_jet_phi_3|        scalar|
+|in_jet_pt_4    |   in|   32|     ap_none|     in_jet_pt_4|        scalar|
+|in_jet_eta_4   |   in|   32|     ap_none|    in_jet_eta_4|        scalar|
+|in_jet_phi_4   |   in|   32|     ap_none|    in_jet_phi_4|        scalar|
+|in_jet_pt_5    |   in|   32|     ap_none|     in_jet_pt_5|        scalar|
+|in_jet_eta_5   |   in|   32|     ap_none|    in_jet_eta_5|        scalar|
+|in_jet_phi_5   |   in|   32|     ap_none|    in_jet_phi_5|        scalar|
+|in_etau_pt_0   |   in|   32|     ap_none|    in_etau_pt_0|        scalar|
+|in_etau_eta_0  |   in|   32|     ap_none|   in_etau_eta_0|        scalar|
+|in_etau_phi_0  |   in|   32|     ap_none|   in_etau_phi_0|        scalar|
+|in_etau_pt_1   |   in|   32|     ap_none|    in_etau_pt_1|        scalar|
+|in_etau_eta_1  |   in|   32|     ap_none|   in_etau_eta_1|        scalar|
+|in_etau_phi_1  |   in|   32|     ap_none|   in_etau_phi_1|        scalar|
+|in_etau_pt_2   |   in|   32|     ap_none|    in_etau_pt_2|        scalar|
+|in_etau_eta_2  |   in|   32|     ap_none|   in_etau_eta_2|        scalar|
+|in_etau_phi_2  |   in|   32|     ap_none|   in_etau_phi_2|        scalar|
+|in_etau_pt_3   |   in|   32|     ap_none|    in_etau_pt_3|        scalar|
+|in_etau_eta_3  |   in|   32|     ap_none|   in_etau_eta_3|        scalar|
+|in_etau_phi_3  |   in|   32|     ap_none|   in_etau_phi_3|        scalar|
+|in_mu_pt_0     |   in|   32|     ap_none|      in_mu_pt_0|        scalar|
+|in_mu_eta_0    |   in|   32|     ap_none|     in_mu_eta_0|        scalar|
+|in_mu_phi_0    |   in|   32|     ap_none|     in_mu_phi_0|        scalar|
+|in_mu_pt_1     |   in|   32|     ap_none|      in_mu_pt_1|        scalar|
+|in_mu_eta_1    |   in|   32|     ap_none|     in_mu_eta_1|        scalar|
+|in_mu_phi_1    |   in|   32|     ap_none|     in_mu_phi_1|        scalar|
+|in_mu_pt_2     |   in|   32|     ap_none|      in_mu_pt_2|        scalar|
+|in_mu_eta_2    |   in|   32|     ap_none|     in_mu_eta_2|        scalar|
+|in_mu_phi_2    |   in|   32|     ap_none|     in_mu_phi_2|        scalar|
+|in_mu_pt_3     |   in|   32|     ap_none|      in_mu_pt_3|        scalar|
+|in_mu_eta_3    |   in|   32|     ap_none|     in_mu_eta_3|        scalar|
+|in_mu_phi_3    |   in|   32|     ap_none|     in_mu_phi_3|        scalar|
+|in_met_pt_0    |   in|   32|     ap_none|     in_met_pt_0|        scalar|
+|in_met_phi_0   |   in|   32|     ap_none|    in_met_phi_0|        scalar|
+|layer9_out_0   |  out|   19|     ap_none|    layer9_out_0|       pointer|
+|layer9_out_1   |  out|   19|     ap_none|    layer9_out_1|       pointer|
+|layer9_out_2   |  out|   19|     ap_none|    layer9_out_2|       pointer|
++---------------+-----+-----+------------+----------------+--------------+
+

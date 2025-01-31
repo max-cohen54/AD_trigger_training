@@ -1,0 +1,52 @@
+<profile>
+
+<section name = "Vitis HLS Report for 'Topo2A_AD_proj'" level="0">
+<item name = "Date">Sat Jan 25 13:41:45 2025
+</item>
+<item name = "Version">2024.1 (Build 5069499 on May 21 2024)</item>
+<item name = "Project">Topo2A_AD_proj_prj</item>
+<item name = "Solution">solution1 (Vivado IP Flow Target)</item>
+<item name = "Product family">virtexuplus</item>
+<item name = "Target device">xcvu9p-flga2104-2-e</item>
+</section>
+
+<section name = "Performance Estimates" level="0">
+<item name = "Timing">
+<section name = "" level="1">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="4">Clock, Target, Estimated, Uncertainty</keys>
+<column name="ap_clk">25.00 ns, 17.294 ns, 6.75 ns</column>
+</table>
+</item>
+</section>
+</item>
+<item name = "Latency">
+<section name = "" level="1">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="8">, min, max, min, max, min, max, Type</keys>
+<column name="">0, 0, 0 ns, 0 ns, 1, 1, yes</column>
+</table>
+</item>
+<item name = "Detail">
+<section name = "" level="1">
+<item name = "Instance"><table name="" hasTotal="0">
+<keys size="9">Instance, Module, min, max, min, max, min, max, Type</keys>
+<column name="call_ret1_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s_fu_71">dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s, 0, 0, 0 ns, 0 ns, 1, 1, yes</column>
+<column name="call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_77">relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s, 0, 0, 0 ns, 0 ns, 1, 1, yes</column>
+<column name="call_ret3_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s_fu_113">dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s, 0, 0, 0 ns, 0 ns, 1, 1, yes</column>
+<column name="call_ret4_linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s_fu_149">linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s, 0, 0, 0 ns, 0 ns, 1, 1, yes</column>
+<column name="call_ret_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s_fu_169">relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s, 0, 0, 0 ns, 0 ns, 1, 1, yes</column>
+<column name="call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_189">dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s, 0, 0, 0 ns, 0 ns, 1, 1, yes</column>
+<column name="call_ret6_linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s_fu_209">linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s, 0, 0, 0 ns, 0 ns, 1, 1, yes</column>
+</table>
+</item>
+<item name = "Loop"><table name="" hasTotal="0">
+<keys size="8">Loop Name, min, max, Latency, achieved, target, Count, Pipelined</keys>
+</table>
+</item>
+</section>
+</item>
+</section>
+</item>
+</section>
+</profile>

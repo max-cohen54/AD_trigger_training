@@ -1,0 +1,24 @@
+
+
+Implementation tool: Xilinx Vivado v.2024.1
+Project:             Topo2A_AD_proj
+Solution:            hls
+Device target:       xcvu9p-flga2104-2-e
+Report date:         Sat Jan 25 15:17:38 PST 2025
+
+#=== Post-Implementation Resource usage ===
+SLICE:            0
+LUT:          23917
+FF:               0
+DSP:              0
+BRAM:             0
+URAM:             0
+LATCH:            0
+SRL:              0
+CLB:           4543
+
+#=== Final timing ===
+CP required:                     25.000
+CP achieved post-synthesis:      NA
+CP achieved post-implementation: NA
+No Sequential Path
