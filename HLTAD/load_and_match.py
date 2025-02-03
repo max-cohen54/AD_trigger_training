@@ -27,6 +27,17 @@ def has_duplicates(arr):
 # ---------------------------------------------------------------------
 def load_and_preprocess_data(file_path):
     with h5py.File(file_path, 'r') as hf:
+        # check if the file is ZeroBias or not
+        if "ZeroBias" in file_path:
+            print("\nZero Bias data file detected based on filename.")
+            ZBflag = 1
+        elif "EB" in file_path:
+            print("\nEnhanced Bias data file detected based on filename.")
+            ZBflag = 0
+        else:
+            print("\nUnable to determine data type from filename. Please check file naming convention.")
+            ZBflag = None 
+
         # Define object counts
         nmuon, nSRjet, netau = 4, 6, 4
 
@@ -41,7 +52,7 @@ def load_and_preprocess_data(file_path):
             return phi_binned
         
         # Load and reshape datasets with scaling
-        def load_and_scale(dataset, n_objects, scale_factor=10, eta_factor=40, phi_factor=128/(2*math.pi)):
+        def load_and_scale(dataset, n_objects, scale_factor=10, eta_factor=40, phi_factor=phi_res):
             data = hf[dataset][:, 0:n_objects, :]
             data[:, :, 0] *= scale_factor  # Scale the pT value
             data[:, :, 1] *= eta_factor  # Scale the angle value
@@ -54,8 +65,9 @@ def load_and_preprocess_data(file_path):
 
         # Load and process MET
         L1_MET = hf['L1_MET'][:]
-        L1_MET[:, 0] *= 40
+        L1_MET[:, 0] *= 10
         L1_MET[:, 2] = fix_phi_range(L1_MET[:, 2])
+        
         
         L1_MET_fixed = np.zeros((L1_MET.shape[0], 2))
         L1_MET_fixed[:, 0] = L1_MET[:, 0]
@@ -66,9 +78,12 @@ def load_and_preprocess_data(file_path):
         valid_events_mask = L1_mu != 0
         
         EB_weights = hf["EB_weights"][:]
-        event_number = hf["event_number"][:]
-        run_number = hf["run_number"][:]
-
+        event_numbers = hf["event_number"][:]
+        run_numbers = hf["run_number"][:]
+        if ZBflag == 0:
+            L1_LBmu = np.ones(len(hf['mu'][:]))*61
+        elif ZBflag == 1:
+            L1_LBmu = hf['averageInteractionsPerCrossing'][:]
         weighted_mu_zero_fraction = np.sum(EB_weights[L1_mu == 0]) / np.sum(EB_weights)
         print(f"Weighted fraction of events with mu=0: {weighted_mu_zero_fraction:.4f}")
 
@@ -82,10 +97,10 @@ def load_and_preprocess_data(file_path):
         pass_L1_unprescaled = pass_L1_unprescaled[valid_events_mask]
         L1_mu = L1_mu[valid_events_mask]
         EB_weights = EB_weights[valid_events_mask]
-        event_number = event_number[valid_events_mask]
-        run_number = run_number[valid_events_mask]
-
-        return Topo_2A, pass_L1_unprescaled, L1_mu, EB_weights, event_number, run_number
+        L1_LBmu = L1_LBmu[valid_events_mask]
+        event_numbers = event_numbers[valid_events_mask]
+        run_numbers = run_numbers[valid_events_mask]
+        return Topo_2A, pass_L1_unprescaled, L1_mu, EB_weights, L1_LBmu, event_numbers, run_numbers
 # ---------------------------------------------------------------------
 
 
@@ -96,31 +111,31 @@ def load_and_preprocess_normal_multiple_files(file_paths):
     all_pass_L1 = []
     all_mu = []
     all_weights = []
-    all_event_number = []
-    all_run_number = []
-
+    all_LBmu = []
+    all_event_numbers = []
+    all_run_numbers = []
     
     # Load data from each file
     for file_path in file_paths:
-        Topo_2A, pass_L1_unprescaled, L1_mu, L1_weights, L1_event_number, L1_run_number = load_and_preprocess_data(file_path)
+        Topo_2A, pass_L1_unprescaled, L1_mu, L1_weights, L1_LBmu, event_numbers, run_numbers = load_and_preprocess_data(file_path)
         if np.sum(pass_L1_unprescaled) == 0:
             print("no L1 pass events!!!")
         all_Topo_2A.append(Topo_2A)
         all_pass_L1.append(pass_L1_unprescaled)
         all_mu.append(L1_mu)
         all_weights.append(L1_weights)
-        all_event_number.append(L1_event_number)
-        all_run_number.append(L1_run_number)
+        all_LBmu.append(L1_LBmu)
+        all_event_numbers.append(event_numbers)
+        all_run_numbers.append(run_numbers)
     
-
     # Concatenate all files' data
     final_Topo_2A = np.concatenate(all_Topo_2A, axis=0)
     final_pass_L1 = np.concatenate(all_pass_L1, axis=0)
     final_mu = np.concatenate(all_mu, axis=0)
     final_weights = np.concatenate(all_weights, axis=0)
-    final_event_number = np.concatenate(all_event_number, axis=0)
-    final_run_number = np.concatenate(all_run_number, axis=0)
-
+    final_LBmu = np.concatenate(all_LBmu, axis=0)
+    final_event_numbers = np.concatenate(all_event_numbers, axis=0)
+    final_run_numbers = np.concatenate(all_run_numbers, axis=0)
     # Get total number of samples
     n_samples = final_Topo_2A.shape[0]
     
@@ -133,9 +148,9 @@ def load_and_preprocess_normal_multiple_files(file_paths):
     final_pass_L1 = final_pass_L1[shuffle_idx]
     final_mu = final_mu[shuffle_idx]
     final_weights = final_weights[shuffle_idx]
-    final_event_number = final_event_number[shuffle_idx]
-    final_run_number = final_run_number[shuffle_idx]
-
+    final_LBmu = final_LBmu[shuffle_idx]
+    final_event_numbers = final_event_numbers[shuffle_idx]
+    final_run_numbers = final_run_numbers[shuffle_idx]
 
     def fill_median(array):
         for i in range(array.shape[1]):
@@ -145,7 +160,7 @@ def load_and_preprocess_normal_multiple_files(file_paths):
     final_Topo_2A = fill_median(final_Topo_2A)
 
     print(f"total of {n_samples} event processed")
-    return final_Topo_2A, final_pass_L1, final_mu, final_weights, final_event_number, final_run_number
+    return final_Topo_2A, final_pass_L1, final_mu, final_weights, final_LBmu, final_event_numbers, final_run_numbers
 # ---------------------------------------------------------------------
 
 
@@ -177,18 +192,14 @@ def load_and_process_anomalous_data(file_name):
         L1_muons = load_and_scale('L1_muons', nmuon, scale_factor=10000)  # Specific scaling for muons
         L1_eFex_taus = load_and_scale('L1_eFex_taus', netau)
         L1_jFex_taus = load_and_scale('L1_jFex_taus', njtau)
-        try:
-            event_number = hf["event_number"][:]
-            run_number = hf["run_number"][:]
-        except:
-            event_number = np.zeros(len(L1_jFexSR_jets))
-            run_number = np.zeros(len(L1_jFexSR_jets))
 
         L1_MET = hf['L1_MET'][:]
-        L1_MET[:, 0] *= 40
+        L1_MET[:, 0] *= 10
         L1_MET[:, 2] = fix_phi_range(L1_MET[:, 2])
 
         pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
+        event_numbers = hf["event_number"][:]
+        run_numbers = hf["run_number"][:]
 
         # Reformat L1_MET
         L1_MET_fixed = np.zeros((L1_MET.shape[0], 2))
@@ -208,14 +219,15 @@ def load_and_process_anomalous_data(file_name):
 
         Topo_2A = fill_median(Topo_2A)
 
-        return Topo_2A, pass_L1_unprescaled, event_number, run_number
+        return Topo_2A, pass_L1_unprescaled, event_numbers, run_numbers
 # ---------------------------------------------------------------------
 
 
 # ---------------------------------------------------------------------
 
 def apply_power_of_2_scaling(X):
-    result = [8, 6, 5, 7, 5, 5, 6, 5, 5, 5, 4, 4, 5, 4, 3, 4, 3, 3, 7, 5, 5, 6, 5, 5, 4, 4, 4, 3, 3, 4, 5, 4, 5, 3, 3, 4, 1, 2, 2, -1, 0, 0, 8, 5]
+    result = [7, 5, 5, 7, 5, 5, 5, 4, 4, 5, 4, 3, 4, 3, 3, 3, 3, 2, 6, 5, 5, 5, 4, 5, 4, 3, 4, 3, 2, 3, 4, 4, 4, 2, 3, 3, 1, 1, 2, -2, -1, -1, 6, 5]
+
     # Apply the scaling using 2 raised to the power of the result
     X_scaled = X / (2.0 ** np.array(result))
     return X_scaled
@@ -333,20 +345,32 @@ def split_data_by_run(datasets, tag_to_split):
 def load_and_match(save_path):
     print('Initializing loading sequence...')
     print('Beginning loading of topo2A data')
-    # Load Kenny's topo2A data and keep track of (run number, event number) pairs used for training --------
     
+    # Load Kenny's topo2A data and keep track of (event number, run number) pairs used for training --------
     file_paths = [
-        '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/EB_473255_0_10-05-2024.h5',
-        '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/EB_475321_0_10-05-2024.h5',
-        '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/EB_482596_0_10-05-2024.h5'
-    ]    
+    '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/EB_473255_0_10-05-2024.h5',
+    '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/EB_475321_0_10-05-2024.h5',
+    '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/EB_482596_0_10-05-2024.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474448_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474462_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474562_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474657_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474679_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474926_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474991_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475008_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475052_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475066_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475168_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475192_01-30-2025.h5',
+]     
     
-    Topo_2A, pass_L1_unprescaled, event_mu, events_weights, event_number, run_number = load_and_preprocess_normal_multiple_files(file_paths)
+    Topo_2A, pass_L1_unprescaled, event_mu, events_weights, event_LBmu, event_numbers, run_numbers = load_and_preprocess_normal_multiple_files(file_paths)
     
-    train_event_id = event_number[0:1000000]
-    train_run_id = run_number[0:1000000]
+    train_event_numbers = event_numbers[0:3000000]
+    train_run_numbers = run_numbers[0:3000000]
 
-    topo2A_train_eventNums_runNums = np.array(list(zip(train_event_id, train_run_id))) # *important variable*
+    topo2A_train_eventNums_runNums = np.array(list(zip(train_event_numbers, train_run_numbers))) # *important variable*
     # --------------------------------------------------------------------------------------------------
 
     
