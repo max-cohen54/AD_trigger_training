@@ -1,0 +1,390 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version      : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
+| Date              : Sat Jan 25 15:17:31 2025
+| Host              : rdsrv413 running 64-bit Ubuntu 20.04.6 LTS
+| Command           : report_timing_summary -file ./report/Topo2A_AD_proj_timing_routed.rpt
+| Design            : bd_0_wrapper
+| Device            : xcvu9p-flga2104
+| Speed File        : -2  PRODUCTION 1.28 03-30-2022
+| Design State      : Routed
+| Temperature Grade : E
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Summary Report
+
+------------------------------------------------------------------------------------------------
+| Timer Settings
+| --------------
+------------------------------------------------------------------------------------------------
+
+  Enable Multi Corner Analysis               :  Yes
+  Enable Pessimism Removal                   :  Yes
+  Pessimism Removal Resolution               :  Nearest Common Node
+  Enable Input Delay Default Clock           :  No
+  Enable Preset / Clear Arcs                 :  No
+  Disable Flight Delays                      :  No
+  Ignore I/O Paths                           :  No
+  Timing Early Launch at Borrowing Latches   :  No
+  Borrow Time for Max Delay Exceptions       :  Yes
+  Merge Timing Exceptions                    :  Yes
+  Inter-SLR Compensation                     :  Conservative
+
+  Corner  Analyze    Analyze    
+  Name    Max Paths  Min Paths  
+  ------  ---------  ---------  
+  Slow    Yes        Yes        
+  Fast    Yes        Yes        
+
+
+------------------------------------------------------------------------------------------------
+| Report Methodology
+| ------------------
+------------------------------------------------------------------------------------------------
+
+No report available as report_methodology has not been run prior. Run report_methodology on the current design for the summary of methodology violations.
+
+
+
+check_timing report
+
+Table of Contents
+-----------------
+1. checking no_clock (0)
+2. checking constant_clock (0)
+3. checking pulse_width_clock (0)
+4. checking unconstrained_internal_endpoints (0)
+5. checking no_input_delay (0)
+6. checking no_output_delay (0)
+7. checking multiple_clock (0)
+8. checking generated_clocks (0)
+9. checking loops (0)
+10. checking partial_input_delay (1410)
+11. checking partial_output_delay (0)
+12. checking latch_loops (0)
+
+1. checking no_clock (0)
+------------------------
+ There are 0 register/latch pins with no clock.
+
+
+2. checking constant_clock (0)
+------------------------------
+ There are 0 register/latch pins with constant_clock.
+
+
+3. checking pulse_width_clock (0)
+---------------------------------
+ There are 0 register/latch pins which need pulse_width check
+
+
+4. checking unconstrained_internal_endpoints (0)
+------------------------------------------------
+ There are 0 pins that are not constrained for maximum delay.
+
+ There are 0 pins that are not constrained for maximum delay due to constant clock.
+
+
+5. checking no_input_delay (0)
+------------------------------
+ There are 0 input ports with no input delay specified.
+
+ There are 0 input ports with no input delay but user has a false path constraint.
+
+
+6. checking no_output_delay (0)
+-------------------------------
+ There are 0 ports with no output delay specified.
+
+ There are 0 ports with no output delay but user has a false path constraint
+
+ There are 0 ports with no output delay but with a timing clock defined on it or propagating through it
+
+
+7. checking multiple_clock (0)
+------------------------------
+ There are 0 register/latch pins with multiple clocks.
+
+
+8. checking generated_clocks (0)
+--------------------------------
+ There are 0 generated clocks that are not connected to a clock source.
+
+
+9. checking loops (0)
+---------------------
+ There are 0 combinational loops in the design.
+
+
+10. checking partial_input_delay (1410)
+---------------------------------------
+ There are 1410 input ports with partial input delay specified. (HIGH)
+
+
+11. checking partial_output_delay (0)
+-------------------------------------
+ There are 0 ports with partial output delay specified.
+
+
+12. checking latch_loops (0)
+----------------------------
+ There are 0 combinational latch loops in the design through latch input
+
+
+
+------------------------------------------------------------------------------------------------
+| Design Timing Summary
+| ---------------------
+------------------------------------------------------------------------------------------------
+
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+    -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+      6.028        0.000                      0                   59           NA           NA                     NA                   NA           NA           NA                      NA                    NA  
+
+
+All user specified timing constraints are met.
+
+
+------------------------------------------------------------------------------------------------
+| Clock Summary
+| -------------
+------------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------------
+| Intra Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+-----             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+
+
+------------------------------------------------------------------------------------------------
+| Inter Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
+
+
+------------------------------------------------------------------------------------------------
+| Other Path Groups Table
+| -----------------------
+------------------------------------------------------------------------------------------------
+
+Path Group        From Clock        To Clock              WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------        ----------        --------              -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
+**default**       input port clock                          6.028        0.000                      0                   59                                                                        
+
+
+------------------------------------------------------------------------------------------------
+| Timing Details
+| --------------
+------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------
+Path Group:  **default**
+From Clock:  input port clock
+  To Clock:  
+
+Setup :            0  Failing Endpoints,  Worst Slack        6.028ns,  Total Violation        0.000ns
+Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
+---------------------------------------------------------------------------------------------------
+
+
+Max Delay Paths
+--------------------------------------------------------------------------------------
+Slack (MET) :             6.028ns  (required time - arrival time)
+  Source:                 in_mu_pt_0[1]
+                            (input port)
+  Destination:            layer9_out_0[11]
+  Path Group:             **default**
+  Path Type:              Max at Slow Process Corner
+  Requirement:            25.000ns  (MaxDelay Path 25.000ns)
+  Data Path Delay:        18.972ns  (logic 5.223ns (27.529%)  route 13.749ns (72.471%))
+  Logic Levels:           53  (CARRY8=23 LUT1=1 LUT2=4 LUT3=6 LUT4=6 LUT5=8 LUT6=5)
+  Output Delay:           0.000ns
+  Timing Exception:       MaxDelay Path 25.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                                                      0.000     0.000 f  in_mu_pt_0[1] (IN)
+                         net (fo=89, unset)           0.000     0.000    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/in_mu_pt_0[1]
+    SLICE_X79Y20         LUT1 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.035     0.035 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/mul_19s_3ns_22_1_1_U135/icmp_ln45_34_fu_1886_p2_carry_i_476/O
+                         net (fo=1, routed)           0.011     0.046    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/mul_19s_3ns_22_1_1_U135/icmp_ln45_34_fu_1886_p2_carry_i_476_n_0
+    SLICE_X79Y20         CARRY8 (Prop_CARRY8_SLICEL_S[5]_CO[7])
+                                                      0.155     0.201 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_34_fu_1886_p2_carry_i_346/CO[7]
+                         net (fo=1, routed)           0.026     0.227    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_34_fu_1886_p2_carry_i_346_n_0
+    SLICE_X79Y21         CARRY8 (Prop_CARRY8_SLICEL_CI_O[0])
+                                                      0.056     0.283 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_34_fu_1886_p2_carry_i_337/O[0]
+                         net (fo=6, routed)           0.992     1.275    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/call_ret1_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s_fu_463/mult_225_fu_8098_p4[4]
+    SLICE_X75Y106        LUT2 (Prop_E6LUT_SLICEL_I1_O)
+                                                      0.099     1.374 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_605/O
+                         net (fo=1, routed)           0.007     1.381    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_605_n_0
+    SLICE_X75Y106        CARRY8 (Prop_CARRY8_SLICEL_S[4]_O[5])
+                                                      0.091     1.472 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_552/O[5]
+                         net (fo=2, routed)           0.397     1.869    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/call_ret1_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s_fu_463/sext_ln57_269_fu_15472_p1[5]
+    SLICE_X75Y109        CARRY8 (Prop_CARRY8_SLICEL_DI[5]_O[6])
+                                                      0.096     1.965 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_478/O[6]
+                         net (fo=2, routed)           0.450     2.415    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/call_ret1_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s_fu_463/sext_ln57_270_fu_15482_p1[6]
+    SLICE_X66Y123        LUT3 (Prop_G5LUT_SLICEM_I1_O)
+                                                      0.112     2.527 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_397/O
+                         net (fo=2, routed)           0.243     2.770    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_397_n_0
+    SLICE_X66Y123        LUT4 (Prop_H6LUT_SLICEM_I3_O)
+                                                      0.152     2.922 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_404/O
+                         net (fo=1, routed)           0.015     2.937    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_404_n_0
+    SLICE_X66Y123        CARRY8 (Prop_CARRY8_SLICEM_S[7]_CO[7])
+                                                      0.117     3.054 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_220/CO[7]
+                         net (fo=1, routed)           0.026     3.080    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_220_n_0
+    SLICE_X66Y124        CARRY8 (Prop_CARRY8_SLICEM_CI_O[1])
+                                                      0.076     3.156 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_216/O[1]
+                         net (fo=2, routed)           0.247     3.403    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_216_n_14
+    SLICE_X65Y124        LUT3 (Prop_B5LUT_SLICEL_I0_O)
+                                                      0.073     3.476 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_140/O
+                         net (fo=2, routed)           0.371     3.847    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_140_n_0
+    SLICE_X65Y124        CARRY8 (Prop_CARRY8_SLICEL_DI[2]_O[3])
+                                                      0.088     3.935 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_55/O[3]
+                         net (fo=3, routed)           0.665     4.600    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_55_n_12
+    SLICE_X61Y108        LUT3 (Prop_G6LUT_SLICEL_I1_O)
+                                                      0.123     4.723 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_58/O
+                         net (fo=2, routed)           0.048     4.771    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_58_n_0
+    SLICE_X61Y108        LUT5 (Prop_F5LUT_SLICEL_I1_O)
+                                                      0.118     4.889 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_22/O
+                         net (fo=2, routed)           0.339     5.228    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_22_n_0
+    SLICE_X60Y108        LUT6 (Prop_E6LUT_SLICEM_I0_O)
+                                                      0.037     5.265 r  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_30/O
+                         net (fo=1, routed)           0.014     5.279    bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_30_n_0
+    SLICE_X60Y108        CARRY8 (Prop_CARRY8_SLICEM_S[4]_O[6])
+                                                      0.129     5.408 f  bd_0_i/hls_inst/inst/call_ret2_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s_fu_468/icmp_ln45_fu_290_p2_carry_i_17/O[6]
+                         net (fo=3, routed)           0.298     5.706    bd_0_i/hls_inst/inst/call_ret1_dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s_fu_463_ap_return_0[14]
+    SLICE_X59Y109        LUT4 (Prop_G6LUT_SLICEM_I0_O)
+                                                      0.150     5.856 f  bd_0_i/hls_inst/inst/icmp_ln45_5_fu_582_p2_carry_i_358/O
+                         net (fo=1, routed)           0.047     5.903    bd_0_i/hls_inst/inst/icmp_ln45_5_fu_582_p2_carry_i_358_n_0
+    SLICE_X59Y109        LUT5 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.101     6.004 f  bd_0_i/hls_inst/inst/icmp_ln45_5_fu_582_p2_carry_i_229/O
+                         net (fo=86, routed)          1.373     7.376    bd_0_i/hls_inst/inst/select_ln46_47_fu_344_p3
+    SLICE_X35Y141        LUT2 (Prop_F6LUT_SLICEM_I1_O)
+                                                      0.148     7.524 r  bd_0_i/hls_inst/inst/icmp_ln45_5_fu_582_p2_carry_i_176/O
+                         net (fo=58, routed)          0.510     8.034    bd_0_i/hls_inst/inst/mul_15ns_4s_19_1_1_U288/icmp_ln45_10_fu_1002_p2_carry_i_1064_n_0
+    SLICE_X37Y115        LUT3 (Prop_A6LUT_SLICEL_I1_O)
+                                                      0.098     8.132 r  bd_0_i/hls_inst/inst/icmp_ln45_7_fu_750_p2_carry_i_749/O
+                         net (fo=1, routed)           0.009     8.141    bd_0_i/hls_inst/inst/icmp_ln45_7_fu_750_p2_carry_i_749_n_0
+    SLICE_X37Y115        CARRY8 (Prop_CARRY8_SLICEL_S[0]_O[1])
+                                                      0.094     8.235 r  bd_0_i/hls_inst/inst/mul_15ns_4ns_18_1_1_U291/icmp_ln45_7_fu_750_p2_carry_i_664/O[1]
+                         net (fo=2, routed)           0.345     8.580    bd_0_i/hls_inst/inst/mul_15ns_4ns_18_1_1_U291/icmp_ln45_7_fu_750_p2_carry_i_664_n_14
+    SLICE_X38Y114        CARRY8 (Prop_CARRY8_SLICEM_S[7]_CO[7])
+                                                      0.117     8.697 r  bd_0_i/hls_inst/inst/mul_15ns_4ns_18_1_1_U291/icmp_ln45_7_fu_750_p2_carry_i_663/CO[7]
+                         net (fo=1, routed)           0.026     8.723    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_507_0[0]
+    SLICE_X38Y115        CARRY8 (Prop_CARRY8_SLICEM_CI_O[2])
+                                                      0.067     8.790 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/mul_15ns_4ns_18_1_1_U291/icmp_ln45_7_fu_750_p2_carry_i_512/O[2]
+                         net (fo=4, routed)           0.924     9.715    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/call_ret3_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s_fu_504/mul_ln73_4_fu_1340_p2[12]
+    SLICE_X43Y147        LUT6 (Prop_G6LUT_SLICEM_I1_O)
+                                                      0.123     9.838 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_628/O
+                         net (fo=2, routed)           0.093     9.931    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_628_n_0
+    SLICE_X43Y147        LUT5 (Prop_C5LUT_SLICEM_I0_O)
+                                                      0.099    10.030 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_626/O
+                         net (fo=2, routed)           0.130    10.160    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_626_n_0
+    SLICE_X43Y147        LUT5 (Prop_D5LUT_SLICEM_I0_O)
+                                                      0.110    10.270 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_619/O
+                         net (fo=2, routed)           0.221    10.491    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_619_n_0
+    SLICE_X43Y147        LUT5 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152    10.643 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_498/O
+                         net (fo=2, routed)           0.191    10.834    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/call_ret3_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s_fu_504/sext_ln111_98_fu_8640_p1__0[4]
+    SLICE_X43Y153        LUT3 (Prop_E5LUT_SLICEM_I1_O)
+                                                      0.102    10.936 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_284/O
+                         net (fo=2, routed)           0.243    11.178    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_284_n_0
+    SLICE_X43Y153        LUT3 (Prop_F6LUT_SLICEM_I0_O)
+                                                      0.037    11.215 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_291/O
+                         net (fo=1, routed)           0.022    11.237    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_291_n_0
+    SLICE_X43Y153        CARRY8 (Prop_CARRY8_SLICEM_S[5]_O[5])
+                                                      0.058    11.295 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_142/O[5]
+                         net (fo=2, routed)           0.211    11.507    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_142_n_10
+    SLICE_X42Y153        LUT6 (Prop_H6LUT_SLICEM_I3_O)
+                                                      0.053    11.560 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_140/O
+                         net (fo=2, routed)           0.155    11.715    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_140_n_0
+    SLICE_X39Y153        LUT4 (Prop_G5LUT_SLICEL_I0_O)
+                                                      0.135    11.850 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_69/O
+                         net (fo=2, routed)           0.206    12.056    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_69_n_0
+    SLICE_X39Y153        LUT4 (Prop_H6LUT_SLICEL_I0_O)
+                                                      0.090    12.146 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_76/O
+                         net (fo=1, routed)           0.010    12.156    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_76_n_0
+    SLICE_X39Y153        CARRY8 (Prop_CARRY8_SLICEL_S[7]_CO[7])
+                                                      0.115    12.271 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_29/CO[7]
+                         net (fo=1, routed)           0.026    12.297    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_29_n_0
+    SLICE_X39Y154        CARRY8 (Prop_CARRY8_SLICEL_CI_O[0])
+                                                      0.056    12.353 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_42/O[0]
+                         net (fo=3, routed)           0.717    13.070    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/call_ret3_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s_fu_504/sext_ln111_100_fu_8672_p1[8]
+    SLICE_X35Y175        LUT5 (Prop_G6LUT_SLICEM_I4_O)
+                                                      0.123    13.193 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_17/O
+                         net (fo=1, routed)           0.191    13.384    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_17_n_0
+    SLICE_X35Y175        CARRY8 (Prop_CARRY8_SLICEM_DI[1]_O[2])
+                                                      0.099    13.483 f  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_14/O[2]
+                         net (fo=46, routed)          0.459    13.942    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/call_ret3_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s_fu_504_ap_return_7[10]
+    SLICE_X34Y189        LUT2 (Prop_F6LUT_SLICEL_I0_O)
+                                                      0.049    13.991 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/icmp_ln45_7_fu_750_p2_carry_i_8/O
+                         net (fo=1, routed)           0.011    14.002    bd_0_i/hls_inst/inst/call_ret_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s_fu_560/layer9_out_0[8]_INST_0_i_551_0[5]
+    SLICE_X34Y189        CARRY8 (Prop_CARRY8_SLICEL_S[5]_CO[6])
+                                                      0.109    14.111 r  bd_0_i/hls_inst/inst/call_ret_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s_fu_560/icmp_ln45_7_fu_750_p2_carry/CO[6]
+                         net (fo=77, routed)          0.496    14.607    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/layer9_out_2[8]_INST_0_i_254_0[0]
+    SLICE_X30Y194        LUT6 (Prop_F6LUT_SLICEM_I0_O)
+                                                      0.037    14.644 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6s_21_1_1_U566/layer9_out_1[8]_INST_0_i_470/O
+                         net (fo=16, routed)          0.215    14.859    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6ns_20_1_1_U565/call_ret_relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s_fu_560_ap_return_7[5]
+    SLICE_X33Y194        LUT2 (Prop_C5LUT_SLICEM_I0_O)
+                                                      0.068    14.927 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_6ns_20_1_1_U565/layer9_out_1[8]_INST_0_i_262/O
+                         net (fo=3, routed)           0.430    15.356    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/DI[4]
+    SLICE_X29Y193        CARRY8 (Prop_CARRY8_SLICEL_DI[5]_CO[7])
+                                                      0.083    15.439 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_752/CO[7]
+                         net (fo=1, routed)           0.026    15.465    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_752_n_0
+    SLICE_X29Y194        CARRY8 (Prop_CARRY8_SLICEL_CI_O[0])
+                                                      0.056    15.521 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_739/O[0]
+                         net (fo=4, routed)           0.228    15.749    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_739_n_15
+    SLICE_X30Y193        LUT4 (Prop_G5LUT_SLICEM_I3_O)
+                                                      0.099    15.848 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_546/O
+                         net (fo=2, routed)           0.239    16.087    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_546_n_0
+    SLICE_X30Y193        LUT5 (Prop_H6LUT_SLICEM_I0_O)
+                                                      0.152    16.239 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_553/O
+                         net (fo=1, routed)           0.015    16.254    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_553_n_0
+    SLICE_X30Y193        CARRY8 (Prop_CARRY8_SLICEM_S[7]_CO[7])
+                                                      0.117    16.371 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_343/CO[7]
+                         net (fo=1, routed)           0.026    16.397    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_343_n_0
+    SLICE_X30Y194        CARRY8 (Prop_CARRY8_SLICEM_CI_O[0])
+                                                      0.056    16.453 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U564/layer9_out_0[8]_INST_0_i_341/O[0]
+                         net (fo=5, routed)           0.307    16.760    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_2s_17_1_1_U573/layer9_out_0[8]_INST_0_i_80_0[4]
+    SLICE_X28Y195        LUT5 (Prop_B5LUT_SLICEL_I4_O)
+                                                      0.165    16.925 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_2s_17_1_1_U573/layer9_out_0[8]_INST_0_i_148/O
+                         net (fo=1, routed)           0.374    17.299    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_2s_17_1_1_U573/layer9_out_0[8]_INST_0_i_148_n_0
+    SLICE_X28Y194        CARRY8 (Prop_CARRY8_SLICEL_DI[0]_O[1])
+                                                      0.078    17.377 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_2s_17_1_1_U573/layer9_out_0[8]_INST_0_i_80/O[1]
+                         net (fo=3, routed)           0.465    17.842    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580_n_687
+    SLICE_X35Y200        LUT6 (Prop_B6LUT_SLICEM_I4_O)
+                                                      0.149    17.991 r  bd_0_i/hls_inst/inst/layer9_out_0[8]_INST_0_i_23/O
+                         net (fo=1, routed)           0.016    18.007    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5ns_19_1_1_U570/layer9_out_0[8]_INST_0_i_2_0[0]
+    SLICE_X35Y200        CARRY8 (Prop_CARRY8_SLICEM_S[1]_O[2])
+                                                      0.117    18.124 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5ns_19_1_1_U570/layer9_out_0[8]_INST_0_i_9/O[2]
+                         net (fo=2, routed)           0.603    18.727    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5ns_19_1_1_U570/layer9_out_0[8]_INST_0_i_9_n_13
+    SLICE_X44Y198        LUT4 (Prop_C6LUT_SLICEL_I3_O)
+                                                      0.123    18.850 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5ns_19_1_1_U570/layer9_out_0[8]_INST_0_i_5/O
+                         net (fo=1, routed)           0.010    18.860    bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U549/layer9_out_0[18]_0[2]
+    SLICE_X44Y198        CARRY8 (Prop_CARRY8_SLICEL_S[2]_O[3])
+                                                      0.081    18.941 r  bd_0_i/hls_inst/inst/call_ret5_dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s_fu_580/mul_15ns_5s_20_1_1_U549/layer9_out_0[8]_INST_0/O[3]
+                         net (fo=0)                   0.031    18.972    layer9_out_0[11]
+                                                                      r  layer9_out_0[11] (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         max delay                   25.000    25.000    
+                         clock pessimism              0.000    25.000    
+                         output delay                -0.000    25.000    
+  -------------------------------------------------------------------
+                         required time                         25.000    
+                         arrival time                         -18.972    
+  -------------------------------------------------------------------
+                         slack                                  6.028    
+
+
+
+
+

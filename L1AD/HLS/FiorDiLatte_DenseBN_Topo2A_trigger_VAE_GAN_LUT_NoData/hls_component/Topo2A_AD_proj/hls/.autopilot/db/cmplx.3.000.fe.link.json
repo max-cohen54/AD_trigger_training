@@ -1,0 +1,263 @@
+{
+  "0": {
+    "basicblocks": 1,
+    "calls": "1 7 4 5 8 13 15",
+    "file": "Topo2A_AD_proj.cpp",
+    "fileloc": 8,
+    "instructions": 1259,
+    "loads": {
+      "L": 88
+    },
+    "name": "Topo2A_AD_proj",
+    "stores": {
+      "L": 88
+    },
+    "total_instructions": 14645
+  },
+  "1": {
+    "basicblocks": 1,
+    "calls": "6",
+    "file": "nnet_dense.h",
+    "fileloc": 36,
+    "instructions": 2,
+    "name": "dense<ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, config2>",
+    "total_instructions": 606
+  },
+  "10": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "b2.h",
+    "fileloc": 12,
+    "instructions": 33,
+    "name": "__cxx_global_var_init.2",
+    "total_instructions": 12385
+  },
+  "11": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_mult.h",
+    "fileloc": 70,
+    "instructions": 4,
+    "name": "product",
+    "total_instructions": 141
+  },
+  "12": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "w2.h",
+    "fileloc": 12,
+    "instructions": 1409,
+    "name": "__cxx_global_var_init.1",
+    "total_instructions": 544897
+  },
+  "13": {
+    "basicblocks": 1,
+    "calls": "20",
+    "file": "nnet_dense.h",
+    "fileloc": 36,
+    "instructions": 2,
+    "name": "dense<ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, ap_fixed<12, 4, AP_TRN, AP_WRAP, 0>, config8>",
+    "total_instructions": 651
+  },
+  "14": {
+    "basicblocks": 1,
+    "calls": "12 10 21 19 17 9",
+    "file": "Topo2A_AD_proj.pp.0.cpp",
+    "fileloc": 0,
+    "instructions": 7,
+    "name": "",
+    "total_instructions": 781366
+  },
+  "15": {
+    "basicblocks": 7,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 28,
+    "instructions": 23,
+    "loads": {
+      "L": 1
+    },
+    "name": "linear<ap_fixed<12, 4, AP_TRN, AP_WRAP, 0>, ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, linear_config9>",
+    "stores": {
+      "L": 1
+    },
+    "total_instructions": 68
+  },
+  "16": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_mult.h",
+    "fileloc": 110,
+    "instructions": 3,
+    "loads": {
+      "L": 1
+    },
+    "name": "cast<ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, config2>",
+    "stores": {
+      "L": 1
+    },
+    "total_instructions": 3
+  },
+  "17": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "w8.h",
+    "fileloc": 12,
+    "instructions": 49,
+    "name": "__cxx_global_var_init.5",
+    "total_instructions": 18577
+  },
+  "18": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_mult.h",
+    "fileloc": 110,
+    "instructions": 3,
+    "name": "cast<ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, ap_fixed<12, 4, AP_TRN, AP_WRAP, 0>, config8>",
+    "total_instructions": 48
+  },
+  "19": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "b5.h",
+    "fileloc": 12,
+    "instructions": 17,
+    "name": "__cxx_global_var_init.4",
+    "total_instructions": 6193
+  },
+  "2": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_mult.h",
+    "fileloc": 110,
+    "instructions": 3,
+    "name": "cast<ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, ap_fixed<14, 6, AP_TRN, AP_WRAP, 0>, config5>",
+    "total_instructions": 48
+  },
+  "20": {
+    "basicblocks": 37,
+    "calls": "11 18",
+    "file": "nnet_dense_latency.h",
+    "fileloc": 13,
+    "instructions": 138,
+    "loads": {
+      "L": 6
+    },
+    "name": "dense_latency<ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, ap_fixed<12, 4, AP_TRN, AP_WRAP, 0>, config8>",
+    "stores": {
+      "L": 6
+    },
+    "total_instructions": 649
+  },
+  "21": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "w5.h",
+    "fileloc": 12,
+    "instructions": 513,
+    "name": "__cxx_global_var_init.3",
+    "total_instructions": 198145
+  },
+  "22": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "nnet_mult.h",
+    "fileloc": 70,
+    "instructions": 4,
+    "name": "product",
+    "total_instructions": 141
+  },
+  "3": {
+    "basicblocks": 37,
+    "calls": "11 2",
+    "file": "nnet_dense_latency.h",
+    "fileloc": 13,
+    "instructions": 138,
+    "loads": {
+      "L": 6
+    },
+    "name": "dense_latency<ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, ap_fixed<14, 6, AP_TRN, AP_WRAP, 0>, config5>",
+    "stores": {
+      "L": 6
+    },
+    "total_instructions": 649
+  },
+  "4": {
+    "basicblocks": 1,
+    "calls": "3",
+    "file": "nnet_dense.h",
+    "fileloc": 36,
+    "instructions": 2,
+    "name": "dense<ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, ap_fixed<14, 6, AP_TRN, AP_WRAP, 0>, config5>",
+    "total_instructions": 651
+  },
+  "5": {
+    "basicblocks": 7,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 28,
+    "instructions": 23,
+    "loads": {
+      "L": 1
+    },
+    "name": "linear<ap_fixed<14, 6, AP_TRN, AP_WRAP, 0>, ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, linear_config6>",
+    "stores": {
+      "L": 1
+    },
+    "total_instructions": 68
+  },
+  "6": {
+    "basicblocks": 37,
+    "calls": "22 16",
+    "file": "nnet_dense_latency.h",
+    "fileloc": 13,
+    "instructions": 138,
+    "loads": {
+      "L": 6
+    },
+    "name": "dense_latency<ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, config2>",
+    "stores": {
+      "L": 6
+    },
+    "total_instructions": 604
+  },
+  "7": {
+    "basicblocks": 10,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 39,
+    "instructions": 45,
+    "loads": {
+      "L": 3
+    },
+    "name": "relu<ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, relu_config4>",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 765
+  },
+  "8": {
+    "basicblocks": 10,
+    "calls": "",
+    "file": "nnet_activation.h",
+    "fileloc": 39,
+    "instructions": 45,
+    "loads": {
+      "L": 3
+    },
+    "name": "relu<ap_fixed<19, 11, AP_TRN, AP_WRAP, 0>, ap_ufixed<15, 0, AP_RND_CONV, AP_SAT, 0>, relu_config7>",
+    "stores": {
+      "L": 3
+    },
+    "total_instructions": 765
+  },
+  "9": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "b8.h",
+    "fileloc": 12,
+    "instructions": 4,
+    "name": "__cxx_global_var_init.6",
+    "total_instructions": 1162
+  }
+}

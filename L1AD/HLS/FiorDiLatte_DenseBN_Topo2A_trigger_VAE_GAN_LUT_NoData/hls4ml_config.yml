@@ -1,0 +1,90 @@
+Backend: Vitis
+ClockPeriod: 25
+ClockUncertainty: 27%
+HLSConfig:
+  LayerName:
+    dense1:
+      Precision:
+        accum: ap_fixed<19,11>
+        bias: ap_fixed<10,6>
+        result: ap_fixed<19,11>
+        weight: ap_fixed<10,6>
+      ReuseFactor: 1
+      Strategy: Latency
+      Trace: true
+    dense1_linear:
+      Precision:
+        result: ap_fixed<19,11>
+        table: fixed<18,8>
+      ReuseFactor: 1
+      Strategy: Latency
+      TableSize: 1024
+      Trace: true
+    dense2:
+      Precision:
+        accum: ap_fixed<19,11>
+        bias: ap_fixed<10,6>
+        result: ap_fixed<14,6>
+        weight: ap_fixed<10,6>
+      ReuseFactor: 1
+      Strategy: Latency
+      Trace: true
+    dense2_linear:
+      Precision:
+        result: ap_fixed<19,11>
+        table: fixed<18,8>
+      ReuseFactor: 1
+      Strategy: Latency
+      TableSize: 1024
+      Trace: true
+    inputs:
+      Precision:
+        result: ap_fixed<19,11>
+      Strategy: Latency
+      Trace: true
+    relu1:
+      Precision:
+        result: ufixed<15,0,RND_CONV,SAT>
+        table: fixed<18,8>
+      ReuseFactor: 1
+      Strategy: Latency
+      TableSize: 1024
+      Trace: true
+    relu2:
+      Precision:
+        result: ufixed<15,0,RND_CONV,SAT>
+        table: fixed<18,8>
+      ReuseFactor: 1
+      Strategy: Latency
+      TableSize: 1024
+      Trace: true
+    z_mean:
+      Precision:
+        accum: ap_fixed<19,11>
+        bias: ap_fixed<10,6>
+        result: ap_fixed<12,4>
+        weight: ap_fixed<10,6>
+      ReuseFactor: 1
+      Strategy: Latency
+      Trace: true
+    z_mean_linear:
+      Precision:
+        result: ap_fixed<19,11>
+        table: fixed<18,8>
+      ReuseFactor: 1
+      Strategy: Latency
+      TableSize: 1024
+      Trace: true
+  Model:
+    BramFactor: 1000000000
+    Precision: ap_fixed<19,11>
+    ReuseFactor: 1
+    Strategy: Latency
+    TraceOutput: false
+IOType: io_parallel
+KerasModel: !keras_model 'FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/keras_model.h5'
+OutputDir: FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData
+Part: xcvu9p-flga2104-2-e
+ProjectName: Topo2A_AD_proj
+Stamp: 4Bf1658d
+Version: 1.0.0

@@ -1,0 +1,304 @@
+==============================================================
+Vitis HLS - High-Level Synthesis from C, C++ and OpenCL v2024.1 (64-bit)
+Tool Version Limit: 2024.05
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+==============================================================
+INFO: [HLS 200-1505] Using default flow_target 'vivado'
+INFO: [HLS 200-1510] Running: config_array_partition -maximum_size 4096 
+ERROR: [HLS 200-101] config_array_partition: Unknown option '-maximum_size'.
+ERROR: [HLS 200-101] config_array_partition: Unknown option '4096'.
+INFO: [HLS 200-1510] Running: config_compile -name_max_length 80 
+INFO: [XFORM 203-1161] The maximum of name length is set to 80.
+INFO: [HLS 200-1510] Running: set_part xcvu9p-flga2104-2-e 
+INFO: [HLS 200-1611] Setting target device to 'xcvu9p-flga2104-2-e'
+INFO: [XFORM 203-1161] The maximum of name length is set to 80.
+INFO: [HLS 200-1510] Running: config_schedule -enable_dsp_full_reg=false 
+INFO: [HLS 200-1510] Running: create_clock -period 25 -name default 
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 25ns.
+INFO: [HLS 200-1510] Running: set_clock_uncertainty 27% default 
+INFO: [SYN 201-201] Setting up clock 'default' with an uncertainty of 6.75ns.
+INFO: [HLS 200-1510] Running: csynth_design 
+INFO: [HLS 200-111] Finished File checks and directory preparation: CPU user time: 0.03 seconds. CPU system time: 0 seconds. Elapsed time: 0.04 seconds; current allocated memory: 335.504 MB.
+INFO: [HLS 200-10] Analyzing design file 'firmware/Topo2A_AD_proj.cpp' ... 
+WARNING: [HLS 207-5292] unused parameter 'keep' (firmware/nnet_utils/nnet_helpers.h:285:99)
+WARNING: [HLS 207-5292] unused parameter 'data' (firmware/nnet_utils/nnet_code_gen.h:11:36)
+WARNING: [HLS 207-5292] unused parameter 'buffer' (firmware/nnet_utils/nnet_code_gen.h:12:36)
+WARNING: [HLS 207-5292] unused parameter 'partition' (firmware/nnet_utils/nnet_code_gen.h:13:44)
+WARNING: [HLS 207-5292] unused parameter 'data' (firmware/nnet_utils/nnet_code_gen.h:21:24)
+WARNING: [HLS 207-5292] unused parameter 'buffer' (firmware/nnet_utils/nnet_code_gen.h:22:24)
+WARNING: [HLS 207-5292] unused parameter 'partition' (firmware/nnet_utils/nnet_code_gen.h:23:32)
+INFO: [HLS 200-111] Finished Source Code Analysis and Preprocessing: CPU user time: 3.48 seconds. CPU system time: 0.81 seconds. Elapsed time: 4.28 seconds; current allocated memory: 340.375 MB.
+INFO: [HLS 200-777] Using interface defaults for 'Vivado' flow target.
+INFO: [HLS 200-1995] There were 3,631 instructions in the design after the 'Compile/Link' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+WARNING: [HLS 200-1995] There were 116,418 instructions in the design after the 'Unroll/Inline (step 1)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 34,240 instructions in the design after the 'Unroll/Inline (step 2)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 33,667 instructions in the design after the 'Unroll/Inline (step 3)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 33,403 instructions in the design after the 'Unroll/Inline (step 4)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 21,266 instructions in the design after the 'Array/Struct (step 1)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 12,797 instructions in the design after the 'Array/Struct (step 2)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 12,797 instructions in the design after the 'Array/Struct (step 3)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 11,121 instructions in the design after the 'Array/Struct (step 4)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 10,989 instructions in the design after the 'Array/Struct (step 5)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 10,989 instructions in the design after the 'Performance (step 1)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 10,989 instructions in the design after the 'Performance (step 2)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 10,989 instructions in the design after the 'Performance (step 3)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 10,989 instructions in the design after the 'Performance (step 4)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 10,993 instructions in the design after the 'HW Transforms (step 1)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 11,002 instructions in the design after the 'HW Transforms (step 2)' phase of compilation. See the Design Size Report for more details: /u1/hjia625/conifer/FiorDiLatte_DenseBN_Topo2A_trigger_VAE_GAN_quan_NoData/Topo2A_AD_proj_prj/solution1/syn/report/csynth_design_size.rpt
+INFO: [HLS 214-131] Inlining function 'nnet::product::mult<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<10, 6, (ap_q_mode)5, (ap_o_mode)3, 0> >::product(ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<10, 6, (ap_q_mode)5, (ap_o_mode)3, 0>)' into 'void nnet::dense_latency<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>(ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*, config2::weight_t*, config2::bias_t*)' (firmware/nnet_utils/nnet_dense_latency.h:42:27)
+INFO: [HLS 214-131] Inlining function 'nnet::product::mult<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<10, 6, (ap_q_mode)5, (ap_o_mode)3, 0> >::product(ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<10, 6, (ap_q_mode)5, (ap_o_mode)3, 0>)' into 'void nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>(ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>*, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>*, config5::weight_t*, config5::bias_t*)' (firmware/nnet_utils/nnet_dense_latency.h:42:27)
+INFO: [HLS 214-131] Inlining function 'nnet::product::mult<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<10, 6, (ap_q_mode)5, (ap_o_mode)3, 0> >::product(ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<10, 6, (ap_q_mode)5, (ap_o_mode)3, 0>)' into 'void nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>(ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>*, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>*, config8::weight_t*, config8::bias_t*)' (firmware/nnet_utils/nnet_dense_latency.h:42:27)
+INFO: [HLS 214-131] Inlining function 'void nnet::dense<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>(ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*, config2::weight_t*, config2::bias_t*)' into 'Topo2A_AD_proj(ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*)' (firmware/Topo2A_AD_proj.cpp:39:2)
+INFO: [HLS 214-131] Inlining function 'void nnet::dense<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>(ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>*, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>*, config5::weight_t*, config5::bias_t*)' into 'Topo2A_AD_proj(ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*)' (firmware/Topo2A_AD_proj.cpp:47:2)
+INFO: [HLS 214-131] Inlining function 'void nnet::dense<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>(ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>*, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>*, config8::weight_t*, config8::bias_t*)' into 'Topo2A_AD_proj(ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*)' (firmware/Topo2A_AD_proj.cpp:59:2)
+INFO: [HLS 214-291] Loop 'VITIS_LOOP_31_1' is marked as complete unroll implied by the pipeline pragma (firmware/nnet_utils/nnet_activation.h:31:19)
+INFO: [HLS 214-291] Loop 'Result' is marked as complete unroll implied by the pipeline pragma (firmware/nnet_utils/nnet_dense_latency.h:64:5)
+INFO: [HLS 214-291] Loop 'Accum1' is marked as complete unroll implied by the pipeline pragma (firmware/nnet_utils/nnet_dense_latency.h:54:5)
+INFO: [HLS 214-291] Loop 'Accum2' is marked as complete unroll implied by the pipeline pragma (firmware/nnet_utils/nnet_dense_latency.h:56:9)
+INFO: [HLS 214-291] Loop 'ResetAccum' is marked as complete unroll implied by the pipeline pragma (firmware/nnet_utils/nnet_dense_latency.h:48:5)
+INFO: [HLS 214-291] Loop 'Product1' is marked as complete unroll implied by the pipeline pragma (firmware/nnet_utils/nnet_dense_latency.h:37:5)
+INFO: [HLS 214-291] Loop 'Product2' is marked as complete unroll implied by the pipeline pragma (firmware/nnet_utils/nnet_dense_latency.h:40:9)
+INFO: [HLS 214-291] Loop 'VITIS_LOOP_43_1' is marked as complete unroll implied by the pipeline pragma (firmware/nnet_utils/nnet_activation.h:43:22)
+INFO: [HLS 214-186] Unrolling loop 'VITIS_LOOP_31_1' (firmware/nnet_utils/nnet_activation.h:31:19) in function 'nnet::linear<ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, linear_config9>' completely with a factor of 3 (firmware/nnet_utils/nnet_activation.h:28:0)
+INFO: [HLS 214-186] Unrolling loop 'Result' (firmware/nnet_utils/nnet_dense_latency.h:64:5) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>' completely with a factor of 3 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Accum1' (firmware/nnet_utils/nnet_dense_latency.h:54:5) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>' completely with a factor of 16 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Accum2' (firmware/nnet_utils/nnet_dense_latency.h:56:9) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>' completely with a factor of 3 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'ResetAccum' (firmware/nnet_utils/nnet_dense_latency.h:48:5) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>' completely with a factor of 3 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Product1' (firmware/nnet_utils/nnet_dense_latency.h:37:5) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>' completely with a factor of 16 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Product2' (firmware/nnet_utils/nnet_dense_latency.h:40:9) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>' completely with a factor of 3 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'VITIS_LOOP_43_1' (firmware/nnet_utils/nnet_activation.h:43:22) in function 'nnet::relu<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, relu_config7>' completely with a factor of 16 (firmware/nnet_utils/nnet_activation.h:39:0)
+INFO: [HLS 214-186] Unrolling loop 'VITIS_LOOP_31_1' (firmware/nnet_utils/nnet_activation.h:31:19) in function 'nnet::linear<ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, linear_config6>' completely with a factor of 16 (firmware/nnet_utils/nnet_activation.h:28:0)
+INFO: [HLS 214-186] Unrolling loop 'Result' (firmware/nnet_utils/nnet_dense_latency.h:64:5) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>' completely with a factor of 16 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Accum1' (firmware/nnet_utils/nnet_dense_latency.h:54:5) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>' completely with a factor of 32 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Accum2' (firmware/nnet_utils/nnet_dense_latency.h:56:9) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>' completely with a factor of 16 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'ResetAccum' (firmware/nnet_utils/nnet_dense_latency.h:48:5) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>' completely with a factor of 16 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Product1' (firmware/nnet_utils/nnet_dense_latency.h:37:5) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>' completely with a factor of 32 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Product2' (firmware/nnet_utils/nnet_dense_latency.h:40:9) in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>' completely with a factor of 16 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'VITIS_LOOP_43_1' (firmware/nnet_utils/nnet_activation.h:43:22) in function 'nnet::relu<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, relu_config4>' completely with a factor of 32 (firmware/nnet_utils/nnet_activation.h:39:0)
+INFO: [HLS 214-186] Unrolling loop 'Result' (firmware/nnet_utils/nnet_dense_latency.h:64:5) in function 'nnet::dense_latency<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>' completely with a factor of 32 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Accum1' (firmware/nnet_utils/nnet_dense_latency.h:54:5) in function 'nnet::dense_latency<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>' completely with a factor of 44 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Accum2' (firmware/nnet_utils/nnet_dense_latency.h:56:9) in function 'nnet::dense_latency<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>' completely with a factor of 32 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'ResetAccum' (firmware/nnet_utils/nnet_dense_latency.h:48:5) in function 'nnet::dense_latency<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>' completely with a factor of 32 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Product1' (firmware/nnet_utils/nnet_dense_latency.h:37:5) in function 'nnet::dense_latency<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>' completely with a factor of 44 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-186] Unrolling loop 'Product2' (firmware/nnet_utils/nnet_dense_latency.h:40:9) in function 'nnet::dense_latency<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>' completely with a factor of 32 (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-178] Inlining function 'std::enable_if<!(std::is_same<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_uint<1> >::value), ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0> >::type nnet::cast<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>(config2::accum_t)' into 'void nnet::dense_latency<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>(ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>*, config2::weight_t*, config2::bias_t*)' (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-178] Inlining function 'std::enable_if<!(std::is_same<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_uint<1> >::value), ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0> >::type nnet::cast<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>(config5::accum_t)' into 'void nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>(ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>*, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>*, config5::weight_t*, config5::bias_t*)' (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-178] Inlining function 'std::enable_if<!(std::is_same<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_uint<1> >::value), ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0> >::type nnet::cast<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>(config8::accum_t)' into 'void nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>(ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>*, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>*, config8::weight_t*, config8::bias_t*)' (firmware/nnet_utils/nnet_dense_latency.h:15:0)
+INFO: [HLS 214-248] Applying array_partition to 'b8': Complete partitioning on dimension 1. (firmware/weights/b8.h:12:0)
+INFO: [HLS 214-248] Applying array_partition to 'b5': Complete partitioning on dimension 1. (firmware/weights/b5.h:12:0)
+INFO: [HLS 214-248] Applying array_partition to 'b2': Complete partitioning on dimension 1. (firmware/weights/b2.h:12:0)
+INFO: [HLS 214-248] Applying array_partition to 'mult': Complete partitioning on dimension 1. (firmware/nnet_utils/nnet_dense_latency.h:17:32)
+INFO: [HLS 214-248] Applying array_partition to 'layer2_out': Complete partitioning on dimension 1. (firmware/Topo2A_AD_proj.cpp:37:11)
+INFO: [HLS 214-248] Applying array_partition to 'layer4_out': Complete partitioning on dimension 1. (firmware/Topo2A_AD_proj.cpp:41:14)
+INFO: [HLS 214-248] Applying array_partition to 'layer5_out': Complete partitioning on dimension 1. (firmware/Topo2A_AD_proj.cpp:45:14)
+INFO: [HLS 214-248] Applying array_partition to 'layer6_out': Complete partitioning on dimension 1. (firmware/Topo2A_AD_proj.cpp:49:14)
+INFO: [HLS 214-248] Applying array_partition to 'layer7_out': Complete partitioning on dimension 1. (firmware/Topo2A_AD_proj.cpp:53:14)
+INFO: [HLS 214-248] Applying array_partition to 'layer8_out': Complete partitioning on dimension 1. (firmware/Topo2A_AD_proj.cpp:57:14)
+INFO: [HLS 214-248] Applying array_partition to 'layer9_out': Complete partitioning on dimension 1. (firmware/Topo2A_AD_proj.cpp:9:0)
+INFO: [HLS 214-248] Applying array_reshape to 'inputs': Complete reshaping on dimension 1. (firmware/Topo2A_AD_proj.cpp:9:0)
+INFO: [HLS 200-111] Finished Compiling Optimization and Transform: CPU user time: 13.66 seconds. CPU system time: 0.68 seconds. Elapsed time: 17.02 seconds; current allocated memory: 352.340 MB.
+INFO: [HLS 200-111] Finished Checking Pragmas: CPU user time: 0 seconds. CPU system time: 0 seconds. Elapsed time: 0 seconds; current allocated memory: 352.340 MB.
+INFO: [HLS 200-10] Starting code transformations ...
+INFO: [HLS 200-111] Finished Standard Transforms: CPU user time: 0.1 seconds. CPU system time: 0 seconds. Elapsed time: 0.11 seconds; current allocated memory: 359.328 MB.
+INFO: [HLS 200-10] Checking synthesizability ...
+INFO: [HLS 200-111] Finished Checking Synthesizability: CPU user time: 0.1 seconds. CPU system time: 0 seconds. Elapsed time: 0.1 seconds; current allocated memory: 362.648 MB.
+INFO: [XFORM 203-401] Performing if-conversion on hyperblock from (firmware/nnet_utils/nnet_activation.h:42:9) to (firmware/nnet_utils/nnet_activation.h:50:1) in function 'nnet::relu<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, relu_config7>'... converting 33 basic blocks.
+INFO: [XFORM 203-401] Performing if-conversion on hyperblock from (firmware/nnet_utils/nnet_activation.h:42:9) to (firmware/nnet_utils/nnet_activation.h:50:1) in function 'nnet::relu<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, relu_config4>'... converting 65 basic blocks.
+INFO: [XFORM 203-11] Balancing expressions in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<14, 6, (ap_q_mode)5, (ap_o_mode)3, 0>, config5>' (firmware/nnet_utils/nnet_mult.h:33:11)...454 expression(s) balanced.
+INFO: [XFORM 203-11] Balancing expressions in function 'nnet::dense_latency<ap_ufixed<15, 0, (ap_q_mode)4, (ap_o_mode)0, 0>, ap_fixed<12, 4, (ap_q_mode)5, (ap_o_mode)3, 0>, config8>' (firmware/nnet_utils/nnet_dense_latency.h:33:1)...47 expression(s) balanced.
+INFO: [XFORM 203-11] Balancing expressions in function 'nnet::dense_latency<ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, ap_fixed<19, 11, (ap_q_mode)5, (ap_o_mode)3, 0>, config2>' (firmware/nnet_utils/nnet_dense_latency.h:33:27)...839 expression(s) balanced.
+INFO: [HLS 200-111] Finished Loop, function and other optimizations: CPU user time: 0.3 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.3 seconds; current allocated memory: 395.375 MB.
+INFO: [HLS 200-111] Finished Architecture Synthesis: CPU user time: 0.37 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.39 seconds; current allocated memory: 474.379 MB.
+INFO: [HLS 200-10] Starting hardware synthesis ...
+INFO: [HLS 200-10] Synthesizing 'Topo2A_AD_proj' ...
+WARNING: [SYN 201-103] Legalizing function name 'dense_latency<ap_fixed<19, 11, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, config2>' to 'dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s'.
+WARNING: [SYN 201-103] Legalizing function name 'relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config4>' to 'relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s'.
+WARNING: [SYN 201-103] Legalizing function name 'dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<14, 6, 5, 3, 0>, config5>' to 'dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s'.
+WARNING: [SYN 201-103] Legalizing function name 'linear<ap_fixed<14, 6, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, linear_config6>' to 'linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s'.
+WARNING: [SYN 201-103] Legalizing function name 'relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config7>' to 'relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s'.
+WARNING: [SYN 201-103] Legalizing function name 'dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<12, 4, 5, 3, 0>, config8>' to 'dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s'.
+WARNING: [SYN 201-103] Legalizing function name 'linear<ap_fixed<12, 4, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, linear_config9>' to 'linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s'.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining function 'dense_latency<ap_fixed<19, 11, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, config2>'.
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 1, function 'dense_latency<ap_fixed<19, 11, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, config2>'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.68 seconds. CPU system time: 0.02 seconds. Elapsed time: 0.71 seconds; current allocated memory: 495.309 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Starting global binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.42 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.43 seconds; current allocated memory: 497.395 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining function 'relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config4>'.
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 1, function 'relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config4>'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.15 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.17 seconds; current allocated memory: 497.480 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.03 seconds. CPU system time: 0 seconds. Elapsed time: 0.02 seconds; current allocated memory: 497.914 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining function 'dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<14, 6, 5, 3, 0>, config5>'.
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 1, function 'dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<14, 6, 5, 3, 0>, config5>'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.47 seconds. CPU system time: 0 seconds. Elapsed time: 0.47 seconds; current allocated memory: 513.910 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Starting global binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.25 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.26 seconds; current allocated memory: 513.910 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining function 'linear<ap_fixed<14, 6, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, linear_config6>'.
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 1, function 'linear<ap_fixed<14, 6, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, linear_config6>'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.07 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.08 seconds; current allocated memory: 513.910 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.01 seconds. CPU system time: 0 seconds. Elapsed time: 0.02 seconds; current allocated memory: 513.910 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining function 'relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config7>'.
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 1, function 'relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config7>'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.04 seconds. CPU system time: 0 seconds. Elapsed time: 0.04 seconds; current allocated memory: 513.910 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.01 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.02 seconds; current allocated memory: 514.254 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining function 'dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<12, 4, 5, 3, 0>, config8>'.
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 1, function 'dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<12, 4, 5, 3, 0>, config8>'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.08 seconds. CPU system time: 0 seconds. Elapsed time: 0.08 seconds; current allocated memory: 516.121 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Starting global binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.03 seconds. CPU system time: 0 seconds. Elapsed time: 0.02 seconds; current allocated memory: 516.441 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining function 'linear<ap_fixed<12, 4, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, linear_config9>'.
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 1, function 'linear<ap_fixed<12, 4, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, linear_config9>'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.01 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.02 seconds; current allocated memory: 516.699 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0 seconds. CPU system time: 0 seconds. Elapsed time: 0.01 seconds; current allocated memory: 516.762 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'Topo2A_AD_proj' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining function 'Topo2A_AD_proj'.
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 1, function 'Topo2A_AD_proj'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.04 seconds. CPU system time: 0 seconds. Elapsed time: 0.04 seconds; current allocated memory: 517.555 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.01 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.02 seconds; current allocated memory: 517.883 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Generating core module 'mul_19s_5ns_23_1_1': 6 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_19s_5s_23_1_1': 3 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_19s_6ns_23_1_1': 3 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_19s_6s_23_1_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_19s_7s_23_1_1': 5 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_19s_8s_23_1_1': 4 instance(s).
+INFO: [RTGEN 206-100] Finished creating RTL model for 'dense_latency_ap_fixed_19_11_5_3_0_ap_fixed_19_11_5_3_0_config2_s'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.16 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.17 seconds; current allocated memory: 538.035 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Finished creating RTL model for 'relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config4_s'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.4 seconds. CPU system time: 0.04 seconds. Elapsed time: 0.48 seconds; current allocated memory: 595.836 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_5ns_19_1_1': 2 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_5s_20_1_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_6ns_20_1_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_6s_21_1_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_7ns_21_1_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_7s_22_1_1': 2 instance(s).
+INFO: [RTGEN 206-100] Finished creating RTL model for 'dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_14_6_5_3_0_config5_s'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.16 seconds. CPU system time: 0.03 seconds. Elapsed time: 0.18 seconds; current allocated memory: 616.281 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Finished creating RTL model for 'linear_ap_fixed_14_6_5_3_0_ap_fixed_19_11_5_3_0_linear_config6_s'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.3 seconds. CPU system time: 0.04 seconds. Elapsed time: 0.38 seconds; current allocated memory: 652.949 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Finished creating RTL model for 'relu_ap_fixed_19_11_5_3_0_ap_ufixed_15_0_4_0_0_relu_config7_s'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.04 seconds. CPU system time: 0 seconds. Elapsed time: 0.04 seconds; current allocated memory: 656.703 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_5ns_19_1_1': 3 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_5s_20_1_1': 6 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_6ns_20_1_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_15ns_6s_21_1_1': 2 instance(s).
+INFO: [RTGEN 206-100] Finished creating RTL model for 'dense_latency_ap_ufixed_15_0_4_0_0_ap_fixed_12_4_5_3_0_config8_s'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.06 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.07 seconds; current allocated memory: 659.789 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Finished creating RTL model for 'linear_ap_fixed_12_4_5_3_0_ap_fixed_19_11_5_3_0_linear_config9_s'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.06 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.07 seconds; current allocated memory: 666.414 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'Topo2A_AD_proj' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-500] Setting interface mode on port 'Topo2A_AD_proj/inputs' to 'ap_vld'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'Topo2A_AD_proj/layer9_out_0' to 'ap_vld'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'Topo2A_AD_proj/layer9_out_1' to 'ap_vld'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'Topo2A_AD_proj/layer9_out_2' to 'ap_vld'.
+INFO: [RTGEN 206-500] Setting interface mode on function 'Topo2A_AD_proj' to 'ap_ctrl_hs'.
+INFO: [RTGEN 206-100] Finished creating RTL model for 'Topo2A_AD_proj'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.05 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.05 seconds; current allocated memory: 671.801 MB.
+INFO: [HLS 200-111] Finished Generating all RTL models: CPU user time: 0.18 seconds. CPU system time: 0.02 seconds. Elapsed time: 0.19 seconds; current allocated memory: 677.293 MB.
+INFO: [HLS 200-111] Finished Updating report files: CPU user time: 0.42 seconds. CPU system time: 0.03 seconds. Elapsed time: 0.44 seconds; current allocated memory: 702.703 MB.
+INFO: [VHDL 208-304] Generating VHDL RTL for Topo2A_AD_proj.
+INFO: [VLOG 209-307] Generating Verilog RTL for Topo2A_AD_proj.
+INFO: [HLS 200-789] **** Estimated Fmax: 57.82 MHz
+INFO: [HLS 200-2161] Finished Command csynth_design Elapsed time: 00:00:26; Allocated memory: 367.199 MB.

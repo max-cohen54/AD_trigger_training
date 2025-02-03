@@ -1,0 +1,254 @@
+
+
+================================================================
+== Vitis HLS Report for 'Topo2A_AD_proj'
+================================================================
+* Date:           Sat Jan 25 13:41:45 2025
+
+* Version:        2024.1 (Build 5069499 on May 21 2024)
+* Project:        Topo2A_AD_proj_prj
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: virtexuplus
+* Target device:  xcvu9p-flga2104-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+-----------+------------+
+    |  Clock |  Target  | Estimated | Uncertainty|
+    +--------+----------+-----------+------------+
+    |ap_clk  |  25.00 ns|  17.294 ns|     6.75 ns|
+    +--------+----------+-----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        N/A
+
+============================================================
++ Verbose Summary: Synthesis Manager
+============================================================
+InlineROM: 1
+ExposeGlobal: 0
+============================================================
++ Verbose Summary: CDFG Model
+============================================================
+IsTopModel: 1
+ResetActiveHigh: 1
+IsCombinational: 0
+IsDatapathOnly: 0
+HasWiredReturn: 1
+HasMFsm: 2
+HasVarLatency: 0
+IsPipeline: 1
+IsRtlPipelined: 0
+IsInstanceOverlapped: 0
+IsDontTouch: 0
+HasImplIP: 0
+IsGatedGlobalClock: 0
+
++ Individual pipeline summary: 
+  * Pipeline-0: initiation interval (II) = 1, depth = 1
+
+
+============================================================
++ Verbose Summary: Schedule
+============================================================
+* Number of FSM states : 1
+* Pipeline : 1
+  Pipeline-0 : II = 1, D = 1, States = { 1 }
+* Dataflow Pipeline: 0
+
+* FSM state transitions: 
+1 --> 
+
+* FSM state operations: 
+
+State 1 <SV = 0> <Delay = 17.2>
+ST_1 : Operation 2 [1/1] (0.00ns)   --->   "%specpipeline_ln0 = specpipeline void @_ssdm_op_SpecPipeline, i32 4294967295, i32 0, i32 0, i32 0, void @empty_0"   --->   Operation 2 'specpipeline' 'specpipeline_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 3 [1/1] (0.00ns)   --->   "%spectopmodule_ln0 = spectopmodule void @_ssdm_op_SpecTopModule, void @empty_2"   --->   Operation 3 'spectopmodule' 'spectopmodule_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 4 [1/1] (0.00ns)   --->   "%specbitsmap_ln0 = specbitsmap void @_ssdm_op_SpecBitsMap, i836 %inputs"   --->   Operation 4 'specbitsmap' 'specbitsmap_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 5 [1/1] (0.00ns)   --->   "%specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i836 %inputs, void @empty, i32 4294967295, i32 4294967295, void @empty_0, i32 0, i32 0, void @empty_0, void @empty_0, void @empty_0, i32 0, i32 0, i32 0, i32 0, void @empty_0, void @empty_0, i32 4294967295, i32 0, i32 0"   --->   Operation 5 'specinterface' 'specinterface_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 6 [1/1] (0.00ns)   --->   "%specbitsmap_ln0 = specbitsmap void @_ssdm_op_SpecBitsMap, i19 %layer9_out_0"   --->   Operation 6 'specbitsmap' 'specbitsmap_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 7 [1/1] (0.00ns)   --->   "%specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i19 %layer9_out_0, void @empty, i32 4294967295, i32 4294967295, void @empty_0, i32 0, i32 0, void @empty_0, void @empty_0, void @empty_0, i32 0, i32 0, i32 0, i32 0, void @empty_0, void @empty_0, i32 4294967295, i32 0, i32 0"   --->   Operation 7 'specinterface' 'specinterface_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 8 [1/1] (0.00ns)   --->   "%specbitsmap_ln0 = specbitsmap void @_ssdm_op_SpecBitsMap, i19 %layer9_out_1"   --->   Operation 8 'specbitsmap' 'specbitsmap_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 9 [1/1] (0.00ns)   --->   "%specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i19 %layer9_out_1, void @empty, i32 4294967295, i32 4294967295, void @empty_0, i32 0, i32 0, void @empty_0, void @empty_0, void @empty_0, i32 0, i32 0, i32 0, i32 0, void @empty_0, void @empty_0, i32 4294967295, i32 0, i32 0"   --->   Operation 9 'specinterface' 'specinterface_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 10 [1/1] (0.00ns)   --->   "%specbitsmap_ln0 = specbitsmap void @_ssdm_op_SpecBitsMap, i19 %layer9_out_2"   --->   Operation 10 'specbitsmap' 'specbitsmap_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 11 [1/1] (0.00ns)   --->   "%specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i19 %layer9_out_2, void @empty, i32 4294967295, i32 4294967295, void @empty_0, i32 0, i32 0, void @empty_0, void @empty_0, void @empty_0, i32 0, i32 0, i32 0, i32 0, void @empty_0, void @empty_0, i32 4294967295, i32 0, i32 0"   --->   Operation 11 'specinterface' 'specinterface_ln0' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 12 [1/1] (0.00ns)   --->   "%inputs_read = read i836 @_ssdm_op_Read.ap_vld.i836P0A, i836 %inputs"   --->   Operation 12 'read' 'inputs_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 13 [1/1] (5.19ns)   --->   "%call_ret1 = call i608 @dense_latency<ap_fixed<19, 11, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, config2>, i836 %inputs_read" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 13 'call' 'call_ret1' <Predicate = true> <Delay = 5.19> <CoreType = "Generic">   --->   Core 0 '' <Latency = 0> <II = 1> <Delay = 1.00> <Generic> <Opcode : >
+ST_1 : Operation 14 [1/1] (0.00ns)   --->   "%layer2_out = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 14 'extractvalue' 'layer2_out' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 15 [1/1] (0.00ns)   --->   "%layer2_out_1 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 15 'extractvalue' 'layer2_out_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 16 [1/1] (0.00ns)   --->   "%layer2_out_2 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 16 'extractvalue' 'layer2_out_2' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 17 [1/1] (0.00ns)   --->   "%layer2_out_3 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 17 'extractvalue' 'layer2_out_3' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 18 [1/1] (0.00ns)   --->   "%layer2_out_4 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 18 'extractvalue' 'layer2_out_4' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 19 [1/1] (0.00ns)   --->   "%layer2_out_5 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 19 'extractvalue' 'layer2_out_5' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 20 [1/1] (0.00ns)   --->   "%layer2_out_6 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 20 'extractvalue' 'layer2_out_6' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 21 [1/1] (0.00ns)   --->   "%layer2_out_7 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 21 'extractvalue' 'layer2_out_7' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 22 [1/1] (0.00ns)   --->   "%layer2_out_8 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 22 'extractvalue' 'layer2_out_8' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 23 [1/1] (0.00ns)   --->   "%layer2_out_9 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 23 'extractvalue' 'layer2_out_9' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 24 [1/1] (0.00ns)   --->   "%layer2_out_10 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 24 'extractvalue' 'layer2_out_10' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 25 [1/1] (0.00ns)   --->   "%layer2_out_11 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 25 'extractvalue' 'layer2_out_11' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 26 [1/1] (0.00ns)   --->   "%layer2_out_12 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 26 'extractvalue' 'layer2_out_12' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 27 [1/1] (0.00ns)   --->   "%layer2_out_13 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 27 'extractvalue' 'layer2_out_13' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 28 [1/1] (0.00ns)   --->   "%layer2_out_14 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 28 'extractvalue' 'layer2_out_14' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 29 [1/1] (0.00ns)   --->   "%layer2_out_15 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 29 'extractvalue' 'layer2_out_15' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 30 [1/1] (0.00ns)   --->   "%layer2_out_16 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 30 'extractvalue' 'layer2_out_16' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 31 [1/1] (0.00ns)   --->   "%layer2_out_17 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 31 'extractvalue' 'layer2_out_17' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 32 [1/1] (0.00ns)   --->   "%layer2_out_18 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 32 'extractvalue' 'layer2_out_18' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 33 [1/1] (0.00ns)   --->   "%layer2_out_19 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 33 'extractvalue' 'layer2_out_19' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 34 [1/1] (0.00ns)   --->   "%layer2_out_20 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 34 'extractvalue' 'layer2_out_20' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 35 [1/1] (0.00ns)   --->   "%layer2_out_21 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 35 'extractvalue' 'layer2_out_21' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 36 [1/1] (0.00ns)   --->   "%layer2_out_22 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 36 'extractvalue' 'layer2_out_22' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 37 [1/1] (0.00ns)   --->   "%layer2_out_23 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 37 'extractvalue' 'layer2_out_23' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 38 [1/1] (0.00ns)   --->   "%layer2_out_24 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 38 'extractvalue' 'layer2_out_24' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 39 [1/1] (0.00ns)   --->   "%layer2_out_25 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 39 'extractvalue' 'layer2_out_25' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 40 [1/1] (0.00ns)   --->   "%layer2_out_26 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 40 'extractvalue' 'layer2_out_26' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 41 [1/1] (0.00ns)   --->   "%layer2_out_27 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 41 'extractvalue' 'layer2_out_27' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 42 [1/1] (0.00ns)   --->   "%layer2_out_28 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 42 'extractvalue' 'layer2_out_28' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 43 [1/1] (0.00ns)   --->   "%layer2_out_29 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 43 'extractvalue' 'layer2_out_29' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 44 [1/1] (0.00ns)   --->   "%layer2_out_30 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 44 'extractvalue' 'layer2_out_30' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 45 [1/1] (0.00ns)   --->   "%layer2_out_31 = extractvalue i608 %call_ret1" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39]   --->   Operation 45 'extractvalue' 'layer2_out_31' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 46 [1/1] (1.14ns)   --->   "%call_ret2 = call i480 @relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config4>, i19 %layer2_out, i19 %layer2_out_1, i19 %layer2_out_2, i19 %layer2_out_3, i19 %layer2_out_4, i19 %layer2_out_5, i19 %layer2_out_6, i19 %layer2_out_7, i19 %layer2_out_8, i19 %layer2_out_9, i19 %layer2_out_10, i19 %layer2_out_11, i19 %layer2_out_12, i19 %layer2_out_13, i19 %layer2_out_14, i19 %layer2_out_15, i19 %layer2_out_16, i19 %layer2_out_17, i19 %layer2_out_18, i19 %layer2_out_19, i19 %layer2_out_20, i19 %layer2_out_21, i19 %layer2_out_22, i19 %layer2_out_23, i19 %layer2_out_24, i19 %layer2_out_25, i19 %layer2_out_26, i19 %layer2_out_27, i19 %layer2_out_28, i19 %layer2_out_29, i19 %layer2_out_30, i19 %layer2_out_31" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 46 'call' 'call_ret2' <Predicate = true> <Delay = 1.14> <CoreType = "Generic">   --->   Core 0 '' <Latency = 0> <II = 1> <Delay = 1.00> <Generic> <Opcode : >
+ST_1 : Operation 47 [1/1] (0.00ns)   --->   "%layer4_out = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 47 'extractvalue' 'layer4_out' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 48 [1/1] (0.00ns)   --->   "%layer4_out_1 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 48 'extractvalue' 'layer4_out_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 49 [1/1] (0.00ns)   --->   "%layer4_out_2 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 49 'extractvalue' 'layer4_out_2' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 50 [1/1] (0.00ns)   --->   "%layer4_out_3 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 50 'extractvalue' 'layer4_out_3' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 51 [1/1] (0.00ns)   --->   "%layer4_out_4 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 51 'extractvalue' 'layer4_out_4' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 52 [1/1] (0.00ns)   --->   "%layer4_out_5 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 52 'extractvalue' 'layer4_out_5' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 53 [1/1] (0.00ns)   --->   "%layer4_out_6 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 53 'extractvalue' 'layer4_out_6' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 54 [1/1] (0.00ns)   --->   "%layer4_out_7 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 54 'extractvalue' 'layer4_out_7' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 55 [1/1] (0.00ns)   --->   "%layer4_out_8 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 55 'extractvalue' 'layer4_out_8' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 56 [1/1] (0.00ns)   --->   "%layer4_out_9 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 56 'extractvalue' 'layer4_out_9' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 57 [1/1] (0.00ns)   --->   "%layer4_out_10 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 57 'extractvalue' 'layer4_out_10' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 58 [1/1] (0.00ns)   --->   "%layer4_out_11 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 58 'extractvalue' 'layer4_out_11' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 59 [1/1] (0.00ns)   --->   "%layer4_out_12 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 59 'extractvalue' 'layer4_out_12' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 60 [1/1] (0.00ns)   --->   "%layer4_out_13 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 60 'extractvalue' 'layer4_out_13' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 61 [1/1] (0.00ns)   --->   "%layer4_out_14 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 61 'extractvalue' 'layer4_out_14' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 62 [1/1] (0.00ns)   --->   "%layer4_out_15 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 62 'extractvalue' 'layer4_out_15' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 63 [1/1] (0.00ns)   --->   "%layer4_out_16 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 63 'extractvalue' 'layer4_out_16' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 64 [1/1] (0.00ns)   --->   "%layer4_out_17 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 64 'extractvalue' 'layer4_out_17' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 65 [1/1] (0.00ns)   --->   "%layer4_out_18 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 65 'extractvalue' 'layer4_out_18' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 66 [1/1] (0.00ns)   --->   "%layer4_out_19 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 66 'extractvalue' 'layer4_out_19' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 67 [1/1] (0.00ns)   --->   "%layer4_out_20 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 67 'extractvalue' 'layer4_out_20' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 68 [1/1] (0.00ns)   --->   "%layer4_out_21 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 68 'extractvalue' 'layer4_out_21' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 69 [1/1] (0.00ns)   --->   "%layer4_out_22 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 69 'extractvalue' 'layer4_out_22' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 70 [1/1] (0.00ns)   --->   "%layer4_out_23 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 70 'extractvalue' 'layer4_out_23' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 71 [1/1] (0.00ns)   --->   "%layer4_out_24 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 71 'extractvalue' 'layer4_out_24' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 72 [1/1] (0.00ns)   --->   "%layer4_out_25 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 72 'extractvalue' 'layer4_out_25' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 73 [1/1] (0.00ns)   --->   "%layer4_out_26 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 73 'extractvalue' 'layer4_out_26' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 74 [1/1] (0.00ns)   --->   "%layer4_out_27 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 74 'extractvalue' 'layer4_out_27' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 75 [1/1] (0.00ns)   --->   "%layer4_out_28 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 75 'extractvalue' 'layer4_out_28' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 76 [1/1] (0.00ns)   --->   "%layer4_out_29 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 76 'extractvalue' 'layer4_out_29' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 77 [1/1] (0.00ns)   --->   "%layer4_out_30 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 77 'extractvalue' 'layer4_out_30' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 78 [1/1] (0.00ns)   --->   "%layer4_out_31 = extractvalue i480 %call_ret2" [firmware/Topo2A_AD_proj.cpp:43]   --->   Operation 78 'extractvalue' 'layer4_out_31' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 79 [1/1] (4.94ns)   --->   "%call_ret3 = call i224 @dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<14, 6, 5, 3, 0>, config5>, i15 %layer4_out, i15 %layer4_out_1, i15 %layer4_out_2, i15 %layer4_out_3, i15 %layer4_out_4, i15 %layer4_out_5, i15 %layer4_out_6, i15 %layer4_out_7, i15 %layer4_out_8, i15 %layer4_out_9, i15 %layer4_out_10, i15 %layer4_out_11, i15 %layer4_out_12, i15 %layer4_out_13, i15 %layer4_out_14, i15 %layer4_out_15, i15 %layer4_out_16, i15 %layer4_out_17, i15 %layer4_out_18, i15 %layer4_out_19, i15 %layer4_out_20, i15 %layer4_out_21, i15 %layer4_out_22, i15 %layer4_out_23, i15 %layer4_out_24, i15 %layer4_out_25, i15 %layer4_out_26, i15 %layer4_out_27, i15 %layer4_out_28, i15 %layer4_out_29, i15 %layer4_out_30, i15 %layer4_out_31" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 79 'call' 'call_ret3' <Predicate = true> <Delay = 4.94> <CoreType = "Generic">   --->   Core 0 '' <Latency = 0> <II = 1> <Delay = 1.00> <Generic> <Opcode : >
+ST_1 : Operation 80 [1/1] (0.00ns)   --->   "%layer5_out = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 80 'extractvalue' 'layer5_out' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 81 [1/1] (0.00ns)   --->   "%layer5_out_1 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 81 'extractvalue' 'layer5_out_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 82 [1/1] (0.00ns)   --->   "%layer5_out_2 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 82 'extractvalue' 'layer5_out_2' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 83 [1/1] (0.00ns)   --->   "%layer5_out_3 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 83 'extractvalue' 'layer5_out_3' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 84 [1/1] (0.00ns)   --->   "%layer5_out_4 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 84 'extractvalue' 'layer5_out_4' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 85 [1/1] (0.00ns)   --->   "%layer5_out_5 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 85 'extractvalue' 'layer5_out_5' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 86 [1/1] (0.00ns)   --->   "%layer5_out_6 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 86 'extractvalue' 'layer5_out_6' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 87 [1/1] (0.00ns)   --->   "%layer5_out_7 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 87 'extractvalue' 'layer5_out_7' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 88 [1/1] (0.00ns)   --->   "%layer5_out_8 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 88 'extractvalue' 'layer5_out_8' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 89 [1/1] (0.00ns)   --->   "%layer5_out_9 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 89 'extractvalue' 'layer5_out_9' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 90 [1/1] (0.00ns)   --->   "%layer5_out_10 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 90 'extractvalue' 'layer5_out_10' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 91 [1/1] (0.00ns)   --->   "%layer5_out_11 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 91 'extractvalue' 'layer5_out_11' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 92 [1/1] (0.00ns)   --->   "%layer5_out_12 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 92 'extractvalue' 'layer5_out_12' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 93 [1/1] (0.00ns)   --->   "%layer5_out_13 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 93 'extractvalue' 'layer5_out_13' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 94 [1/1] (0.00ns)   --->   "%layer5_out_14 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 94 'extractvalue' 'layer5_out_14' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 95 [1/1] (0.00ns)   --->   "%layer5_out_15 = extractvalue i224 %call_ret3" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47]   --->   Operation 95 'extractvalue' 'layer5_out_15' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 96 [1/1] (0.00ns)   --->   "%call_ret4 = call i304 @linear<ap_fixed<14, 6, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, linear_config6>, i14 %layer5_out, i14 %layer5_out_1, i14 %layer5_out_2, i14 %layer5_out_3, i14 %layer5_out_4, i14 %layer5_out_5, i14 %layer5_out_6, i14 %layer5_out_7, i14 %layer5_out_8, i14 %layer5_out_9, i14 %layer5_out_10, i14 %layer5_out_11, i14 %layer5_out_12, i14 %layer5_out_13, i14 %layer5_out_14, i14 %layer5_out_15" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 96 'call' 'call_ret4' <Predicate = true> <Delay = 0.00> <CoreType = "Generic">   --->   Core 0 '' <Latency = 0> <II = 1> <Delay = 1.00> <Generic> <Opcode : >
+ST_1 : Operation 97 [1/1] (0.00ns)   --->   "%layer6_out = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 97 'extractvalue' 'layer6_out' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 98 [1/1] (0.00ns)   --->   "%layer6_out_1 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 98 'extractvalue' 'layer6_out_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 99 [1/1] (0.00ns)   --->   "%layer6_out_2 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 99 'extractvalue' 'layer6_out_2' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 100 [1/1] (0.00ns)   --->   "%layer6_out_3 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 100 'extractvalue' 'layer6_out_3' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 101 [1/1] (0.00ns)   --->   "%layer6_out_4 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 101 'extractvalue' 'layer6_out_4' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 102 [1/1] (0.00ns)   --->   "%layer6_out_5 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 102 'extractvalue' 'layer6_out_5' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 103 [1/1] (0.00ns)   --->   "%layer6_out_6 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 103 'extractvalue' 'layer6_out_6' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 104 [1/1] (0.00ns)   --->   "%layer6_out_7 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 104 'extractvalue' 'layer6_out_7' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 105 [1/1] (0.00ns)   --->   "%layer6_out_8 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 105 'extractvalue' 'layer6_out_8' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 106 [1/1] (0.00ns)   --->   "%layer6_out_9 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 106 'extractvalue' 'layer6_out_9' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 107 [1/1] (0.00ns)   --->   "%layer6_out_10 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 107 'extractvalue' 'layer6_out_10' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 108 [1/1] (0.00ns)   --->   "%layer6_out_11 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 108 'extractvalue' 'layer6_out_11' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 109 [1/1] (0.00ns)   --->   "%layer6_out_12 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 109 'extractvalue' 'layer6_out_12' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 110 [1/1] (0.00ns)   --->   "%layer6_out_13 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 110 'extractvalue' 'layer6_out_13' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 111 [1/1] (0.00ns)   --->   "%layer6_out_14 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 111 'extractvalue' 'layer6_out_14' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 112 [1/1] (0.00ns)   --->   "%layer6_out_15 = extractvalue i304 %call_ret4" [firmware/Topo2A_AD_proj.cpp:51]   --->   Operation 112 'extractvalue' 'layer6_out_15' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 113 [1/1] (1.14ns)   --->   "%call_ret = call i240 @relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config7>, i19 %layer6_out, i19 %layer6_out_1, i19 %layer6_out_2, i19 %layer6_out_3, i19 %layer6_out_4, i19 %layer6_out_5, i19 %layer6_out_6, i19 %layer6_out_7, i19 %layer6_out_8, i19 %layer6_out_9, i19 %layer6_out_10, i19 %layer6_out_11, i19 %layer6_out_12, i19 %layer6_out_13, i19 %layer6_out_14, i19 %layer6_out_15" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 113 'call' 'call_ret' <Predicate = true> <Delay = 1.14> <CoreType = "Generic">   --->   Core 0 '' <Latency = 0> <II = 1> <Delay = 1.00> <Generic> <Opcode : >
+ST_1 : Operation 114 [1/1] (0.00ns)   --->   "%layer7_out = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 114 'extractvalue' 'layer7_out' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 115 [1/1] (0.00ns)   --->   "%layer7_out_1 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 115 'extractvalue' 'layer7_out_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 116 [1/1] (0.00ns)   --->   "%layer7_out_2 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 116 'extractvalue' 'layer7_out_2' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 117 [1/1] (0.00ns)   --->   "%layer7_out_3 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 117 'extractvalue' 'layer7_out_3' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 118 [1/1] (0.00ns)   --->   "%layer7_out_4 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 118 'extractvalue' 'layer7_out_4' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 119 [1/1] (0.00ns)   --->   "%layer7_out_5 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 119 'extractvalue' 'layer7_out_5' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 120 [1/1] (0.00ns)   --->   "%layer7_out_6 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 120 'extractvalue' 'layer7_out_6' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 121 [1/1] (0.00ns)   --->   "%layer7_out_7 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 121 'extractvalue' 'layer7_out_7' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 122 [1/1] (0.00ns)   --->   "%layer7_out_8 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 122 'extractvalue' 'layer7_out_8' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 123 [1/1] (0.00ns)   --->   "%layer7_out_9 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 123 'extractvalue' 'layer7_out_9' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 124 [1/1] (0.00ns)   --->   "%layer7_out_10 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 124 'extractvalue' 'layer7_out_10' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 125 [1/1] (0.00ns)   --->   "%layer7_out_11 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 125 'extractvalue' 'layer7_out_11' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 126 [1/1] (0.00ns)   --->   "%layer7_out_12 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 126 'extractvalue' 'layer7_out_12' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 127 [1/1] (0.00ns)   --->   "%layer7_out_13 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 127 'extractvalue' 'layer7_out_13' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 128 [1/1] (0.00ns)   --->   "%layer7_out_14 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 128 'extractvalue' 'layer7_out_14' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 129 [1/1] (0.00ns)   --->   "%layer7_out_15 = extractvalue i240 %call_ret" [firmware/Topo2A_AD_proj.cpp:55]   --->   Operation 129 'extractvalue' 'layer7_out_15' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 130 [1/1] (4.85ns)   --->   "%call_ret5 = call i36 @dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<12, 4, 5, 3, 0>, config8>, i15 %layer7_out, i15 %layer7_out_1, i15 %layer7_out_2, i15 %layer7_out_3, i15 %layer7_out_4, i15 %layer7_out_5, i15 %layer7_out_6, i15 %layer7_out_7, i15 %layer7_out_8, i15 %layer7_out_9, i15 %layer7_out_10, i15 %layer7_out_11, i15 %layer7_out_12, i15 %layer7_out_13, i15 %layer7_out_14, i15 %layer7_out_15" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:59]   --->   Operation 130 'call' 'call_ret5' <Predicate = true> <Delay = 4.85> <CoreType = "Generic">   --->   Core 0 '' <Latency = 0> <II = 1> <Delay = 1.00> <Generic> <Opcode : >
+ST_1 : Operation 131 [1/1] (0.00ns)   --->   "%layer8_out = extractvalue i36 %call_ret5" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:59]   --->   Operation 131 'extractvalue' 'layer8_out' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 132 [1/1] (0.00ns)   --->   "%layer8_out_1 = extractvalue i36 %call_ret5" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:59]   --->   Operation 132 'extractvalue' 'layer8_out_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 133 [1/1] (0.00ns)   --->   "%layer8_out_2 = extractvalue i36 %call_ret5" [firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:59]   --->   Operation 133 'extractvalue' 'layer8_out_2' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 134 [1/1] (0.00ns)   --->   "%call_ret6 = call i57 @linear<ap_fixed<12, 4, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, linear_config9>, i12 %layer8_out, i12 %layer8_out_1, i12 %layer8_out_2" [firmware/Topo2A_AD_proj.cpp:61]   --->   Operation 134 'call' 'call_ret6' <Predicate = true> <Delay = 0.00> <CoreType = "Generic">   --->   Core 0 '' <Latency = 0> <II = 1> <Delay = 1.00> <Generic> <Opcode : >
+ST_1 : Operation 135 [1/1] (0.00ns)   --->   "%layer9_out_0_ret = extractvalue i57 %call_ret6" [firmware/Topo2A_AD_proj.cpp:61]   --->   Operation 135 'extractvalue' 'layer9_out_0_ret' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 136 [1/1] (0.00ns)   --->   "%write_ln61 = write void @_ssdm_op_Write.ap_vld.i19P0A, i19 %layer9_out_0, i19 %layer9_out_0_ret" [firmware/Topo2A_AD_proj.cpp:61]   --->   Operation 136 'write' 'write_ln61' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 137 [1/1] (0.00ns)   --->   "%layer9_out_1_ret = extractvalue i57 %call_ret6" [firmware/Topo2A_AD_proj.cpp:61]   --->   Operation 137 'extractvalue' 'layer9_out_1_ret' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 138 [1/1] (0.00ns)   --->   "%write_ln61 = write void @_ssdm_op_Write.ap_vld.i19P0A, i19 %layer9_out_1, i19 %layer9_out_1_ret" [firmware/Topo2A_AD_proj.cpp:61]   --->   Operation 138 'write' 'write_ln61' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 139 [1/1] (0.00ns)   --->   "%layer9_out_2_ret = extractvalue i57 %call_ret6" [firmware/Topo2A_AD_proj.cpp:61]   --->   Operation 139 'extractvalue' 'layer9_out_2_ret' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 140 [1/1] (0.00ns)   --->   "%write_ln61 = write void @_ssdm_op_Write.ap_vld.i19P0A, i19 %layer9_out_2, i19 %layer9_out_2_ret" [firmware/Topo2A_AD_proj.cpp:61]   --->   Operation 140 'write' 'write_ln61' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 141 [1/1] (0.00ns)   --->   "%ret_ln63 = ret" [firmware/Topo2A_AD_proj.cpp:63]   --->   Operation 141 'ret' 'ret_ln63' <Predicate = true> <Delay = 0.00>
+
+
+============================================================
++ Verbose Summary: Timing violations
+============================================================
+Target clock period: 25.000ns, clock uncertainty: 6.750ns.
+
+ <State 1>: 17.294ns
+The critical path consists of the following:
+	wire read operation ('inputs_read') on port 'inputs' [15]  (0.000 ns)
+	'call' operation 608 bit ('call_ret1', firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:39) to 'dense_latency<ap_fixed<19, 11, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, config2>' [16]  (5.192 ns)
+	'call' operation 480 bit ('call_ret2', firmware/Topo2A_AD_proj.cpp:43) to 'relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config4>' [49]  (1.149 ns)
+	'call' operation 224 bit ('call_ret3', firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:47) to 'dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<14, 6, 5, 3, 0>, config5>' [82]  (4.948 ns)
+	'call' operation 304 bit ('call_ret4', firmware/Topo2A_AD_proj.cpp:51) to 'linear<ap_fixed<14, 6, 5, 3, 0>, ap_fixed<19, 11, 5, 3, 0>, linear_config6>' [99]  (0.000 ns)
+	'call' operation 240 bit ('call_ret', firmware/Topo2A_AD_proj.cpp:55) to 'relu<ap_fixed<19, 11, 5, 3, 0>, ap_ufixed<15, 0, 4, 0, 0>, relu_config7>' [116]  (1.149 ns)
+	'call' operation 36 bit ('call_ret5', firmware/nnet_utils/nnet_dense.h:41->firmware/Topo2A_AD_proj.cpp:59) to 'dense_latency<ap_ufixed<15, 0, 4, 0, 0>, ap_fixed<12, 4, 5, 3, 0>, config8>' [133]  (4.855 ns)
+
+
+============================================================
++ Verbose Summary: Binding
+============================================================
+N/A
+* FSMD analyzer results:
+  - Output states:
+ - Input state : 
+  - Chain level:
+	State 1
+
+
+============================================================
++ Verbose Summary: Datapath Resource usage 
+============================================================
+N/A
