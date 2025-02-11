@@ -12,6 +12,7 @@ from qkeras import QConv2D, QBatchNormalization
 from qkeras import QDense, QActivation, QDenseBatchnorm, quantized_relu, quantized_bits
 from qkeras.utils import _add_supported_quantized_objects
 import math
+phi_res = 128/(2*math.pi)
 
 
 # Infrastructure for loading topo2A data: ---------------------------------------------------------------------
@@ -165,7 +166,7 @@ def load_and_preprocess_normal_multiple_files(file_paths):
 
 
 # ---------------------------------------------------------------------
-def load_and_process_anomalous_data(file_name):
+def load_and_process_anomalous_data(file_name, event_num=False):
     with h5py.File(file_name, 'r') as hf:
         nmuon, nLRjet, nSRjet, negamma, netau, njtau = 4, 6, 6, 4, 4, 4
         print(hf.keys())
@@ -198,8 +199,9 @@ def load_and_process_anomalous_data(file_name):
         L1_MET[:, 2] = fix_phi_range(L1_MET[:, 2])
 
         pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
-        event_numbers = hf["event_number"][:]
-        run_numbers = hf["run_number"][:]
+        if event_num:
+            event_numbers = hf["event_number"][:]
+            run_numbers = hf["run_number"][:]
 
         # Reformat L1_MET
         L1_MET_fixed = np.zeros((L1_MET.shape[0], 2))
@@ -219,7 +221,10 @@ def load_and_process_anomalous_data(file_name):
 
         Topo_2A = fill_median(Topo_2A)
 
-        return Topo_2A, pass_L1_unprescaled, event_numbers, run_numbers
+        if event_num:
+            return Topo_2A, pass_L1_unprescaled, event_numbers, run_numbers
+        else:
+            return Topo_2A, pass_L1_unprescaled
 # ---------------------------------------------------------------------
 
 
@@ -248,17 +253,11 @@ def load_l1AD_model():
 
     # Load the model with custom objects
     loaded_model = tf.keras.models.load_model(
-        '/eos/home-m/mmcohen/ntuples/l1_model_1-20-2025/',
+        '/eos/home-m/mmcohen/ntuples/2A_AE_model_FDL_GAN_ALT_23e.h5',
         custom_objects=custom_objects,
         compile=False  # If they only need inference
     )
 
-
-    # loaded_model = tf.keras.models.load_model(
-    #     model_path,
-    #     custom_objects=custom_objects,
-    #     compile=False  # If they only need inference
-    # )
     return loaded_model
 # ---------------------------------------------------------------------
 
@@ -383,7 +382,7 @@ def load_and_match(save_path):
         if file_name.startswith('N') or file_name.startswith('.'): continue
         file_path = os.path.join(base_path, file_name)
             
-        Topo_2A, pass_L1_unprescaled, event_mu, events_weights, event_number, run_number = load_and_preprocess_data(file_path)
+        Topo_2A, pass_L1_unprescaled, event_mu, events_weights, event_LBmu, event_number, run_number = load_and_preprocess_data(file_path)
         
         topo2A_datasets[file_name] = {
             'data': Topo_2A,
@@ -400,12 +399,12 @@ def load_and_match(save_path):
     
         dataset_tag = filename.split('_')[0]
     
-        Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(MC_path+filename)
+        Topo_2A, pass_L1 = load_and_process_anomalous_data(MC_path+filename, event_num=False)
     
         topo2A_datasets[dataset_tag] = {
             'data': Topo_2A[0:100000],
-            'event_numbers': event_number,
-            'run_numbers': run_number
+            #'event_numbers': event_number,
+            #'run_numbers': run_number
         }
     # --------------------------------------------------------------------------------------------------
 
@@ -418,7 +417,7 @@ def load_and_match(save_path):
     
         dataset_tag = 'mc23e_'+(filename.split('_12')[0]).split('C_')[1]
     
-        Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(MC_path+filename)
+        Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(MC_path+filename, event_num=True)
     
         topo2A_datasets[dataset_tag] = {
             'data': Topo_2A[0:100000],
@@ -435,7 +434,7 @@ def load_and_match(save_path):
     
         dataset_tag = 'physMain_'+(filename.split('_')[1])+(filename.split('_')[2])
     
-        Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(physMain_path+filename)
+        Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(physMain_path+filename, event_num=True)
     
         topo2A_datasets[dataset_tag] = {
             'data': Topo_2A[0:100000],

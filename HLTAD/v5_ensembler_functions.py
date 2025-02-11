@@ -6,6 +6,7 @@ from sklearn.metrics import roc_curve, auc
 from tensorflow.keras import layers, Model
 import tensorflow.keras.backend as K
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.optimizers import Adam
 import h5py
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import regularizers
@@ -183,7 +184,7 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     # -------------------
 
     # Load data
-    datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/01-17-2025')
+    datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/02-03-2025')
 
     # put in Kaito's fake data:
     # First event data
@@ -251,7 +252,7 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     #remove mc23e for some preliminary testing (to remove later):
     tags_to_remove = []
     for tag in datasets.keys():
-        if ('mc23e' in tag) or ('jj' in tag) or ('noalg' in tag) or ('Zprime' in tag) or ('ZZ' in tag) or ('phys' in tag):
+        if ('qqa' in tag) or (tag=='jjJZ2') or (tag=='jjJZ4') or ('Zprime' in tag) or ('ZZ' in tag) or ('A14' in tag) or ('HHbbtt' in tag) or ('HAHM' in tag):
             tags_to_remove.append(tag)
 
     for tag in tags_to_remove:
@@ -268,6 +269,10 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
 
     elif train_data_scheme == 'topo2A_train':
         datasets['EB_train'] = datasets.pop('topo2A_train')
+
+    # Only train over L1Passed events:
+    passL1_mask = datasets['EB_train']['passL1'] ###########################
+    datasets['EB_train'] = {key:value[passL1_mask] for key, value in datasets['EB_train'].items()} ###########################
 
     # now combine the other EB runs into EB_test
     tags_to_combine = [key for key in datasets.keys() if "EB" in key and key != 'EB_train']
@@ -567,7 +572,8 @@ def initialize_model(input_dim, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, d
     # -------------------
 
     # Compile
-    HLT_AE.compile(optimizer='adam', loss=loss_fn, weighted_metrics=[])
+    optimizer = Adam(learning_rate=0.001)
+    HLT_AE.compile(optimizer=optimizer, loss=loss_fn, weighted_metrics=[])
     # -------------------
 
     # Load model weights (if specified in the args)
@@ -709,8 +715,9 @@ def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropo
 
     # Write the training info to a txt file
     with open('./training_documentation.txt', 'a') as f:
-        f.write('\n')
+        f.write('\n training_info:')
         f.write(json.dumps(training_info))
+        f.write('data_info:')
         f.write(json.dumps(data_info))
         f.write('\n')
     # -------------------
@@ -752,7 +759,7 @@ def MSE_AD_score(y, x):
     return loss
 # -----------------------------------------------------------------------------------------
 
-def ROC_curve_plot(datasets: dict, save_path: str, save_name: str, target_FPR, bkg_tag='EB_test', obj_type='HLT'):
+def ROC_curve_plot(datasets: dict, save_path: str, save_name: str, HLTAD_threshold, bkg_tag='EB_test', obj_type='HLT'):
     
     # Check if the background tag is valid
     if bkg_tag not in datasets.keys():
@@ -788,10 +795,13 @@ def ROC_curve_plot(datasets: dict, save_path: str, save_name: str, target_FPR, b
         AUC = auc(FPRs, TPRs)
 
         # Calculate the TPR at target FPR
-        closest_index = np.argmin(np.abs(FPRs - target_FPR))
+        #closest_index = np.argmin(np.abs(FPRs - target_FPR))
+        closest_index = np.argmin(np.abs(thresholds - HLTAD_threshold))
+        corresponding_FPR = FPRs[closest_index]
         corresponding_TPR = TPRs[closest_index]
         signal_efficiencies[tag] = corresponding_TPR
-        print(f'ROC threshold for tag {tag} was calculated to be {thresholds[closest_index]}')
+        print(f'ROC threshold for tag {tag} was given to be {thresholds[closest_index]}')
+        print(f'Corresponding ROC FPR is {corresponding_FPR}')
 
         # Add the ROC curve from this tag to the plot
         plt.plot(FPRs, TPRs, label=f'{tag}, AUC={AUC:.3f}', linewidth=1.5)
@@ -801,7 +811,7 @@ def ROC_curve_plot(datasets: dict, save_path: str, save_name: str, target_FPR, b
     plt.plot(xx, xx, color='grey', linestyle='dashed')
 
     # Plot vertical line corresponding to 10Hz HLTAD rate
-    plt.plot([target_FPR, target_FPR], [0, 1], color='r', linestyle='dashed')
+    plt.plot([corresponding_FPR, corresponding_FPR], [0, 1], color='r', linestyle='dashed')
 
     # Aesthetics
     plt.xlabel('FPR', fontsize=14)
@@ -846,7 +856,7 @@ def raw_efficiencies_plot_from_regions(region_counts: dict, save_path: str, save
 
     y = np.arange(len(signal_efficiencies.keys()))
 
-    # Plot for L1Seeded
+    # Plot
     plt.figure(figsize=(15,8))
     plt.scatter(signal_efficiencies.values(), y, color='cornflowerblue', s=150, alpha=0.5)
     plt.xlabel('Efficiency', fontsize=15)
@@ -862,7 +872,7 @@ def raw_efficiencies_plot_from_regions(region_counts: dict, save_path: str, save
 
 def efficiency_gain_plot(region_counts: dict, save_path: str, save_name: str, target_rate: int):
 
-    tags = [tag for tag in region_counts.keys() if region_counts[tag]['A'] != 0]
+    tags = [tag for tag in region_counts.keys() if region_counts[tag]['A'] != 0 and not (tag.startswith('k') or tag.startswith('EB') or tag.startswith('phys') or ('noalg' in tag))]
 
     hlt_effs = [(region_counts[tag]['G'] + region_counts[tag]['F']) / (region_counts[tag]['A']) for tag in tags]
     combined_effs = [(region_counts[tag]['E'] + region_counts[tag]['G'] + region_counts[tag]['F']) / (region_counts[tag]['A']) for tag in tags]
@@ -932,42 +942,81 @@ def EoverFplusG_plot(region_counts: dict, save_path: str, save_name: str):
 
     return EoverFplusG
 
-def pileup_efficiency_plot(datasets: dict, save_path: str, save_name: str):
+def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, obj_type: str, seed_scheme: str):
 
     # idxs = ['B' in label for label in datasets['EB_test']['region_labels']] | ['C' in label for label in datasets['EB_test']['region_labels']]
     # anomalous = (['E' in label for label in datasets['EB_test']['region_labels']] | ['F' in label for label in datasets['EB_test']['region_labels']])
 
-    bins = np.linspace(np.min(datasets['EB_test']['pileups'][datasets['EB_test']['pileups'] != 0])-5, np.max(datasets['EB_test']['pileups'])+5, 35)
+    pileups = datasets['EB_test']['pileups']
+    leading_jet_pt = datasets['EB_test'][f'{obj_type}_preprocessed_data'][:, 0]
+    MET_pt = datasets['EB_test'][f'{obj_type}_preprocessed_data'][:, -3]
+    weights = datasets['EB_test']['weights']
 
-    # Initialize TEfficiency
-    h_total = ROOT.TH1F("h_total", "Total Events", len(bins)-1, bins)
-    h_pass = ROOT.TH1F("h_pass", "Passed Events", len(bins)-1, bins)
+    # Define bins for each variable
+    pileup_bins = np.linspace(np.min(pileups[pileups != 0])-5, np.max(pileups)+5, 35)
+    jet_pt_bins = np.linspace(np.min(leading_jet_pt)-5, np.percentile(leading_jet_pt, 75)+300, 35)
+    MET_pt_bins = np.linspace(np.min(MET_pt)-5, np.percentile(MET_pt, 75)+300, 35)
 
-    L1Seeded_mask = np.array(['B' in label for label in datasets['EB_test']['region_labels']]) | np.array(['C' in label for label in datasets['EB_test']['region_labels']])
-    HLTAD_mask = np.array(['E' in label for label in datasets['EB_test']['region_labels']]) | np.array(['F' in label for label in datasets['EB_test']['region_labels']])
+    # Initialize TEfficiency for pileup
+    h_total_pileup = ROOT.TH1F("h_total_pileup", "Total Events Pileup", len(pileup_bins)-1, pileup_bins)
+    h_pass_pileup = ROOT.TH1F("h_pass_pileup", "Passed Events Pileup", len(pileup_bins)-1, pileup_bins)
 
-    # Fill histograms using pileup and weights
+    # Initialize TEfficiency for leading jet pt
+    h_total_jet_pt = ROOT.TH1F("h_total_jet_pt", "Total Events Jet Pt", len(jet_pt_bins)-1, jet_pt_bins)
+    h_pass_jet_pt = ROOT.TH1F("h_pass_jet_pt", "Passed Events Jet Pt", len(jet_pt_bins)-1, jet_pt_bins)
+
+    # Initialize TEfficiency for MET pt
+    h_total_MET_pt = ROOT.TH1F("h_total_MET_pt", "Total Events MET Pt", len(MET_pt_bins)-1, MET_pt_bins)
+    h_pass_MET_pt = ROOT.TH1F("h_pass_MET_pt", "Passed Events MET Pt", len(MET_pt_bins)-1, MET_pt_bins)
+
+    if seed_scheme == 'l1Seeded':
+        L1Seeded_mask = np.array(['B' in label for label in datasets['EB_test']['region_labels']]) | np.array(['C' in label for label in datasets['EB_test']['region_labels']])
+        HLTAD_mask = np.array(['E' in label for label in datasets['EB_test']['region_labels']]) | np.array(['F' in label for label in datasets['EB_test']['region_labels']])
+
+    elif seed_scheme == 'l1All':
+        L1Seeded_mask = np.array(['B' in label for label in datasets['EB_test']['region_labels']]) | np.array(['C' in label for label in datasets['EB_test']['region_labels']]) | np.array(['D' in label for label in datasets['EB_test']['region_labels']])
+        HLTAD_mask = np.array(['E' in label for label in datasets['EB_test']['region_labels']]) | np.array(['F' in label for label in datasets['EB_test']['region_labels']])
+
+    # Fill histograms using pileup, leading jet pt, MET pt, and weights
     for i in range(len(datasets['EB_test']['pileups'])):
 
-        # First, fill the total histogram with events passing L1AD (regions B and C)
+        # Fill the total histograms with events passing L1AD (regions B and C)
         if L1Seeded_mask[i]:
-            h_total.Fill(datasets['EB_test']['pileups'][i], datasets['EB_test']['weights'][i])
+            h_total_pileup.Fill(datasets['EB_test']['pileups'][i], datasets['EB_test']['weights'][i])
+            h_total_jet_pt.Fill(leading_jet_pt[i], datasets['EB_test']['weights'][i])
+            h_total_MET_pt.Fill(MET_pt[i], datasets['EB_test']['weights'][i])
         
-        # Then, fill the pass histogram with events passing HLTAD (regions E and F)
+        # Fill the pass histograms with events passing HLTAD (regions E and F)
         if HLTAD_mask[i]:
-            h_pass.Fill(datasets['EB_test']['pileups'][i], datasets['EB_test']['weights'][i])
+            h_pass_pileup.Fill(datasets['EB_test']['pileups'][i], datasets['EB_test']['weights'][i])
+            h_pass_jet_pt.Fill(leading_jet_pt[i], datasets['EB_test']['weights'][i])
+            h_pass_MET_pt.Fill(MET_pt[i], datasets['EB_test']['weights'][i])
 
-    # Create TEfficiency object
-    eff = ROOT.TEfficiency(h_pass, h_total)
+    # Create TEfficiency objects
+    eff_pileup = ROOT.TEfficiency(h_pass_pileup, h_total_pileup)
+    eff_jet_pt = ROOT.TEfficiency(h_pass_jet_pt, h_total_jet_pt)
+    eff_MET_pt = ROOT.TEfficiency(h_pass_MET_pt, h_total_MET_pt)
 
     # Plot efficiency vs pileup using ROOT
     if save_path is not None:
-        c = ROOT.TCanvas("c", "Efficiency vs Pileup", 800, 600)
-        eff.SetTitle(f"Anomalous Event Efficiency vs Pileup;Pileup;Efficiency")
-        eff.Draw("AP")  # A: Axis, P: Points with error bars
-        c.SaveAs(f'{save_path}/{save_name}.png')
+        c_pileup = ROOT.TCanvas("c_pileup", "Efficiency vs Pileup", 800, 600)
+        eff_pileup.SetTitle(f"Anomalous Event Efficiency vs Pileup;Pileup;Efficiency")
+        eff_pileup.Draw("AP")
+        c_pileup.SaveAs(f'{save_path}/{save_name}_pileup.png')
 
-def plot_individual_model_results(datasets: dict, region_counts: dict, seed_scheme, save_path, model_version, L1AD_threshold, L1AD_rate, target_HLTAD_rate, obj_type='HLT'):
+        # Plot efficiency vs leading jet pt using ROOT
+        c_jet_pt = ROOT.TCanvas("c_jet_pt", "Efficiency vs Leading Jet Pt", 800, 600)
+        eff_jet_pt.SetTitle(f"Anomalous Event Efficiency vs Leading Jet Pt;Leading Jet Pt;Efficiency")
+        eff_jet_pt.Draw("AP")
+        c_jet_pt.SaveAs(f'{save_path}/{save_name}_jet_pt.png')
+
+        # Plot efficiency vs MET pt using ROOT
+        c_MET_pt = ROOT.TCanvas("c_MET_pt", "Efficiency vs MET Pt", 800, 600)
+        eff_MET_pt.SetTitle(f"Anomalous Event Efficiency vs MET Pt;MET Pt;Efficiency")
+        eff_MET_pt.Draw("AP")
+        c_MET_pt.SaveAs(f'{save_path}/{save_name}_MET_pt.png')
+
+def plot_individual_model_results(datasets: dict, region_counts: dict, seed_scheme, save_path, model_version, L1AD_threshold, L1AD_rate, HLTAD_threshold, target_HLTAD_rate, obj_type='HLT'):
 
     if seed_scheme not in ['l1Seeded', 'l1All']:
         raise ValueError(f"Invalid seed_scheme: {seed_scheme}. Must be 'l1Seeded' or 'l1All'.")
@@ -994,7 +1043,7 @@ def plot_individual_model_results(datasets: dict, region_counts: dict, seed_sche
             seeded_datasets[tag] = {key: np.array(value)[pass_L1AD_or_L1] for key, value in datasets[tag].items()}
 
     # Plot the ROC curves and obtain raw signal efficiencies
-    seeded_signal_efficiencies = ROC_curve_plot(seeded_datasets, save_path=save_path, save_name=f'ROC_curves_{model_version}_{seed_scheme}', target_FPR=seeded_target_FPR, obj_type=obj_type)
+    seeded_signal_efficiencies = ROC_curve_plot(seeded_datasets, save_path=save_path, save_name=f'ROC_curves_{model_version}_{seed_scheme}', HLTAD_threshold=HLTAD_threshold, obj_type=obj_type)
 
     # Plot the raw efficiencies
     raw_efficiencies_plot_from_ROC(seeded_signal_efficiencies, save_path=save_path, save_name=f'Efficiencies_ROC_{model_version}_{seed_scheme}')
@@ -1004,15 +1053,17 @@ def plot_individual_model_results(datasets: dict, region_counts: dict, seed_sche
     EoverFplusG = EoverFplusG_plot(region_counts, save_path=save_path, save_name=f'EoverFplusG_{model_version}_{seed_scheme}')
     efficiency_gain_plot(region_counts, save_path=save_path, save_name=f'Efficiency_gains_{model_version}_{seed_scheme}', target_rate=target_HLTAD_rate)
 
-    # Plot the pileup efficiency
-    pileup_efficiency_plot(datasets, save_path=save_path, save_name=f'Pileup_efficiency_{model_version}_{seed_scheme}')
+    # Plot the efficiency vs variable
+    efficiency_vs_variable_plot(datasets, save_path=save_path, save_name=f'Efficiency_plot_{model_version}_{seed_scheme}', obj_type=obj_type, seed_scheme=seed_scheme)
 
     return signal_efficiencies, EoverFplusG
 
 
 def ensemble_efficiency_gain_plot(efficiency_gains: dict, save_path: str, save_name: str):
+
+    good_tags = [tag for tag in efficiency_gains[0].keys() if not (tag.startswith('k') or tag.startswith('EB') or tag.startswith('phys') or ('noalg' in tag))]
     
-    gains = {tag: [gains[tag] for gains in efficiency_gains] for tag in efficiency_gains[0].keys()}
+    gains = {tag: [gains[tag] for gains in efficiency_gains] for tag in good_tags}
 
 
     plt.figure(figsize=(12, 6))
@@ -1110,17 +1161,15 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             if tag in skip_tags: continue
 
             dict[f'{obj_type}_preprocessed_data'] = HLT_preprocessing_model.predict(dict[f'{obj_type}_data'], verbose=0, batch_size=8)
-            dict[f'{obj_type}_model_outputs'] = HLT_AE.predict(dict[f'{obj_type}_preprocessed_data'], verbose=0, batch_size=8)
-            dict[f'{obj_type}_latent_reps'] = HLT_encoder.predict(dict[f'{obj_type}_preprocessed_data'], verbose=0, batch_size=8)
-            #dict['L1_model_outputs'] = L1_AE.predict(dict['L1_data'], verbose=0)
-            #dict['L1_latent_reps'] = L1_encoder.predict(dict['L1_data'])
+            #dict[f'{obj_type}_model_outputs'] = HLT_AE.predict(dict[f'{obj_type}_preprocessed_data'], verbose=0, batch_size=8)
+            #dict[f'{obj_type}_latent_reps'] = HLT_encoder.predict(dict[f'{obj_type}_preprocessed_data'], verbose=0, batch_size=8)
 
         # Calculate the AD scores
         for tag, dict in datasets.items():
             if tag in skip_tags: continue
 
             dict[f'{obj_type}_AD_scores'] = HLT_MSE_AE.predict(dict[f'{obj_type}_preprocessed_data'], batch_size=8)
-            dict[f'calculated_{obj_type}_AD_scores'] = MSE_AD_score(dict[f'{obj_type}_preprocessed_data'], dict[f'{obj_type}_model_outputs'])
+            #dict[f'calculated_{obj_type}_AD_scores'] = MSE_AD_score(dict[f'{obj_type}_preprocessed_data'], dict[f'{obj_type}_model_outputs'])
 
         
         # Calculate the L1AD threshold and rates
@@ -1129,7 +1178,7 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             weights=datasets['EB_test']['weights'],
             pass_current_trigs=datasets['EB_test']['passL1'],
             target_rate=L1AD_rate,
-            incoming_rate=40e6
+            incoming_rate=31575960
         )
 
         print(f'model {i}:')
@@ -1203,7 +1252,9 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             model_version=i, 
             L1AD_threshold=L1AD_threshold, 
             L1AD_rate=L1AD_total_rate, 
-            target_HLTAD_rate=target_rate
+            HLTAD_threshold=HLTAD_threshold,
+            target_HLTAD_rate=target_rate,
+            obj_type=obj_type
         )
 
         l1Seeded_results['efficiency_gains'].append(EoverFplusG)
@@ -1274,7 +1325,9 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             model_version=i, 
             L1AD_threshold=L1AD_threshold, 
             L1AD_rate=L1AD_total_rate, 
-            target_HLTAD_rate=target_rate
+            HLTAD_threshold=HLTAD_threshold,
+            target_HLTAD_rate=target_rate,
+            obj_type=obj_type
         )
 
         l1All_results['efficiency_gains'].append(EoverFplusG)
