@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import tensorflow as tf
+import math
 from tensorflow.keras.models import load_model
 from sklearn.metrics import roc_curve, auc
 from tensorflow.keras import layers, Model
@@ -214,6 +215,19 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     event2_photons = [[62.634, -0.756, 2.699]]
     event2_met = [37.874, 0.0, -0.663]
 
+    # third event data
+    event3_jets = [
+        [100, 0.5, 0.5]
+    ]
+    event3_electrons = [
+        [100, 0.51, 0.49], [100, -0.5, -0.5]
+    ]
+    event3_muons = []
+    event3_photons = [
+        [100, -0.51, -0.49]
+    ]
+    event3_met = [0, 0, 0]
+
     # Function to select the top-N pt objects or pad with zeros
     def select_objects(objects, max_count):
         if len(objects) > max_count:
@@ -241,18 +255,18 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     # Create arrays for both events
     event1_array = process_event(event1_jets, event1_electrons, event1_muons, event1_photons, event1_met)
     event2_array = process_event(event2_jets, event2_electrons, event2_muons, event2_photons, event2_met)
-
-    # Combine into a single (2, 16, 3) array
-    combined_array = np.stack([event1_array, event2_array])
+    event3_array = process_event(event3_jets, event3_electrons, event3_muons, event3_photons, event3_met)
+    # Combine into a single (3, 16, 3) array
+    combined_array = np.stack([event1_array, event2_array, event3_array])
     
-    datasets['kaito'] = {key: value[0:2] for key, value in datasets['topo2A_train'].items()}
+    datasets['kaito'] = {key: value[0:3] for key, value in datasets['topo2A_train'].items()}
     datasets['kaito']['HLT_data'] = combined_array
     datasets['kaito']['L1_data'] = combined_array
 
     #remove mc23e for some preliminary testing (to remove later):
     tags_to_remove = []
     for tag in datasets.keys():
-        if ('qqa' in tag) or (tag=='jjJZ2') or (tag=='jjJZ4') or ('Zprime' in tag) or ('ZZ' in tag) or ('A14' in tag) or ('HHbbtt' in tag) or ('HAHM' in tag):
+        if ('qqa' in tag) or (tag=='jjJZ2') or (tag=='jjJZ1') or (tag=='jjJZ4') or ('Zprime' in tag) or ('ZZ' in tag) or ('A14' in tag) or ('HHbbtt' in tag) or ('HAHM' in tag):
             tags_to_remove.append(tag)
 
     for tag in tags_to_remove:
@@ -269,10 +283,6 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
 
     elif train_data_scheme == 'topo2A_train':
         datasets['EB_train'] = datasets.pop('topo2A_train')
-
-    # Only train over L1Passed events:
-    passL1_mask = datasets['EB_train']['passL1'] ###########################
-    datasets['EB_train'] = {key:value[passL1_mask] for key, value in datasets['EB_train'].items()} ###########################
 
     # now combine the other EB runs into EB_test
     tags_to_combine = [key for key in datasets.keys() if "EB" in key and key != 'EB_train']
@@ -318,6 +328,127 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
 
 
 # -----------------------------------------------------------------------------------------
+class OverlapRemovalLayer(tf.keras.layers.Layer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def call(self, inputs):
+        """
+        inputs: a tensor of shape (N, 16, 3) with the following ordering per event:
+           0-5:   jets
+           6-8:   electrons
+           9-11:  muons
+           12-14: photons
+           15:    MET (untouched)
+        """
+        def process_event(event):
+            # Split the event into objects based on the new ordering.
+            jets = event[0:6]       # shape (6, 3)
+            electrons = event[6:9]  # shape (3, 3)
+            muons = event[9:12]     # shape (3, 3)
+            photons = event[12:15]  # shape (3, 3)
+            met = event[15:16]      # shape (1, 3)
+
+            # Helper: When an object is "removed" we zero its features.
+            # For overlap checks, removed objects should not affect dR calculations.
+            # The helper function below replaces removed objects (pt == 0)
+            # with sentinel values (eta,phi = 1e6) so that distances computed with them are huge.
+            def mask_removed(objs):
+                # objs: shape (n, 3) with col0: pt, col1: eta, col2: phi.
+                active = tf.expand_dims(objs[:, 0] > 0, axis=-1)  # (n,1)
+                sentinel = tf.constant([0.0, 1e6, 1e6], dtype=objs.dtype)
+                sentinel = tf.broadcast_to(sentinel, tf.shape(objs))
+                return tf.where(active, objs, sentinel)
+
+            # Helper: dphi (accounts for periodicity)
+            def dphi(phi1, phi2):
+                diff = phi1 - phi2
+                return tf.math.floormod(diff + math.pi, 2 * math.pi) - math.pi
+
+            # Helper: pairwise dR calculation between two sets of objects.
+            def pairwise_dR(objs1, objs2):
+                objs1 = mask_removed(objs1)
+                objs2 = mask_removed(objs2)
+                eta1 = objs1[:, 1]  # shape (N,)
+                phi1 = objs1[:, 2]
+                eta2 = objs2[:, 1]  # shape (M,)
+                phi2 = objs2[:, 2]
+                deta = tf.expand_dims(eta1, axis=1) - tf.expand_dims(eta2, axis=0)  # (N, M)
+                dphi_val = dphi(tf.expand_dims(phi1, axis=1), tf.expand_dims(phi2, axis=0))  # (N, M)
+                return tf.sqrt(deta**2 + dphi_val**2)  # (N, M)
+
+            # Sequential update functions: each rule zeroes out objects that fail the overlap test.
+
+            # RULE 1: Muon vs Electron: if any electron is within dR < 0.2 of a muon, remove that muon.
+            def rule1_update(muons, electrons):
+                dr = pairwise_dR(electrons, muons)  # shape (n_elec, n_muon)
+                remove = tf.reduce_any(dr < 0.2, axis=0)  # for each muon
+                return tf.where(tf.expand_dims(remove, axis=-1), tf.zeros_like(muons), muons)
+            muons = rule1_update(muons, electrons)
+
+            # RULE 2: Photon vs Electron: if any electron is within dR < 0.4 of a photon, remove that photon.
+            def rule2_update(photons, electrons):
+                dr = pairwise_dR(electrons, photons)  # shape (n_elec, n_photon)
+                remove = tf.reduce_any(dr < 0.4, axis=0)
+                return tf.where(tf.expand_dims(remove, axis=-1), tf.zeros_like(photons), photons)
+            photons = rule2_update(photons, electrons)
+
+            # RULE 3: Photon vs Muon: if any muon is within dR < 0.4 of a photon, remove that photon.
+            def rule3_update(photons, muons):
+                dr = pairwise_dR(muons, photons)  # shape (n_muon, n_photon)
+                remove = tf.reduce_any(dr < 0.4, axis=0)
+                return tf.where(tf.expand_dims(remove, axis=-1), tf.zeros_like(photons), photons)
+            photons = rule3_update(photons, muons)
+
+            # RULE 4: Jet vs Electron: if any electron is within dR < 0.2 of a jet, remove that jet.
+            def rule4_update(jets, electrons):
+                dr = pairwise_dR(electrons, jets)  # shape (n_elec, n_jet)
+                remove = tf.reduce_any(dr < 0.2, axis=0)
+                return tf.where(tf.expand_dims(remove, axis=-1), tf.zeros_like(jets), jets)
+            jets = rule4_update(jets, electrons)
+
+            # RULE 5: Electron vs Jet: if any jet is within dR < 0.4 of an electron, remove that electron.
+            def rule5_update(electrons, jets):
+                dr = pairwise_dR(jets, electrons)  # shape (n_jet, n_elec)
+                remove = tf.reduce_any(dr < 0.4, axis=0)
+                return tf.where(tf.expand_dims(remove, axis=-1), tf.zeros_like(electrons), electrons)
+            electrons = rule5_update(electrons, jets)
+
+            # RULE 6: Jet vs Muon: if any muon is within dR < 0.2 of a jet, remove that jet.
+            def rule6_update(jets, muons):
+                dr = pairwise_dR(muons, jets)  # shape (n_muon, n_jet)
+                remove = tf.reduce_any(dr < 0.2, axis=0)
+                return tf.where(tf.expand_dims(remove, axis=-1), tf.zeros_like(jets), jets)
+            jets = rule6_update(jets, muons)
+
+            # RULE 7: Muon vs Jet: if any jet is within dR < 0.4 of a muon, remove that muon.
+            def rule7_update(muons, jets):
+                dr = pairwise_dR(jets, muons)  # shape (n_jet, n_muon)
+                remove = tf.reduce_any(dr < 0.4, axis=0)
+                return tf.where(tf.expand_dims(remove, axis=-1), tf.zeros_like(muons), muons)
+            muons = rule7_update(muons, jets)
+
+            # RULE 8: Photon vs Jet: if any jet is within dR < 0.4 of a photon, remove that photon.
+            def rule8_update(photons, jets):
+                dr = pairwise_dR(jets, photons)  # shape (n_jet, n_photon)
+                remove = tf.reduce_any(dr < 0.4, axis=0)
+                return tf.where(tf.expand_dims(remove, axis=-1), tf.zeros_like(photons), photons)
+            photons = rule8_update(photons, jets)
+
+            # Reassemble the event in the new order: jets, electrons, muons, photons, MET.
+            output_event = tf.concat([jets, electrons, muons, photons, met], axis=0)
+            return output_event
+
+        outputs = tf.map_fn(process_event, inputs)
+        return outputs
+
+    def get_config(self):
+        config = super().get_config()
+        return config
+
+
+
+
 class DeltaPhiPreprocessingLayer(tf.keras.layers.Layer):
     def call(self, data):
         phi = data[:, :, 2]
@@ -389,6 +520,45 @@ class NormalizePtLayer(tf.keras.layers.Layer):
         return data_scaled
 
 
+class ScalePtPerEvent(tf.keras.layers.Layer):
+    def __init__(self, target_sum=10.0, epsilon=1e-6, **kwargs):
+        """
+        Scales the pt's for each event so that the sum of the pt's equals target_sum.
+        """
+        super().__init__(**kwargs)
+        self.target_sum = target_sum
+        self.epsilon = epsilon
+
+    def call(self, inputs):
+
+        pts = inputs[:, :, 0]           # Shape: (N, 16)
+        other_features = inputs[:, :, 1:]  # Shape: (N, 16, 2)
+
+        # Compute the sum of pts per event (resulting shape: (N, 1))
+        sum_pts = tf.reduce_sum(pts, axis=1, keepdims=True)
+
+        # Compute the per-event scaling factor so that new sum equals target_sum.
+        scale = self.target_sum / (sum_pts + self.epsilon)  # Shape: (N, 1)
+
+        # Scale the pt's
+        scaled_pts = pts * scale  # Still shape: (N, 16)
+
+        # Expand dims to match the other features along the last axis.
+        scaled_pts = tf.expand_dims(scaled_pts, axis=-1)  # Shape: (N, 16, 1)
+
+        # Concatenate the scaled pts with the other features
+        outputs = tf.concat([scaled_pts, other_features], axis=-1)
+        return outputs
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            'target_sum': self.target_sum,
+            'epsilon': self.epsilon,
+        })
+        return config
+
+
 class MSEADScoreLayer(tf.keras.layers.Layer):
     def call(self, inputs):
         y, x = inputs
@@ -407,19 +577,26 @@ class MSEADScoreLayer(tf.keras.layers.Layer):
 
 def create_large_AE_with_preprocessed_inputs(
     num_objects, num_features, h_dim_1, h_dim_2, h_dim_3, h_dim_4, latent_dim, 
-    pt_thresholds, scale_factor, l2_reg=0.01, dropout_rate=0
+    pt_thresholds, scale_factor, l2_reg=0.01, dropout_rate=0, pt_normalization_type='global_division', overlap_removal=False
 ):
     # Preprocessing Layers
+    overlap_removal_layer = OverlapRemovalLayer()
     phi_rotation_layer = DeltaPhiPreprocessingLayer()
     met_bias_layer = METBiasMaskLayer()
     zero_out_layer = ZeroOutLowPtLayer(pt_thresholds)
-    normalize_pt_layer = NormalizePtLayer(scale_factor)
+    if pt_normalization_type == 'global_division':
+        normalize_pt_layer = NormalizePtLayer(scale_factor)
+    elif pt_normalization_type == 'per_event':
+        normalize_pt_layer = ScalePtPerEvent(target_sum=10.0)
     flatten_layer = tf.keras.layers.Flatten()
 
     # Preprocessing Model
     preprocessing_inputs = layers.Input(shape=(num_objects * num_features,))
     unflattened = tf.keras.layers.Reshape((num_objects, num_features))(preprocessing_inputs)
     preprocessed = phi_rotation_layer(unflattened)
+    if overlap_removal:
+        preprocessed = overlap_removal_layer(preprocessed)
+    
     preprocessed = met_bias_layer(preprocessed)
     preprocessed = zero_out_layer(preprocessed)
     preprocessed = normalize_pt_layer(preprocessed)
@@ -530,7 +707,7 @@ def loss_fn(y_true, y_pred):
 
 
 # -----------------------------------------------------------------------------------------
-def initialize_model(input_dim, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, dropout_p=0, L2_reg_coupling=0, latent_dim=4, saved_model_path=None, save_version=None, obj_type='HLT'):
+def initialize_model(input_dim, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, dropout_p=0, L2_reg_coupling=0, latent_dim=4, saved_model_path=None, save_version=None, obj_type='HLT', pt_normalization_type='global_division', overlap_removal=False):
     '''
     Inputs:
         save_path: string of the path to save the model.
@@ -567,7 +744,9 @@ def initialize_model(input_dim, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, d
         pt_thresholds=pt_thresholds,
         scale_factor=pt_scale_factor,
         l2_reg=L2_reg_coupling, 
-        dropout_rate=dropout_p
+        dropout_rate=dropout_p,
+        pt_normalization_type=pt_normalization_type,
+        overlap_removal=overlap_removal
     )
     # -------------------
 
@@ -591,7 +770,7 @@ def initialize_model(input_dim, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, d
 
 
 # -----------------------------------------------------------------------------------------
-def train_model(datasets: dict, model_version: str, save_path: str, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, dropout_p=0, L2_reg_coupling=0, latent_dim=4, large_network=True, training_weights=True, obj_type='HLT'):
+def train_model(datasets: dict, model_version: str, save_path: str, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, dropout_p=0, L2_reg_coupling=0, latent_dim=4, large_network=True, training_weights=True, obj_type='HLT', pt_normalization_type='global_division', overlap_removal=False):
     """
     Trains, and saves an AE.
 
@@ -609,6 +788,8 @@ def train_model(datasets: dict, model_version: str, save_path: str, pt_threshold
         'L2_reg_coupling': L2_reg_coupling,
         'latent_dim': latent_dim,
         'obj_type': obj_type,
+        'pt_normalization_type': pt_normalization_type,
+        'overlap_removal': overlap_removal
     }
     
     HLT_AE, HLT_encoder, HLT_MSE_AE, HLT_preprocessing_model = initialize_model(**model_args)
@@ -655,7 +836,7 @@ def train_model(datasets: dict, model_version: str, save_path: str, pt_threshold
 
 
 # -----------------------------------------------------------------------------------------
-def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropout_p=0, L2_reg_coupling=0, latent_dim=4, large_network=True, num_trainings=10, training_weights=True, obj_type='HLT'):
+def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropout_p=0, L2_reg_coupling=0, latent_dim=4, large_network=True, num_trainings=10, training_weights=True, obj_type='HLT', overlap_removal=False):
     """
     calls 'initialize_and_train' multiple times to average results across multiple trainings.
 
@@ -693,7 +874,9 @@ def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropo
             latent_dim=latent_dim,
             large_network=large_network,
             training_weights=training_weights,
-            obj_type=obj_type
+            obj_type=obj_type,
+            pt_normalization_type=data_info['pt_normalization_type'],
+            overlap_removal=overlap_removal
         )
         print(f'model {i} success\n')
 
@@ -842,33 +1025,91 @@ def raw_efficiencies_plot_from_ROC(signal_efficiencies, save_path: str, save_nam
     plt.savefig(f'{save_path}/{save_name}.png')
     plt.close()
 
-def raw_efficiencies_plot_from_regions(region_counts: dict, save_path: str, save_name: str, seed_scheme: str):
-    
+def raw_efficiencies_plot_from_regions(datasets: dict, save_path: str, save_name: str, seed_scheme: str):
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import ROOT
+
     if seed_scheme not in ['l1Seeded', 'l1All']:
         raise ValueError(f"Invalid seed_scheme: {seed_scheme}. Must be 'l1Seeded' or 'l1All'.")
 
-    # Calculate the efficiencies from the region counts
-    if seed_scheme == 'l1Seeded':
-        signal_efficiencies = {key: (counts['E'] + counts['F']) / (counts['B'] + counts['C']) for key, counts in region_counts.items() if (counts['B'] + counts['C']) != 0}
+    # Dictionaries to store the efficiencies and their uncertainties
+    signal_efficiencies = {}
+    signal_efficiencies_up = {}
+    signal_efficiencies_down = {}
 
-    elif seed_scheme == 'l1All':
-        signal_efficiencies = {key: (counts['E'] + counts['F']) / (counts['B'] + counts['C'] + counts['D']) for key, counts in region_counts.items() if (counts['B'] + counts['C'] + counts['D']) != 0}
+    # Loop over each tag in the datasets dictionary.
+    skip_tags = ['EB_train', 'EB_val']
+    for tag, data_dict in datasets.items():
+        if tag in skip_tags: continue
+        region_labels = data_dict['region_labels']
+        weights = data_dict['weights']
 
-    y = np.arange(len(signal_efficiencies.keys()))
+        # Define the numerator mask: regions containing 'E' or 'F'
+        num_mask = np.array([('E' in rl) or ('F' in rl) for rl in region_labels])
 
-    # Plot
-    plt.figure(figsize=(15,8))
-    plt.scatter(signal_efficiencies.values(), y, color='cornflowerblue', s=150, alpha=0.5)
+        # Define the denominator mask based on seed_scheme.
+        if seed_scheme == 'l1Seeded':
+            den_mask = np.array([('B' in rl) or ('C' in rl) for rl in region_labels])
+        elif seed_scheme == 'l1All':
+            den_mask = np.array([('B' in rl) or ('C' in rl) or ('D' in rl) for rl in region_labels])
+
+        # Select the weights for numerator and denominator
+        num_weights = weights[num_mask]
+        den_weights = weights[den_mask]
+
+        # Skip if the denominator is zero.
+        if np.sum(den_weights) == 0:
+            continue
+
+        # Create one-bin histograms for numerator and denominator.
+        # We use a dummy x-range of [0, 1] and fill at x=0.5.
+        h_num = ROOT.TH1F(f"h_num_{tag}", f"Numerator for {tag}", 1, 0, 1)
+        h_den = ROOT.TH1F(f"h_den_{tag}", f"Denom for {tag}", 1, 0, 1)
+
+        # Instead of simply adding a single bin content, we fill each event individually.
+        # This way the histogram stores the correct sum of weights and also the sum of the squares.
+        for w in num_weights:
+            h_num.Fill(0.5, w)
+        for w in den_weights:
+            h_den.Fill(0.5, w)
+
+        # Create a TGraphAsymmErrors from the two histograms using the Bayesian method.
+        # The option string sets the confidence level (cl=0.683) and Bayesian prior parameters b(1,1).
+        g = ROOT.TGraphAsymmErrors(h_num, h_den, "cl=0.683 b(1,1) mode")
+
+        # Calculate the efficiency from the histograms.
+        #efficiency = h_num.GetBinContent(1) / h_den.GetBinContent(1)
+        efficiency = np.sum(num_weights) / np.sum(den_weights)
+        signal_efficiencies[tag] = efficiency
+        signal_efficiencies_up[tag] = g.GetErrorYhigh(0)
+        signal_efficiencies_down[tag] = g.GetErrorYlow(0)
+
+    # Create a plot of the efficiencies with asymmetric error bars.
+    # For the y-axis, we assign one row per tag.
+    tags = list(signal_efficiencies.keys())
+    y_positions = np.arange(len(tags))
+
+    plt.figure(figsize=(15, 8))
+    # Build the error bar array: first row for lower errors, second row for upper errors.
+    yerr = np.array([[signal_efficiencies_down[tag] for tag in tags],
+                     [signal_efficiencies_up[tag] for tag in tags]])
+
+    plt.errorbar(list(signal_efficiencies.values()), y_positions, xerr=yerr,
+                 fmt='o', color='cornflowerblue', markersize=10, alpha=0.5, capsize=5)
+
     plt.xlabel('Efficiency', fontsize=15)
-    plt.title(f'Raw Signal Efficiencies', fontsize=16)
-    plt.yticks(y, signal_efficiencies.keys())
+    plt.title('Raw Signal Efficiencies', fontsize=16)
+    plt.yticks(y_positions, tags)
     plt.tick_params(axis='y', labelsize=12)
     plt.grid(color='gray', linestyle='-', linewidth=0.5, alpha=0.5)
-    #plt.savefig(f'{save_path}/region_counts_{model_version}_efficiencies.png')
     plt.savefig(f'{save_path}/{save_name}.png')
     plt.close()
 
+    # Return the dictionary of efficiencies.
     return signal_efficiencies
+
+
 
 def efficiency_gain_plot(region_counts: dict, save_path: str, save_name: str, target_rate: int):
 
@@ -921,20 +1162,90 @@ def efficiency_gain_plot(region_counts: dict, save_path: str, save_name: str, ta
     plt.tight_layout()
     plt.savefig(f'{save_path}/{save_name}.png')
     plt.close()
+
+
+
+
+def EoverFplusG_plot(datasets: dict, save_path: str, save_name: str):
     
+    # Calculate the uncertainty of EoverFplusG:
+    # if eff_gain = E / (F + G), and eff = E / (E + F + G), then:
+    # eff_gain = eff / (1 - eff)
+    # So we'll calculate the uncertainty of eff and then propagate it to eff_gain
 
-def EoverFplusG_plot(region_counts: dict, save_path: str, save_name: str):
+    # Dictionaries for the transformed efficiency and its uncertainties.
+    EoverFplusG = {}
+    uncertainties_up = {}
+    uncertainties_down = {}
 
-    EoverFplusG = {key: (counts['E']) / (counts['F'] + counts['G']) for key, counts in region_counts.items() if (counts['F'] + counts['G']) != 0}
+    # Transformation function: from efficiency (E/(E+F+G)) to E/(F+G)
+    def func(x):
+        return x / (1 - x)
 
-    y = np.arange(len(EoverFplusG.keys()))
+    # Loop over each tag in the datasets.
+    skip_tags = ['EB_train', 'EB_val']
+    for tag, data_dict in datasets.items():
+        if tag in skip_tags: continue
+        region_labels = data_dict['region_labels']
+        weights = data_dict['weights']
 
-    # Plot for L1Seeded
-    plt.figure(figsize=(15,8))
-    plt.scatter(EoverFplusG.values(), y, color='cornflowerblue', s=150, alpha=0.5)
-    plt.xlabel('Efficiency', fontsize=15)
-    plt.title(f'Signal Efficiency Gains (E/(F+G))', fontsize=16)
-    plt.yticks(y, EoverFplusG.keys())
+        # Define the numerator mask: only events with region labels containing 'E'
+        num_mask = np.array(['E' in rl for rl in region_labels])
+        # Denominator: all events with labels containing 'E', 'F', or 'G'
+        den_mask = np.array([('E' in rl) or ('F' in rl) or ('G' in rl) for rl in region_labels])
+
+        # Select the appropriate weights.
+        num_weights = weights[num_mask]
+        den_weights = weights[den_mask]
+
+        # Skip tags where the denominator sums to zero.
+        if np.sum(den_weights) == 0:
+            continue
+
+        # Create one-bin histograms for numerator and denominator.
+        # We use a dummy x-axis range [0,1] and fill at x=0.5.
+        h_num = ROOT.TH1F(f"h_num_{tag}", f"Numerator for {tag}", 1, 0, 1)
+        h_den = ROOT.TH1F(f"h_den_{tag}", f"Denom for {tag}", 1, 0, 1)
+
+        # Fill each histogram event-by-event so that the error calculation is correct.
+        for w in num_weights:
+            h_num.Fill(0.5, w)
+        for w in den_weights:
+            h_den.Fill(0.5, w)
+
+        # Build a TGraphAsymmErrors using the Bayesian method.
+        # The option string "cl=0.683 b(1,1) mode" sets the confidence level and the Bayesian prior.
+        g = ROOT.TGraphAsymmErrors(h_num, h_den, "cl=0.683 b(1,1) mode")
+
+        # Compute the efficiency: E/(E+F+G)
+        #eff = h_num.GetBinContent(1) / h_den.GetBinContent(1)
+        eff = np.sum(num_weights) / np.sum(den_weights)
+        # Transform the efficiency to get E/(F+G)
+        EoverFplusG[tag] = func(eff)
+
+        # Retrieve the Bayesian uncertainties on the efficiency.
+        eff_unc_up = g.GetErrorYhigh(0)
+        eff_unc_down = g.GetErrorYlow(0)
+
+        # Propagate the uncertainties through the transformation.
+        uncertainties_up[tag] = func(eff + eff_unc_up) - func(eff)
+        uncertainties_down[tag] = func(eff) - func(eff - eff_unc_down)
+
+    # Prepare the plotting variables.
+    tags = list(EoverFplusG.keys())
+    y_positions = np.arange(len(tags))
+    # Assemble the asymmetric error array: first row lower, second row upper.
+    yerr = np.array([[uncertainties_down[tag] for tag in tags],
+                     [uncertainties_up[tag] for tag in tags]])
+
+    # Create the plot.
+    plt.figure(figsize=(15, 8))
+    plt.errorbar(list(EoverFplusG.values()), y_positions,
+                 xerr=yerr,
+                 fmt='o', color='cornflowerblue', markersize=10, alpha=0.5, capsize=5)
+    plt.xlabel('Efficiency Gain (E/(F+G))', fontsize=15)
+    plt.title('Signal Efficiency Gains (E/(F+G))', fontsize=16)
+    plt.yticks(y_positions, tags)
     plt.tick_params(axis='y', labelsize=12)
     plt.grid(color='gray', linestyle='-', linewidth=0.5, alpha=0.5)
     plt.savefig(f'{save_path}/{save_name}.png')
@@ -942,14 +1253,105 @@ def EoverFplusG_plot(region_counts: dict, save_path: str, save_name: str):
 
     return EoverFplusG
 
+
+    
+def EoverB_plot(datasets: dict, save_path: str, save_name: str):
+    
+    # Calculate the uncertainty of EoverB:
+    # if eff_gain = E / B, and eff = E / (E + B), then:
+    # eff_gain = eff / (1 - eff)
+    # So we'll calculate the uncertainty of eff and then propagate it to eff_gain
+
+    # Dictionaries for the transformed efficiency and its uncertainties.
+    EoverB = {}
+    uncertainties_up = {}
+    uncertainties_down = {}
+
+    # Transformation function: from efficiency (E/(E+B)) to E/B
+    def func(x):
+        return x / (1 - x)
+
+    # Loop over each tag in the datasets.
+    skip_tags = ['EB_train', 'EB_val']
+    for tag, data_dict in datasets.items():
+        if (tag in skip_tags) or (tag.startswith('phys')): continue
+        region_labels = data_dict['region_labels']
+        weights = data_dict['weights']
+
+        # Define the numerator mask: only events with region labels containing 'E'
+        num_mask = np.array(['E' in rl for rl in region_labels])
+        # Denominator: all events with labels containing 'E' or 'B'
+        den_mask = np.array([('E' in rl) or ('B' in rl) for rl in region_labels])
+
+        # Select the appropriate weights.
+        num_weights = weights[num_mask]
+        den_weights = weights[den_mask]
+
+        # Skip tags where the denominator sums to zero.
+        if np.sum(den_weights) == 0:
+            continue
+
+        # Create one-bin histograms for numerator and denominator.
+        # We use a dummy x-axis range [0,1] and fill at x=0.5.
+        h_num = ROOT.TH1F(f"h_num_{tag}", f"Numerator for {tag}", 1, 0, 1)
+        h_den = ROOT.TH1F(f"h_den_{tag}", f"Denom for {tag}", 1, 0, 1)
+
+        # Fill each histogram event-by-event so that the error calculation is correct.
+        for w in num_weights:
+            h_num.Fill(0.5, w)
+        for w in den_weights:
+            h_den.Fill(0.5, w)
+
+        # Build a TGraphAsymmErrors using the Bayesian method.
+        # The option string "cl=0.683 b(1,1) mode" sets the confidence level and the Bayesian prior.
+        g = ROOT.TGraphAsymmErrors(h_num, h_den, "cl=0.683 b(1,1) mode")
+
+        # Compute the efficiency: E/(E+B)
+        #eff = h_num.GetBinContent(1) / h_den.GetBinContent(1)
+        eff = np.sum(num_weights) / np.sum(den_weights)
+        # Transform the efficiency to get E/B
+        EoverB[tag] = func(eff)
+
+        # Retrieve the Bayesian uncertainties on the efficiency.
+        eff_unc_up = g.GetErrorYhigh(0)
+        eff_unc_down = g.GetErrorYlow(0)
+
+        # Propagate the uncertainties through the transformation.
+        uncertainties_up[tag] = func(eff + eff_unc_up) - func(eff)
+        uncertainties_down[tag] = func(eff) - func(eff - eff_unc_down)
+
+    # Prepare the plotting variables.
+    tags = list(EoverB.keys())
+    y_positions = np.arange(len(tags))
+    # Assemble the asymmetric error array: first row lower, second row upper.
+    yerr = np.array([[uncertainties_down[tag] for tag in tags],
+                     [uncertainties_up[tag] for tag in tags]])
+
+    # Create the plot.
+    plt.figure(figsize=(15, 8))
+    plt.errorbar(list(EoverB.values()), y_positions,
+                 xerr=yerr,
+                 fmt='o', color='cornflowerblue', markersize=10, alpha=0.5, capsize=5)
+    plt.xlabel('E/B', fontsize=15)
+    plt.title('E/B', fontsize=16)
+    plt.yticks(y_positions, tags)
+    plt.tick_params(axis='y', labelsize=12)
+    plt.grid(color='gray', linestyle='-', linewidth=0.5, alpha=0.5)
+    plt.savefig(f'{save_path}/{save_name}.png')
+    plt.close()
+
+    return EoverB
+
+    
+
 def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, obj_type: str, seed_scheme: str):
 
     # idxs = ['B' in label for label in datasets['EB_test']['region_labels']] | ['C' in label for label in datasets['EB_test']['region_labels']]
     # anomalous = (['E' in label for label in datasets['EB_test']['region_labels']] | ['F' in label for label in datasets['EB_test']['region_labels']])
 
     pileups = datasets['EB_test']['pileups']
-    leading_jet_pt = datasets['EB_test'][f'{obj_type}_preprocessed_data'][:, 0]
-    MET_pt = datasets['EB_test'][f'{obj_type}_preprocessed_data'][:, -3]
+    leading_jet_pt = datasets['EB_test'][f'{obj_type}_data'][:, 0]
+    MET_pt = datasets['EB_test'][f'{obj_type}_data'][:, -3]
     weights = datasets['EB_test']['weights']
 
     # Define bins for each variable
@@ -993,9 +1395,13 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
             h_pass_MET_pt.Fill(MET_pt[i], datasets['EB_test']['weights'][i])
 
     # Create TEfficiency objects
-    eff_pileup = ROOT.TEfficiency(h_pass_pileup, h_total_pileup)
-    eff_jet_pt = ROOT.TEfficiency(h_pass_jet_pt, h_total_jet_pt)
-    eff_MET_pt = ROOT.TEfficiency(h_pass_MET_pt, h_total_MET_pt)
+    # eff_pileup = ROOT.TEfficiency(h_pass_pileup, h_total_pileup)
+    # eff_jet_pt = ROOT.TEfficiency(h_pass_jet_pt, h_total_jet_pt)
+    # eff_MET_pt = ROOT.TEfficiency(h_pass_MET_pt, h_total_MET_pt)
+
+    eff_pileup = ROOT.TGraphAsymmErrors(h_pass_pileup, h_total_pileup, "cl=0.683 b(1,1) mode")
+    eff_jet_pt = ROOT.TGraphAsymmErrors(h_pass_jet_pt, h_total_jet_pt, "cl=0.683 b(1,1) mode")
+    eff_MET_pt = ROOT.TGraphAsymmErrors(h_pass_MET_pt, h_total_MET_pt, "cl=0.683 b(1,1) mode")
 
     # Plot efficiency vs pileup using ROOT
     if save_path is not None:
@@ -1014,7 +1420,7 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
         c_MET_pt = ROOT.TCanvas("c_MET_pt", "Efficiency vs MET Pt", 800, 600)
         eff_MET_pt.SetTitle(f"Anomalous Event Efficiency vs MET Pt;MET Pt;Efficiency")
         eff_MET_pt.Draw("AP")
-        c_MET_pt.SaveAs(f'{save_path}/{save_name}_MET_pt.png')
+        c_MET_pt.SaveAs(f'{save_path}/{save_name}_MET.png')
 
 def plot_individual_model_results(datasets: dict, region_counts: dict, seed_scheme, save_path, model_version, L1AD_threshold, L1AD_rate, HLTAD_threshold, target_HLTAD_rate, obj_type='HLT'):
 
@@ -1047,16 +1453,19 @@ def plot_individual_model_results(datasets: dict, region_counts: dict, seed_sche
 
     # Plot the raw efficiencies
     raw_efficiencies_plot_from_ROC(seeded_signal_efficiencies, save_path=save_path, save_name=f'Efficiencies_ROC_{model_version}_{seed_scheme}')
-    signal_efficiencies = raw_efficiencies_plot_from_regions(region_counts, save_path=save_path, save_name=f'Efficiencies_region_counts_{model_version}_{seed_scheme}', seed_scheme=seed_scheme)
+    signal_efficiencies = raw_efficiencies_plot_from_regions(datasets, save_path=save_path, save_name=f'Efficiencies_region_counts_{model_version}_{seed_scheme}', seed_scheme=seed_scheme)
 
     # Plot the efficiency gains
-    EoverFplusG = EoverFplusG_plot(region_counts, save_path=save_path, save_name=f'EoverFplusG_{model_version}_{seed_scheme}')
+    EoverFplusG = EoverFplusG_plot(datasets, save_path=save_path, save_name=f'EoverFplusG_{model_version}_{seed_scheme}')
     efficiency_gain_plot(region_counts, save_path=save_path, save_name=f'Efficiency_gains_{model_version}_{seed_scheme}', target_rate=target_HLTAD_rate)
 
     # Plot the efficiency vs variable
     efficiency_vs_variable_plot(datasets, save_path=save_path, save_name=f'Efficiency_plot_{model_version}_{seed_scheme}', obj_type=obj_type, seed_scheme=seed_scheme)
 
-    return signal_efficiencies, EoverFplusG
+    # Plot E over B plot
+    EoverB = EoverB_plot(datasets, save_path=save_path, save_name=f'EoverB_{model_version}_{seed_scheme}')
+
+    return signal_efficiencies, EoverFplusG, EoverB
 
 
 def ensemble_efficiency_gain_plot(efficiency_gains: dict, save_path: str, save_name: str):
@@ -1083,7 +1492,20 @@ def ensemble_raw_efficiencies_plot(efficiencies: dict, save_path: str, save_name
     plt.figure(figsize=(12, 6))
     plt.boxplot(effs.values(), labels=effs.keys())
     plt.title(f'Distribution of Efficiencies')
-    plt.ylabel('Efficiency (E/(F+G))')
+    plt.ylabel('Efficiency')
+    plt.xlabel('Signal')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig(f'{save_path}/{save_name}.png')
+    plt.close()
+
+def ensemble_EoverB_plot(EoverBs: dict, save_path: str, save_name: str):
+    EoverBs = {tag: [EoverB[tag] for EoverB in EoverBs] for tag in EoverBs[0].keys()}
+
+    plt.figure(figsize=(12, 6))
+    plt.boxplot(EoverBs.values(), labels=EoverBs.keys())
+    plt.title(f'Distribution of E over Bs')
+    plt.ylabel('E/B')
     plt.xlabel('Signal')
     plt.xticks(rotation=45)
     plt.tight_layout()
@@ -1093,10 +1515,10 @@ def ensemble_raw_efficiencies_plot(efficiencies: dict, save_path: str, save_name
 def plot_ensemble_results(results: dict, save_path: str, seed_scheme: str):
     efficiency_gains = results['efficiency_gains']
     efficiencies = results['efficiencies']
-
+    EoverBs = results['EoverBs']
     ensemble_efficiency_gain_plot(efficiency_gains, save_path, save_name=f'Efficiency_gains_distribution_{seed_scheme}')
     ensemble_raw_efficiencies_plot(efficiencies, save_path, save_name=f'Efficiencies_distribution_{seed_scheme}')
-
+    ensemble_EoverB_plot(EoverBs, save_path, save_name=f'EoverB_distribution_{seed_scheme}')
 
 
 
@@ -1127,13 +1549,15 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
     l1Seeded_results = {
         'region_counts': [],
         'efficiency_gains': [],
-        'efficiencies': []
+        'efficiencies': [],
+        'EoverBs': []
     }
 
     l1All_results = {
         'region_counts': [],
         'efficiency_gains': [],
-        'efficiencies': []
+        'efficiencies': [],
+        'EoverBs': []
     }
 
     # Loop over each trained model
@@ -1152,7 +1576,9 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             #large_network=large_network,
             saved_model_path=save_path,
             save_version=i,
-            obj_type=obj_type
+            obj_type=obj_type,
+            pt_normalization_type=data_info['pt_normalization_type'],
+            overlap_removal=training_info['overlap_removal']
         )
 
         # Pass the data through the model
@@ -1244,7 +1670,7 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
         #target_FPR = L1Seeded_HLTAD_total_rate / L1AD_total_rate
 
         # Now let's make plots for this model
-        signal_efficiencies, EoverFplusG = plot_individual_model_results(
+        signal_efficiencies, EoverFplusG, EoverB = plot_individual_model_results(
             datasets=datasets, 
             region_counts=region_counts, 
             seed_scheme='l1Seeded',
@@ -1259,7 +1685,7 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
 
         l1Seeded_results['efficiency_gains'].append(EoverFplusG)
         l1Seeded_results['efficiencies'].append(signal_efficiencies)
-
+        l1Seeded_results['EoverBs'].append(EoverB)
         # L1All ---------------------------------------------------------
         pass_L1AD_or_L1_mask = (datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold) | (datasets['EB_test']['passL1'])
 
@@ -1317,7 +1743,7 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
         #target_FPR = L1Seeded_HLTAD_total_rate / L1AD_total_rate
 
         # Now let's make plots for this model
-        signal_efficiencies, EoverFplusG = plot_individual_model_results(
+        signal_efficiencies, EoverFplusG, EoverB = plot_individual_model_results(
             datasets=datasets, 
             region_counts=region_counts, 
             seed_scheme='l1All',
@@ -1332,7 +1758,7 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
 
         l1All_results['efficiency_gains'].append(EoverFplusG)
         l1All_results['efficiencies'].append(signal_efficiencies)
-
+        l1All_results['EoverBs'].append(EoverB)
     
     plot_ensemble_results(l1Seeded_results, save_path=plots_path, seed_scheme='l1Seeded')
     plot_ensemble_results(l1All_results, save_path=plots_path, seed_scheme='l1All')
@@ -1437,7 +1863,9 @@ def convert_to_onnx(training_info, data_info, model_version, save_dir, opset=13,
         #large_network=large_network,
         saved_model_path=save_path,
         save_version=model_version,
-        obj_type=obj_type
+        obj_type=obj_type,
+        pt_normalization_type=data_info['pt_normalization_type'],
+        overlap_removal=training_info['overlap_removal']
     )
 
     # Next, we create a wrapper model which combines the preprocessing model with the MSE model
@@ -1491,7 +1919,9 @@ def compare_tf_with_onnx(datasets: dict, training_info: dict, data_info, model_v
         #large_network=large_network,
         saved_model_path=save_path,
         save_version=model_version,
-        obj_type=obj_type
+        obj_type=obj_type,
+        pt_normalization_type=data_info['pt_normalization_type'],
+        overlap_removal=training_info['overlap_removal']
     )
 
     # Pass the data through the TensorFlow model
