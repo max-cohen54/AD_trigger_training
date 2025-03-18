@@ -769,8 +769,9 @@ class Sampling(layers.Layer):
     """Uses (mu, log_var) to sample z, via reparameterization trick."""
     def call(self, inputs):
         mu, log_var = inputs
+        log_var_clamped = tf.clip_by_value(log_var, -10.0, 10.0)
         epsilon = tf.random.normal(shape=tf.shape(mu))
-        return mu + tf.exp(0.5 * log_var) * epsilon
+        return mu + tf.exp(0.5 * log_var_clamped) * epsilon
 
 
 
@@ -944,7 +945,7 @@ def create_large_VAEGAN_with_preprocessed_inputs(
 
 
 # -----------------------------------------------------------------------------------------
-def masked_mse(y_true, y_pred):
+def masked_mse_per_sample(y_true, y_pred):
     """Masked MSE with correct averaging by the number of valid objects."""
     
     # Masks to filter out invalid objects (zero padding and -999 placeholder)
@@ -973,12 +974,12 @@ def masked_mse(y_true, y_pred):
     mean_squared_error = sum_squared_difference / valid_count
     
     # Return the mean over the batch
-    return K.mean(mean_squared_error)
-
+    #return K.mean(mean_squared_error) * 0.01 # Scale MSE by 0.1 to avoid latent space collapse
+    return mean_squared_error
 def kl_divergence(mu, log_var):
     return -0.5 * tf.reduce_sum(1 + log_var - tf.square(mu) - tf.exp(log_var), axis=1)
 
-bce = BinaryCrossentropy(from_logits=False)
+bce = BinaryCrossentropy(from_logits=False, reduction=tf.keras.losses.Reduction.NONE)
 # -----------------------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------------------
@@ -1022,10 +1023,10 @@ def train_model_vaegan(
     model_version,
     save_path,
     models_dict,
-    num_epochs=100,
+    num_epochs=300,
     batch_size=512,
     gamma=1.0,
-    kl_start=0.0,
+    kl_start=0.0001,
     kl_stop=1.0,
     kl_anneal_epochs=50,
     disc_train_steps=1,
@@ -1033,9 +1034,19 @@ def train_model_vaegan(
     obj_type='HLT',
     training_weights=True,
     learning_rate=1e-3,
+    # --- New hyperparams for LR scheduling & early stopping ---
+    STOP_PATIENCE=10,       # # epochs of no improvement before stopping
+    LR_PATIENCE=5,          # # epochs of no improvement before reducing LR
+    LR_FACTOR=0.1,          # factor to reduce LR by
+    MIN_DELTA=1e-4,         # minimal improvement threshold
+    verbose=1
 ):
     """
-    Train a VAE-GAN using a custom training loop with beta-annealing.
+    Train a VAE-GAN using a custom training loop with:
+      - Beta-annealing (KL ramp)
+      - Validation loss calculation
+      - Learning rate scheduling (ReduceLROnPlateau style)
+      - Early stopping
 
     Args:
         datasets (dict): same structure as your original code, containing:
@@ -1057,7 +1068,12 @@ def train_model_vaegan(
         gen_train_steps (int): how many times to train the VAE per epoch.
         obj_type (str): 'HLT' or 'L1', etc. for dataset keys.
         training_weights (bool): whether to use sample weights from dataset.
-        learning_rate (float): learning rate for both optimizers.
+        learning_rate (float): initial learning rate for both optimizers.
+        STOP_PATIENCE (int): # epochs of no improvement before early stopping.
+        LR_PATIENCE (int): # epochs of no improvement before reducing LR.
+        LR_FACTOR (float): factor to reduce LR by when no improvement.
+        MIN_DELTA (float): minimal improvement threshold to count as improvement.
+        verbose (int): verbosity.
 
     Returns:
         history (dict): a dictionary of recorded losses for analysis.
@@ -1068,50 +1084,48 @@ def train_model_vaegan(
     encoder = models_dict["encoder"]
     decoder = models_dict["decoder"]
     discriminator = models_dict["discriminator"]
-    vae_gan_model = models_dict["vae_gan_model"]  # for the forward pass (Encoder->Decoder->Disc)
+    # vae_gan_model = models_dict["vae_gan_model"]  # not strictly needed here
 
-    # Optionally, compile for static shape checks, but we won't rely on model.fit().
-    # We'll do a custom loop with tf.GradientTape.
-    # (Note: We do not do "discriminator.compile(...)" because we have a custom step.)
-    
     # Adam optimizers for Discriminator and VAE
     disc_optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
-    vae_optimizer = Adam(learning_rate=learning_rate, beta_1=0.5)
+    vae_optimizer  = Adam(learning_rate=learning_rate, beta_1=0.5)
 
     # ---------------------------------------------------------------------
     # Prepare data & weights
-    # 1) Preprocess offline and store to avoid repeated calls each epoch
     # ---------------------------------------------------------------------
     x_train_raw = datasets['EB_train'][f'{obj_type}_data']
     x_val_raw   = datasets['EB_val'][f'{obj_type}_data']
 
-    print("[INFO] Preprocessing training data...")
+    if verbose:
+        print("[INFO] Preprocessing training data...")
     x_train_prep = preprocessing_model.predict(x_train_raw, batch_size=8)
-    print("[INFO] Preprocessing validation data...")
-    x_val_prep   = preprocessing_model.predict(x_val_raw,   batch_size=8)
+    if verbose:
+        print("[INFO] Preprocessing validation data...")
+    x_val_prep   = preprocessing_model.predict(x_val_raw, batch_size=8)
 
-    # Convert to tf.data for convenience
-    # NOTE: If your dataset is large, you might want to shuffle, cache, etc.
+    # Build tf.data for train
     n_train = x_train_prep.shape[0]
-    train_dataset = tf.data.Dataset.from_tensor_slices(x_train_prep)
     if training_weights:
         train_weights = datasets['EB_train']['weights']
         train_weights = 1000. * train_weights / np.sum(train_weights)
+        train_weights = train_weights.astype(np.float32)
         train_dataset = tf.data.Dataset.from_tensor_slices((x_train_prep, train_weights))
     else:
-        train_dataset = tf.data.Dataset.from_tensor_slices((x_train_prep, np.ones(shape=(n_train,))))
+        train_dataset = tf.data.Dataset.from_tensor_slices((x_train_prep, np.ones((n_train,))))
 
     train_dataset = train_dataset.shuffle(buffer_size=n_train).batch(batch_size, drop_remainder=True)
 
+    # Build tf.data for val
     n_val = x_val_prep.shape[0]
-    val_dataset = tf.data.Dataset.from_tensor_slices(x_val_prep)
     if training_weights:
         val_weights = datasets['EB_val']['weights']
         val_weights = 1000. * val_weights / np.sum(val_weights)
+        val_weights = val_weights.astype(np.float32)
         val_dataset = tf.data.Dataset.from_tensor_slices((x_val_prep, val_weights))
     else:
-        val_dataset = tf.data.Dataset.from_tensor_slices((x_val_prep, np.ones(shape=(n_val,))))
-    val_dataset = val_dataset.batch(batch_size, drop_remainder=True)
+        val_dataset = tf.data.Dataset.from_tensor_slices((x_val_prep, np.ones((n_val,))))
+
+    val_dataset = val_dataset.batch(batch_size, drop_remainder=False)
 
     # ---------------------------------------------------------------------
     # Bookkeeping for storing losses
@@ -1119,84 +1133,150 @@ def train_model_vaegan(
     history = {
         "disc_loss": [],
         "gen_loss": [],
+        "val_loss": [],
+        "val_mse":  [],
+        "val_kl":   [],
+        "val_adv":  [],
         "kl_beta":  [],
+        "learning_rate": [],
     }
+
+    # Early stopping / LR scheduling variables
+    best_val_loss = np.inf
+    epochs_no_improve_lr = 0
+    epochs_no_improve_stop = 0
+    current_lr = learning_rate
 
     # ---------------------------------------------------------------------
     # Custom training steps
     # ---------------------------------------------------------------------
     @tf.function
     def train_discriminator_step(x_real, sample_weight=1.0):
-        """
-        Train the discriminator: real->discriminator, fake->discriminator.
-        Minimizes -[ log(D(real)) + log(1 - D(fake)) ].
-        """
         with tf.GradientTape() as tape:
-            # 1) Forward pass real
             d_real = discriminator(x_real, training=True)
-            # BCE( real=1 )
             real_labels = tf.ones_like(d_real)
             disc_loss_real = bce(real_labels, d_real)
 
-            # 2) Forward pass fake
-            #   Encode->Decode
+            # Generate fakes
             mu, log_var, z = encoder(x_real, training=False)
             x_fake = decoder(z, training=False)
             d_fake = discriminator(x_fake, training=True)
-            # BCE( fake=0 )
+
+            #print(f'discriminator step:')
+            #tf.print("d_real:", d_real[0:10])
+            #tf.print("d_fake:", d_fake[0:10])
+
             fake_labels = tf.zeros_like(d_fake)
             disc_loss_fake = bce(fake_labels, d_fake)
 
-            disc_loss_total = disc_loss_real + disc_loss_fake
-            disc_loss_total = disc_loss_total * sample_weight  # very naive weighting
+            # print shapes
+            #tf.print("disc_loss_real:", tf.shape(disc_loss_real))
+            #tf.print("disc_loss_fake:", tf.shape(disc_loss_fake))
 
-            # Add any regularization losses
-            reg_losses = discriminator.losses  # L2 from the layers
+            disc_loss_per_sample = (disc_loss_real + disc_loss_fake) * sample_weight
+            disc_loss_total = tf.reduce_mean(disc_loss_per_sample)
+            # Regularization from discriminator
+            reg_losses = discriminator.losses
             if reg_losses:
                 disc_loss_total += tf.math.add_n(reg_losses)
 
         grads = tape.gradient(disc_loss_total, discriminator.trainable_variables)
-        disc_optimizer.apply_gradients(zip(grads, discriminator.trainable_variables))
+        
+        clipped_grads = [tf.clip_by_value(g, -1.0, 1.0) for g in grads]
+        disc_optimizer.apply_gradients(zip(clipped_grads, discriminator.trainable_variables))
         return disc_loss_total
 
     @tf.function
     def train_vae_step(x_real, kl_beta, sample_weight=1.0):
-        """
-        Train the VAE (Encoder+Decoder) with adversarial loss from the discriminator.
-        Loss = MSE + kl_beta * KL + gamma * adv_loss
-        where adv_loss = -log(D(fake)) to "fool" the disc.
-        """
         with tf.GradientTape() as tape:
-            # Forward pass
             mu, log_var, z = encoder(x_real, training=True)
             x_fake = decoder(z, training=True)
 
-            # 1) Reconstruction (masked MSE)
-            mse_loss = masked_mse(x_real, x_fake)
+            # MSE
+            mse_loss = masked_mse_per_sample(x_real, x_fake)
+            #mse_loss = tf.reduce_mean(mse_loss)
 
-            # 2) KL
+
+            # KL
             kl = kl_divergence(mu, log_var)
-            kl_mean = tf.reduce_mean(kl)
+            #kl_mean = tf.reduce_mean(kl)
 
-            # 3) Adversarial: want D(fake) ~ 1
+            # Adversarial: generator wants D(fake)=1
             d_fake = discriminator(x_fake, training=False)
-            # generator wants log(d_fake) to be high => -log(d_fake) is minimized
             adv_loss = bce(tf.ones_like(d_fake), d_fake)
 
-            # Combine all
-            gen_loss_total = mse_loss + kl_beta * kl_mean + gamma * adv_loss
+            # print shapes
+            #tf.print("mse_loss:", tf.shape(mse_loss))
+            #tf.print("kl:", tf.shape(kl))
+            #tf.print("adv_loss:", tf.shape(adv_loss))
 
-            # sample_weight
-            gen_loss_total = gen_loss_total * sample_weight
+            
 
-            # Add AE regularization losses (from encoder + decoder)
-            reg_losses = encoder.losses + decoder.losses  # L2 from layers
+            #gen_loss_per_sample = mse_loss + kl_beta * kl_mean + gamma * adv_loss
+            gen_loss_total = tf.reduce_mean((mse_loss + kl_beta * kl + gamma * adv_loss) * sample_weight)
+            mse_loss = tf.reduce_mean(mse_loss)
+            kl_mean = tf.reduce_mean(kl)
+            adv_loss = tf.reduce_mean(adv_loss)
+            #gen_loss_per_sample = gen_loss_per_sample * sample_weight
+            #gen_loss_total = tf.reduce_mean(gen_loss_per_sample)
+
+            #tf.print("vae step:")
+            #tf.print("mu:", mu[0:10])
+            #tf.print("log_var:", log_var[0:10])
+            #tf.print("z:", z[0:10])
+            #tf.print("d_fake:", d_fake[0:10])
+            #tf.print("adv_loss:", adv_loss)
+
+            reg_losses = encoder.losses + decoder.losses
             if reg_losses:
                 gen_loss_total += tf.math.add_n(reg_losses)
 
         grads = tape.gradient(gen_loss_total, encoder.trainable_variables + decoder.trainable_variables)
-        vae_optimizer.apply_gradients(zip(grads, encoder.trainable_variables + decoder.trainable_variables))
+        clipped_grads = [tf.clip_by_value(g, -1.0, 1.0) for g in grads]
+        vae_optimizer.apply_gradients(zip(clipped_grads, encoder.trainable_variables + decoder.trainable_variables))
         return gen_loss_total, mse_loss, kl_mean, adv_loss
+
+    # ---------------------------------------------------------------------
+    # Helper: compute validation losses
+    # ---------------------------------------------------------------------
+    def compute_val_loss(kl_beta):
+        """
+        Loop over val_dataset, compute:
+          - MSE
+          - KL
+          - Adversarial
+          - Combined VAE-GAN loss
+        Returns average across the entire validation set.
+        """
+        val_mse_vals = []
+        val_kl_vals  = []
+        val_adv_vals = []
+        for x_val_batch, weight_batch in val_dataset:
+            mu_val, log_var_val, z_val = encoder(x_val_batch, training=False)
+            x_fake_val = decoder(z_val, training=False)
+
+            # MSE
+            val_mse_loss = masked_mse_per_sample(x_val_batch, x_fake_val).numpy() # shape (batch,)
+            val_mse_loss = np.mean(val_mse_loss * weight_batch)
+            # KL
+            klv = kl_divergence(mu_val, log_var_val).numpy()  # shape (batch,)
+            kl_mean_val = np.mean(klv * weight_batch)
+
+            # adv
+            d_fake_val = discriminator(x_fake_val, training=False)
+            adv_loss_val = bce(tf.ones_like(d_fake_val), d_fake_val).numpy()
+            adv_loss_val = np.mean(adv_loss_val * weight_batch)
+
+            val_mse_vals.append(val_mse_loss)
+            val_kl_vals.append(kl_mean_val)
+            val_adv_vals.append(adv_loss_val)
+
+        mean_val_mse = np.mean(val_mse_vals)
+        mean_val_kl  = np.mean(val_kl_vals)
+        mean_val_adv = np.mean(val_adv_vals)
+        # total vae-gan
+        total_val_loss = mean_val_mse + kl_beta * mean_val_kl + gamma * mean_val_adv
+        return total_val_loss, mean_val_mse, mean_val_kl, mean_val_adv
 
     # ---------------------------------------------------------------------
     # Main training loop
@@ -1205,7 +1285,6 @@ def train_model_vaegan(
 
     for epoch in range(num_epochs):
         # Beta-annealing schedule
-        # For example: ramp from kl_start to kl_stop linearly over kl_anneal_epochs
         if epoch < kl_anneal_epochs:
             kl_beta = kl_start + (kl_stop - kl_start) * (epoch / float(kl_anneal_epochs))
         else:
@@ -1214,34 +1293,75 @@ def train_model_vaegan(
         disc_loss_epoch = 0.0
         gen_loss_epoch = 0.0
 
-        # Iterate over training batches
+        # --- Training Phase ---
         for step, batch in enumerate(train_dataset.take(n_steps_per_epoch)):
-            # Unpack
             x_batch, w_batch = batch
 
-            # Train Discriminator "disc_train_steps" times
+            # Train Discriminator
             for _ in range(disc_train_steps):
                 d_loss = train_discriminator_step(x_batch, sample_weight=w_batch)
                 disc_loss_epoch += d_loss
 
-            # Train VAE "gen_train_steps" times
+            # Train VAE
             for _ in range(gen_train_steps):
                 g_loss, mse_loss_val, kl_val, adv_val = train_vae_step(x_batch, kl_beta, sample_weight=w_batch)
                 gen_loss_epoch += g_loss
 
-        # Average losses over steps
+        # Average losses
         disc_loss_epoch /= (n_steps_per_epoch * disc_train_steps)
         gen_loss_epoch  /= (n_steps_per_epoch * gen_train_steps)
+
+        # --- Validation Phase ---
+        val_loss, val_mse, val_kl, val_adv = compute_val_loss(kl_beta)
 
         # Store in history
         history["disc_loss"].append(disc_loss_epoch.numpy())
         history["gen_loss"].append(gen_loss_epoch.numpy())
+        history["val_loss"].append(val_loss)
+        history["val_mse"].append(val_mse)
+        history["val_kl"].append(val_kl)
+        history["val_adv"].append(val_adv)
         history["kl_beta"].append(kl_beta)
+        history["learning_rate"].append(vae_optimizer.learning_rate.numpy())
 
-        # Print progress
-        print(f"Epoch {epoch+1}/{num_epochs} - disc_loss: {disc_loss_epoch:.4f}, gen_loss: {gen_loss_epoch:.4f}, kl_beta: {kl_beta:.3f}")
+        if verbose:
+            print(
+                f"Epoch {epoch+1}/{num_epochs} "
+                f"- disc_loss: {disc_loss_epoch:.4f}, gen_loss: {gen_loss_epoch:.4f}, "
+                f"val_loss: {val_loss:.4f}, "
+                f"val_mse: {val_mse:.4f}, val_kl: {val_kl:.4f}, val_adv: {val_adv:.4f}, "
+                f"kl_beta: {kl_beta:.3f}, lr: {vae_optimizer.learning_rate.numpy():.2e}"
+            )
 
-        # Optionally do validation, early stopping checks, etc.
+        # --- LR Scheduler & Early Stopping ---
+        # Check if validation improved
+        if epoch > kl_anneal_epochs + 10:
+            if val_loss < (best_val_loss - MIN_DELTA):
+                # improved
+                best_val_loss = val_loss
+                epochs_no_improve_lr = 0
+                epochs_no_improve_stop = 0
+            else:
+                # no significant improvement
+                epochs_no_improve_lr   += 1
+                epochs_no_improve_stop += 1
+
+                # Reduce LR if patience is exceeded
+                if epochs_no_improve_lr >= LR_PATIENCE:
+                    new_lr = vae_optimizer.learning_rate * LR_FACTOR
+                    disc_optimizer.learning_rate.assign(new_lr)
+                    vae_optimizer.learning_rate.assign(new_lr)
+                    if verbose:
+                        print(
+                            f"[LR Scheduler] Reducing LR to {new_lr.numpy():.2e} at epoch {epoch+1}"
+                        )
+                    epochs_no_improve_lr = 0  # reset
+
+            # Early stopping if patience is exceeded
+            if epochs_no_improve_stop >= STOP_PATIENCE:
+                if verbose:
+                    print(f"[Early Stopping] No improvement for {STOP_PATIENCE} epochs. Stopping.")
+                break
 
     # ---------------------------------------------------------------------
     # Save final weights
@@ -1256,54 +1376,110 @@ def train_model_vaegan(
 
 
 # -----------------------------------------------------------------------------------------
-def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropout_p=0, L2_reg_coupling=0, latent_dim=4, large_network=True, num_trainings=10, training_weights=True, obj_type='HLT', overlap_removal=False):
+def train_multiple_models(
+    datasets: dict, 
+    data_info: dict, 
+    save_path: str, 
+    dropout_p=0, 
+    L2_reg_coupling=0, 
+    latent_dim=4, 
+    large_network=True, 
+    num_trainings=10, 
+    training_weights=True, 
+    obj_type='HLT', 
+    overlap_removal=False
+):
     """
-    calls 'initialize_and_train' multiple times to average results across multiple trainings.
+    Calls a VAE-GAN initialization and training function multiple times 
+    to average results across multiple runs.
 
     Inputs:
-        datasets: dict containing the data.
-        data_info: dict containing information about the training data.
-        save_path: string of the path to save the model.
-        dropout_p: dropout percentage for the AE.
-        L2_reg_coupling: coupling value for L2 regularization.
-        latent_dim: dimension of the latent space of the model.
-        large_network: boolean for whether the network should be large or small.
-        num_trainings: number of trainings to run.
+        datasets (dict): dictionary containing the data
+        data_info (dict): dictionary containing info about the data/training
+        save_path (str): path to save the model
+        dropout_p (float): dropout percentage
+        L2_reg_coupling (float): L2 regularization factor
+        latent_dim (int): dimension of the latent space
+        large_network (bool): whether to use a large architecture
+        num_trainings (int): number of trainings to run
+        training_weights (bool): whether to use event weights
+        obj_type (str): e.g. 'HLT' or 'L1'
+        overlap_removal (bool): whether to apply overlap removal
 
     Returns:
-        training_info: dict containing information about the training which will be used for processing the model. Also dumped into a file for documentation.
-        data_info: dict containing information about the training data.
+        training_info (dict): summary of training info
+        data_info (dict): the same dict passed in, or updated if needed
     """
-    
-    # -------------------
+
     print(f'Booting up... initializing trainings of {num_trainings} models\n')
 
+    # Decide on your hidden-layer sizes based on "large_network"
+    if large_network:
+        H_DIM_1 = 100
+        H_DIM_2 = 100
+        H_DIM_3 = 64
+        H_DIM_4 = 32
+    else:
+        H_DIM_1 = 32
+        H_DIM_2 = 16
+        H_DIM_3 = 8
+        H_DIM_4 = 8
+
     for i in range(num_trainings):
-        print(f'starting training model {i}...')
-        
-        model_version = f'{i}'
-        
-        train_model(
-            datasets=datasets, 
-            model_version=model_version,
-            save_path=save_path,
-            dropout_p=dropout_p,
-            pt_thresholds=data_info['pt_thresholds'],
-            pt_scale_factor=data_info['pt_scale_factor'],
-            L2_reg_coupling=L2_reg_coupling,
+        print(f'Starting training model {i}...')
+
+        # Construct a model version tag (suffix)
+        model_version = f"{i}"
+
+        # 1) CREATE the VAE-GAN models (encoder, decoder, disc, etc.)
+        #    using the function you wrote to build everything.
+        #    You might want to pass additional arguments (e.g. L2, dropout_p)
+        models_dict = create_large_VAEGAN_with_preprocessed_inputs(
+            num_objects=16,
+            num_features=3,
+            h_dim_1=H_DIM_1,
+            h_dim_2=H_DIM_2,
+            h_dim_3=H_DIM_3,
+            h_dim_4=H_DIM_4,
             latent_dim=latent_dim,
-            large_network=large_network,
-            training_weights=training_weights,
-            obj_type=obj_type,
+            pt_thresholds=data_info['pt_thresholds'],
+            scale_factor=data_info['pt_scale_factor'],
+            l2_reg=L2_reg_coupling,
+            dropout_rate=dropout_p,
             pt_normalization_type=data_info['pt_normalization_type'],
             overlap_removal=overlap_removal
         )
-        print(f'model {i} success\n')
 
-    print(f'Powering off... finished trainings.')
-    # -------------------
+        # 2) TRAIN the VAE-GAN using the new training loop
+        history = train_model_vaegan(
+            datasets=datasets,
+            model_version=model_version,
+            save_path=save_path,
+            models_dict=models_dict,
+            num_epochs=300,            # customize your epoch count
+            batch_size=512,           # or set your own
+            gamma=1.0,                # adv loss multiplier
+            kl_start=0.0001,             # KL anneal start
+            kl_stop=0.0001,              # KL anneal stop
+            kl_anneal_epochs=50,      # ramp up over 50 epochs
+            disc_train_steps=1,
+            gen_train_steps=1,
+            obj_type=obj_type,
+            training_weights=training_weights,
+            learning_rate=1e-3,
+            STOP_PATIENCE=10,         # early stopping patience
+            LR_PATIENCE=5,           # LR scheduler patience
+            LR_FACTOR=0.1,           
+            MIN_DELTA=1e-4,
+            verbose=1
+        )
 
-    # -------------------
+        print(f'Model {i} successfully trained.\n')
+        # Optionally, you could save "history" somewhere or merge them.
+
+    print('Powering off... finished trainings.')
+
+    # Summarize what we did in "training_info"
     training_info = {
         'save_path': save_path,
         'dropout_p': dropout_p,
@@ -1315,16 +1491,14 @@ def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropo
         'obj_type': obj_type,
         'overlap_removal': overlap_removal
     }
-    # -------------------
 
-    # Write the training info to a txt file
+    # Write the training info to a txt file for documentation
     with open('./training_documentation.txt', 'a') as f:
         f.write('\n training_info:')
         f.write(json.dumps(training_info))
-        f.write('data_info:')
+        f.write('\n data_info:')
         f.write(json.dumps(data_info))
         f.write('\n')
-    # -------------------
 
     return training_info, data_info
 # -----------------------------------------------------------------------------------------
@@ -1361,6 +1535,12 @@ def MSE_AD_score(y, x):
     loss = sum_squared_diff / valid_count
     
     return loss
+
+
+def KL_AD_score(mu, log_var):
+
+    kl = -0.5 * np.sum(1 + log_var - np.square(mu) - np.exp(log_var), axis=-1)
+    return kl
 # -----------------------------------------------------------------------------------------
 
 def ROC_curve_plot(datasets: dict, save_path: str, save_name: str, HLTAD_threshold, bkg_tag='EB_test', obj_type='HLT'):
@@ -2087,14 +2267,40 @@ def plot_ensemble_results(results: dict, save_path: str, seed_scheme: str):
 
     
 # -----------------------------------------------------------------------------------------
-def process_multiple_models(training_info: dict, data_info: dict, plots_path: str, target_rate: int=10, L1AD_rate: int=1000, custom_datasets=None, obj_type='HLT'):
+def process_multiple_models(
+    training_info: dict,
+    data_info: dict,
+    plots_path: str,
+    target_rate: int = 10,
+    L1AD_rate: int = 1000,
+    custom_datasets=None,
+    obj_type='HLT'
+):
+    """
+    Loads multiple trained VAE-GAN models and evaluates them on test datasets
+    to produce AD scores, thresholds, and final region-based results/plots.
 
-    print(f'powering on... preparing to run evals')
+    Args:
+        training_info (dict): Info about the training runs (save_path, dropout, etc.).
+        data_info (dict): Info for data loading/preprocessing (pt_thresholds, pt_scale_factor, etc.).
+        plots_path (str): Directory path for saving plots/results.
+        target_rate (int): target HLT rate
+        L1AD_rate (int): target L1 rate
+        custom_datasets (dict or None): if provided, use these datasets instead of reloading
+        obj_type (str): e.g. 'HLT' or 'L1' object key in your dataset
 
+    Returns:
+        datasets, l1Seeded_results, l1All_results
+    """
+
+    print(f'Powering on... preparing to run evals.')
+
+    # Either use provided datasets or load from disk
     if custom_datasets is not None:
         datasets = custom_datasets
     else:
-        # Load data according to the training info
+        # You presumably have a function like "load_and_preprocess(**data_info)"
+        # that returns a datasets dict and possibly updates data_info
         datasets, data_info = load_and_preprocess(**data_info)
 
     # Unpack training info
@@ -2102,13 +2308,14 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
     dropout_p = training_info['dropout_p']
     L2_reg_coupling = training_info['L2_reg_coupling']
     latent_dim = training_info['latent_dim']
-    #large_network = training_info['large_network']
     num_trainings = training_info['num_trainings']
+    overlap_removal = training_info['overlap_removal']
+    #training_weights = training_info['training_weights']  # if needed
+    large_network = training_info['large_network'] if 'large_network' in training_info else True
 
-    print(f'evals phase 1 of 2 initiated.')
+    print(f'Evals phase 1 of 2 initiated.')
 
-    # Initialize results: dictionary of lists. Each list will contain 'num_trainings' elements.
-    # trying to decide if I want lists for each metric, or if I should first separate it by tags, and then have metrics in each tag.
+    # Initialize results containers
     l1Seeded_results = {
         'region_counts': [],
         'efficiency_gains': [],
@@ -2123,46 +2330,77 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
         'EoverBs': []
     }
 
-    # Loop over each trained model
+    # Decide hidden-layer sizes based on "large_network" (if needed):
+    if large_network:
+        H_DIM_1, H_DIM_2, H_DIM_3, H_DIM_4 = 100, 100, 64, 32
+    else:
+        H_DIM_1, H_DIM_2, H_DIM_3, H_DIM_4 = 32, 16, 8, 8
+
     for i in range(num_trainings):
+        print(f'Phase 1: Starting evals of model index {i}...')
 
-        print(f'phase 1: starting evals of model {i}...')
-
-        # Load the model
-        HLT_AE, HLT_encoder, HLT_MSE_AE, HLT_preprocessing_model = initialize_model(
-            input_dim=datasets['EB_train']['HLT_data'].shape[1],
-            pt_thresholds=data_info['pt_thresholds'],
-            pt_scale_factor=data_info['pt_scale_factor'],
-            dropout_p=dropout_p,
-            L2_reg_coupling=L2_reg_coupling,
+        # 1) Build a fresh VAE-GAN architecture
+        models_dict = create_large_VAEGAN_with_preprocessed_inputs(
+            num_objects=16,
+            num_features=3,
+            h_dim_1=H_DIM_1,
+            h_dim_2=H_DIM_2,
+            h_dim_3=H_DIM_3,
+            h_dim_4=H_DIM_4,
             latent_dim=latent_dim,
-            #large_network=large_network,
-            saved_model_path=save_path,
-            save_version=i,
-            obj_type=obj_type,
+            pt_thresholds=data_info['pt_thresholds'],
+            scale_factor=data_info['pt_scale_factor'],
+            l2_reg=L2_reg_coupling,
+            dropout_rate=dropout_p,
             pt_normalization_type=data_info['pt_normalization_type'],
-            overlap_removal=training_info['overlap_removal']
+            overlap_removal=overlap_removal
         )
 
-        # Pass the data through the model
+        # 2) Load the saved weights for the relevant submodels
+        encoder        = models_dict["encoder"]
+        decoder        = models_dict["decoder"]
+        discriminator  = models_dict["discriminator"]  # might not be needed for AD score
+        preprocess     = models_dict["preprocessing_model"]
+
+        # File naming pattern
+        encoder.load_weights(f'{save_path}/EB_{obj_type}_encoder_{i}.weights.h5')
+        decoder.load_weights(f'{save_path}/EB_{obj_type}_decoder_{i}.weights.h5')
+        discriminator.load_weights(f'{save_path}/EB_{obj_type}_discriminator_{i}.weights.h5')
+        preprocess.load_weights(f'{save_path}/EB_{obj_type}_preprocessing_{i}.weights.h5')
+
+        # 3) For each dataset, get AD scores:
         skip_tags = ['EB_train', 'EB_val']
-        for tag, dict in datasets.items():
-            if tag in skip_tags: continue
+        for tag, data_dict in datasets.items():
+            if tag in skip_tags:
+                continue
 
-            dict[f'{obj_type}_preprocessed_data'] = HLT_preprocessing_model.predict(dict[f'{obj_type}_data'], verbose=0, batch_size=8)
-            #dict[f'{obj_type}_model_outputs'] = HLT_AE.predict(dict[f'{obj_type}_preprocessed_data'], verbose=0, batch_size=8)
-            #dict[f'{obj_type}_latent_reps'] = HLT_encoder.predict(dict[f'{obj_type}_preprocessed_data'], verbose=0, batch_size=8)
+            # Preprocess
+            data_dict[f'{obj_type}_preprocessed_data'] = preprocess.predict(
+                data_dict[f'{obj_type}_data'], batch_size=8, verbose=0
+            )
 
-        # Calculate the AD scores
-        for tag, dict in datasets.items():
-            if tag in skip_tags: continue
+            # Forward pass: (mu, log_var, z) = encoder(...)
+            #   encoder.predict returns [mu, log_var, z] if your encoder has 3 outputs.
+            #   Be sure to match the shape the function actually returns.
+            enc_outputs = encoder.predict(data_dict[f'{obj_type}_preprocessed_data'], batch_size=8, verbose=0)
+            # If your encoder has outputs [mu, log_var, z], enc_outputs will be a list of 3 arrays.
+            if isinstance(enc_outputs, list) and len(enc_outputs) == 3:
+                mu, log_var, z = enc_outputs
+            else:
+                raise ValueError("Encoder predict did not return [mu, log_var, z]! Check your architecture.")
 
-            dict[f'{obj_type}_AD_scores'] = HLT_MSE_AE.predict(dict[f'{obj_type}_preprocessed_data'], batch_size=8)
-            #dict[f'calculated_{obj_type}_AD_scores'] = MSE_AD_score(dict[f'{obj_type}_preprocessed_data'], dict[f'{obj_type}_model_outputs'])
+            # Decoder pass
+            data_dict[f'{obj_type}_model_outputs'] = decoder.predict(z, batch_size=8, verbose=0)
 
-        
-        # Calculate the L1AD threshold and rates
-        L1AD_threshold, L1AD_pure_rate , L1AD_total_rate = find_threshold(
+            # 4) Compute AD scores using masked MSE
+            #    Your MSE_AD_score is a NumPy function. So ensure data are NumPy arrays.
+            #y = data_dict[f'{obj_type}_preprocessed_data']
+            #x = data_dict[f'{obj_type}_model_outputs']
+            #data_dict[f'{obj_type}_AD_scores'] = MSE_AD_score(y, x)
+            data_dict[f'{obj_type}_AD_scores'] = KL_AD_score(mu, log_var)
+
+        # 5) Compute L1AD threshold and rates for "EB_test"
+        L1AD_threshold, L1AD_pure_rate, L1AD_total_rate = find_threshold(
             scores=datasets['EB_test']['topo2A_AD_scores'],
             weights=datasets['EB_test']['weights'],
             pass_current_trigs=datasets['EB_test']['passL1'],
@@ -2170,13 +2408,12 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             incoming_rate=31575960
         )
 
-        print(f'model {i}:')
-        print(f'L1AD_pure_rate: {L1AD_pure_rate}')
-        print(f'L1AD_total_rate: {L1AD_total_rate}')
-        print(f'L1AD_threshold: {L1AD_threshold}')
+        print(f'Model {i}:')
+        print(f'  L1AD_pure_rate: {L1AD_pure_rate}')
+        print(f'  L1AD_total_rate: {L1AD_total_rate}')
+        print(f'  L1AD_threshold: {L1AD_threshold}')
 
-
-        # L1Seeded ---------------------------------------------------------
+        # ============= L1-SEEDED SCHEME =============
         pass_L1AD_mask = datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold
 
         HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
@@ -2186,27 +2423,26 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             target_rate=target_rate,
             incoming_rate=L1AD_total_rate
         )
-        print(f'l1Seeded:::')
-        print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
-        print(f'HLTAD_total_rate: {HLTAD_total_rate}')
-        print(f'HLTAD_threshold: {HLTAD_threshold}\n')
+        print(f'  l1Seeded:')
+        print(f'    HLTAD_pure_rate: {HLTAD_pure_rate}')
+        print(f'    HLTAD_total_rate: {HLTAD_total_rate}')
+        print(f'    HLTAD_threshold: {HLTAD_threshold}\n')
 
-        # Initialize the region counts for each tag
-        region_counts = {tag: {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0} for tag in datasets.keys()}
-        
-        # Loop over each tag
-        for tag, data_dict in datasets.items():
-            if tag in skip_tags: continue
-            
-            # will hold the regions that each event falls into. Each event will be in region A
+        # Region counts for each dataset/tag
+        region_counts = {tg: {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0}
+                         for tg in datasets.keys()}
+
+        # Label each event's region
+        for tg, data_dict in datasets.items():
+            if tg in skip_tags:
+                continue
+
             data_dict['region_labels'] = ['A'] * len(data_dict[f'{obj_type}_AD_scores'])
-
             passHLTAD = data_dict[f'{obj_type}_AD_scores'] >= HLTAD_threshold
-            passHLT = data_dict['passHLT']
-            passL1AD = data_dict['topo2A_AD_scores'] >= L1AD_threshold
-            passL1 = data_dict['passL1']
+            passHLT   = data_dict['passHLT']
+            passL1AD  = data_dict['topo2A_AD_scores'] >= L1AD_threshold
+            passL1    = data_dict['passL1']
 
-            # Add letters to strings where conditions are met
             for j, (l1ad, l1, hltad, hlt) in enumerate(zip(passL1AD, passL1, passHLTAD, passHLT)):
                 if l1ad and not l1:
                     data_dict['region_labels'][j] += 'B'
@@ -2221,18 +2457,15 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
                 if (l1 or l1ad) and not hltad and hlt:
                     data_dict['region_labels'][j] += 'G'
 
-            # Now keep track of the number of events in each region
             for j, label in enumerate(data_dict['region_labels']):
                 weight = data_dict['weights'][j]
                 for region in label:
-                    region_counts[tag][region] += weight
-        
-        # Append the results to the list
+                    region_counts[tg][region] += weight
+
+        # Store results
         l1Seeded_results['region_counts'].append(region_counts)
 
-        #target_FPR = L1Seeded_HLTAD_total_rate / L1AD_total_rate
-
-        # Now let's make plots for this model
+        # Generate your plots (l1Seeded scheme)
         signal_efficiencies, EoverFplusG, EoverB = plot_individual_model_results(
             datasets=datasets, 
             region_counts=region_counts, 
@@ -2245,11 +2478,11 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             target_HLTAD_rate=target_rate,
             obj_type=obj_type
         )
-
         l1Seeded_results['efficiency_gains'].append(EoverFplusG)
         l1Seeded_results['efficiencies'].append(signal_efficiencies)
         l1Seeded_results['EoverBs'].append(EoverB)
-        # L1All ---------------------------------------------------------
+
+        # ============= L1-ALL SCHEME =============
         pass_L1AD_or_L1_mask = (datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold) | (datasets['EB_test']['passL1'])
 
         HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
@@ -2257,29 +2490,26 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             weights=datasets['EB_test']['weights'][pass_L1AD_or_L1_mask],
             pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_or_L1_mask],
             target_rate=target_rate,
-            incoming_rate=100000
+            incoming_rate=100000  # or however you define your "incoming_rate" for L1All
         )
-        print(f'l1All:::')
-        print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
-        print(f'HLTAD_total_rate: {HLTAD_total_rate}')
-        print(f'HLTAD_threshold: {HLTAD_threshold}\n')
+        print(f'  l1All:')
+        print(f'    HLTAD_pure_rate: {HLTAD_pure_rate}')
+        print(f'    HLTAD_total_rate: {HLTAD_total_rate}')
+        print(f'    HLTAD_threshold: {HLTAD_threshold}\n')
 
-        # Initialize the region counts for each tag
-        region_counts = {tag: {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0} for tag in datasets.keys()}
-        
-        # Loop over each tag
-        for tag, data_dict in datasets.items():
-            if tag in skip_tags: continue
-            
-            # will hold the regions that each event falls into. Each event will be in region A
+        region_counts = {tg: {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0}
+                         for tg in datasets.keys()}
+
+        for tg, data_dict in datasets.items():
+            if tg in skip_tags:
+                continue
+
             data_dict['region_labels'] = ['A'] * len(data_dict[f'{obj_type}_AD_scores'])
-
             passHLTAD = data_dict[f'{obj_type}_AD_scores'] >= HLTAD_threshold
-            passHLT = data_dict['passHLT']
-            passL1AD = data_dict['topo2A_AD_scores'] >= L1AD_threshold
-            passL1 = data_dict['passL1']
+            passHLT   = data_dict['passHLT']
+            passL1AD  = data_dict['topo2A_AD_scores'] >= L1AD_threshold
+            passL1    = data_dict['passL1']
 
-            # Add letters to strings where conditions are met
             for j, (l1ad, l1, hltad, hlt) in enumerate(zip(passL1AD, passL1, passHLTAD, passHLT)):
                 if l1ad and not l1:
                     data_dict['region_labels'][j] += 'B'
@@ -2294,18 +2524,15 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
                 if (l1 or l1ad) and not hltad and hlt:
                     data_dict['region_labels'][j] += 'G'
 
-            # Now keep track of the number of events in each region
             for j, label in enumerate(data_dict['region_labels']):
                 weight = data_dict['weights'][j]
                 for region in label:
-                    region_counts[tag][region] += weight
-        
-        # Append the results to the list
+                    region_counts[tg][region] += weight
+
+        # Append results for l1All
         l1All_results['region_counts'].append(region_counts)
 
-        #target_FPR = L1Seeded_HLTAD_total_rate / L1AD_total_rate
-
-        # Now let's make plots for this model
+        # Make plots for l1All
         signal_efficiencies, EoverFplusG, EoverB = plot_individual_model_results(
             datasets=datasets, 
             region_counts=region_counts, 
@@ -2318,27 +2545,26 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             target_HLTAD_rate=target_rate,
             obj_type=obj_type
         )
-
         l1All_results['efficiency_gains'].append(EoverFplusG)
         l1All_results['efficiencies'].append(signal_efficiencies)
         l1All_results['EoverBs'].append(EoverB)
-    
+
+    # Plot ensemble results
     plot_ensemble_results(l1Seeded_results, save_path=plots_path, seed_scheme='l1Seeded')
-    plot_ensemble_results(l1All_results, save_path=plots_path, seed_scheme='l1All')
+    plot_ensemble_results(l1All_results,    save_path=plots_path, seed_scheme='l1All')
 
-    print(f'evals phase 1 complete.')
-    print(f'evals phase 2 of 2 initiated.')
+    print(f'Evals phase 1 complete.')
+    print(f'Evals phase 2 of 2 initiated...')  # or whatever steps remain
 
-
-
+    # Save results as JSON for later analysis
     with open(f'{plots_path}/l1Seeded_stability_results.json', 'w') as f:
         json.dump(l1Seeded_results, f)
 
     with open(f'{plots_path}/l1All_stability_results.json', 'w') as f:
         json.dump(l1All_results, f)
-    
-    print(f'evals phase 2 complete, powering down...')
-    print(f'goodbye.')
+
+    print(f'Evals phase 2 complete, powering down...')
+    print(f'Goodbye.')
     return datasets, l1Seeded_results, l1All_results
 # -----------------------------------------------------------------------------------------
 
@@ -2393,120 +2619,184 @@ def load_subdicts_from_h5(save_dir):
     return main_dict
 # -----------------------------------------------------------------------------------------
 
-def load_and_inference(training_info: dict, data_info: dict, target_rate: int=10, L1AD_rate: int=1000, obj_type='HLT', save_version:int=0, tag='all', seed_scheme:str='l1Seeded'):
+def load_and_inference(training_info: dict, data_info: dict, target_rate: int=10, L1AD_rate: int=1000, obj_type='HLT', save_version:int=0, tags='all', seed_scheme:str='l1Seeded', regions=False):
 
-    if seed_scheme != 'l1Seeded':
-        raise ValueError(f'other seed schemes not yet implemented')
+
+    datasets, data_info = load_and_preprocess(**data_info)
     
+    # Delete datasets that are not in the tags list
+    if tags != 'all':
+        for tag in datasets.keys():
+            if tag not in tags:
+                del datasets[tag]
+
     # Unpack training info
     save_path = training_info['save_path']
     dropout_p = training_info['dropout_p']
     L2_reg_coupling = training_info['L2_reg_coupling']
     latent_dim = training_info['latent_dim']
-    #large_network = training_info['large_network']
     num_trainings = training_info['num_trainings']
+    overlap_removal = training_info['overlap_removal']
+    #training_weights = training_info['training_weights']  # if needed
+    large_network = training_info['large_network'] if 'large_network' in training_info else True
 
-    datasets, data_info = load_and_preprocess(**data_info)
+    print(f'Evals phase 1 of 2 initiated.')
+
+    # Initialize results containers
+    l1Seeded_results = {
+        'region_counts': [],
+        'efficiency_gains': [],
+        'efficiencies': [],
+        'EoverBs': []
+    }
+
+    l1All_results = {
+        'region_counts': [],
+        'efficiency_gains': [],
+        'efficiencies': [],
+        'EoverBs': []
+    }
+
+    # Decide hidden-layer sizes based on "large_network" (if needed):
+    if large_network:
+        H_DIM_1, H_DIM_2, H_DIM_3, H_DIM_4 = 100, 100, 64, 32
+    else:
+        H_DIM_1, H_DIM_2, H_DIM_3, H_DIM_4 = 32, 16, 8, 8
 
 
-    # Load the model
-    HLT_AE, HLT_encoder, HLT_MSE_AE, HLT_preprocessing_model = initialize_model(
-        input_dim=datasets['EB_train']['HLT_data'].shape[1],
-        pt_thresholds=data_info['pt_thresholds'],
-        pt_scale_factor=data_info['pt_scale_factor'],
-        dropout_p=dropout_p,
-        L2_reg_coupling=L2_reg_coupling,
+    # 1) Build a fresh VAE-GAN architecture
+    models_dict = create_large_VAEGAN_with_preprocessed_inputs(
+        num_objects=16,
+        num_features=3,
+        h_dim_1=H_DIM_1,
+        h_dim_2=H_DIM_2,
+        h_dim_3=H_DIM_3,
+        h_dim_4=H_DIM_4,
         latent_dim=latent_dim,
-        #large_network=large_network,
-        saved_model_path=save_path,
-        save_version=save_version,
-        obj_type=obj_type,
+        pt_thresholds=data_info['pt_thresholds'],
+        scale_factor=data_info['pt_scale_factor'],
+        l2_reg=L2_reg_coupling,
+        dropout_rate=dropout_p,
         pt_normalization_type=data_info['pt_normalization_type'],
-        overlap_removal=training_info['overlap_removal']
+        overlap_removal=overlap_removal
     )
 
-    # Pass the data through the model
-    skip_tags = ['EB_train', 'EB_val']
-    if tag == 'all':
-        good_tags = [tag for tag in datasets.keys() if tag not in skip_tags]
-    else:
-        good_tags = [tag, 'EB_test']
+    # 2) Load the saved weights for the relevant submodels
+    encoder        = models_dict["encoder"]
+    decoder        = models_dict["decoder"]
+    discriminator  = models_dict["discriminator"]  # might not be needed for AD score
+    preprocess     = models_dict["preprocessing_model"]
 
+    # File naming pattern
+    encoder.load_weights(f'{save_path}/EB_{obj_type}_encoder_{save_version}.weights.h5')
+    decoder.load_weights(f'{save_path}/EB_{obj_type}_decoder_{save_version}.weights.h5')
+    discriminator.load_weights(f'{save_path}/EB_{obj_type}_discriminator_{save_version}.weights.h5')
+    preprocess.load_weights(f'{save_path}/EB_{obj_type}_preprocessing_{save_version}.weights.h5')
+
+    # 3) For each dataset, get AD scores:
+    skip_tags = ['EB_train', 'EB_val']
+    if tags:
+        good_tags = tags
+    elif tags=='all':
+        good_tags = [tag for tag in datasets.keys() if tag not in skip_tags]
+    
+    
     for tag in good_tags:
         data_dict = datasets[tag]
 
-        # Preprocess the data
-        data_dict[f'{obj_type}_preprocessed_data'] = HLT_preprocessing_model.predict(data_dict[f'{obj_type}_data'], verbose=0, batch_size=8)
+        # Preprocess
+        data_dict[f'{obj_type}_preprocessed_data'] = preprocess.predict(
+            data_dict[f'{obj_type}_data'], batch_size=8, verbose=0
+        )
 
-        # Calculate the AD scores
-        data_dict[f'{obj_type}_AD_scores'] = HLT_MSE_AE.predict(data_dict[f'{obj_type}_preprocessed_data'], batch_size=8, verbose=0)
+        # Forward pass: (mu, log_var, z) = encoder(...)
+        #   encoder.predict returns [mu, log_var, z] if your encoder has 3 outputs.
+        #   Be sure to match the shape the function actually returns.
+        enc_outputs = encoder.predict(data_dict[f'{obj_type}_preprocessed_data'], batch_size=8, verbose=0)
+        # If your encoder has outputs [mu, log_var, z], enc_outputs will be a list of 3 arrays.
+        if isinstance(enc_outputs, list) and len(enc_outputs) == 3:
+            mu, log_var, z = enc_outputs
+
+        data_dict['mus'] = mu
+        data_dict['log_vars'] = log_var
+        data_dict['z'] = z
+        # Decoder pass
+        #data_dict[f'{obj_type}_model_outputs'] = decoder.predict(z, batch_size=8, verbose=0)
+
+        # 4) Compute AD scores using masked MSE
+        #    Your MSE_AD_score is a NumPy function. So ensure data are NumPy arrays.
+        #y = data_dict[f'{obj_type}_preprocessed_data']
+        #x = data_dict[f'{obj_type}_model_outputs']
+        #data_dict[f'{obj_type}_AD_scores'] = MSE_AD_score(y, x)
+        data_dict[f'{obj_type}_AD_scores'] = KL_AD_score(mu, log_var)
 
     
     # Calculate the L1AD threshold and rates
-    L1AD_threshold, L1AD_pure_rate , L1AD_total_rate = find_threshold(
-        scores=datasets['EB_test']['topo2A_AD_scores'],
-        weights=datasets['EB_test']['weights'],
-        pass_current_trigs=datasets['EB_test']['passL1'],
-        target_rate=L1AD_rate,
-        incoming_rate=31575960
-    )
-
-
-    if seed_scheme == 'l1Seeded':
-        # L1Seeded ---------------------------------------------------------
-        pass_L1AD_mask = datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold
-
-        HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
-            scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
-            weights=datasets['EB_test']['weights'][pass_L1AD_mask],
-            pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
-            target_rate=target_rate,
-            incoming_rate=L1AD_total_rate
+    region_counts = {tag: {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0} for tag in datasets.keys()}
+    if regions:
+        L1AD_threshold, L1AD_pure_rate , L1AD_total_rate = find_threshold(
+            scores=datasets['EB_test']['topo2A_AD_scores'],
+            weights=datasets['EB_test']['weights'],
+            pass_current_trigs=datasets['EB_test']['passL1'],
+            target_rate=L1AD_rate,
+            incoming_rate=31575960
         )
-        print(f'l1Seeded:::')
-        print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
-        print(f'HLTAD_total_rate: {HLTAD_total_rate}')
-        print(f'HLTAD_threshold: {HLTAD_threshold}\n')
-
-        # Initialize the region counts for each tag
-        region_counts = {tag: {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0} for tag in datasets.keys()}
-        
-        # Loop over each tag
-        for tag in good_tags:
-            data_dict = datasets[tag]
+    
+    
+        if seed_scheme == 'l1Seeded':
+            # L1Seeded ---------------------------------------------------------
+            pass_L1AD_mask = datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold
+    
+            HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
+                scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+                weights=datasets['EB_test']['weights'][pass_L1AD_mask],
+                pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
+                target_rate=target_rate,
+                incoming_rate=L1AD_total_rate
+            )
+            print(f'l1Seeded:::')
+            print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
+            print(f'HLTAD_total_rate: {HLTAD_total_rate}')
+            print(f'HLTAD_threshold: {HLTAD_threshold}\n')
+    
+            # Initialize the region counts for each tag
             
-            # will hold the regions that each event falls into. Each event will be in region A
-            data_dict['region_labels'] = ['A'] * len(data_dict[f'{obj_type}_AD_scores'])
-
-            passHLTAD = data_dict[f'{obj_type}_AD_scores'] >= HLTAD_threshold
-            passHLT = data_dict['passHLT']
-            passL1AD = data_dict['topo2A_AD_scores'] >= L1AD_threshold
-            passL1 = data_dict['passL1']
-
-            # Add letters to strings where conditions are met
-            for j, (l1ad, l1, hltad, hlt) in enumerate(zip(passL1AD, passL1, passHLTAD, passHLT)):
-                if l1ad and not l1:
-                    data_dict['region_labels'][j] += 'B'
-                if l1ad and l1:
-                    data_dict['region_labels'][j] += 'C'
-                if not l1ad and l1:
-                    data_dict['region_labels'][j] += 'D'
-                if l1ad and hltad and not hlt:
-                    data_dict['region_labels'][j] += 'E'
-                if l1ad and hltad and hlt:
-                    data_dict['region_labels'][j] += 'F'
-                if (l1 or l1ad) and not hltad and hlt:
-                    data_dict['region_labels'][j] += 'G'
-
-            # Now keep track of the number of events in each region
-            for j, label in enumerate(data_dict['region_labels']):
-                weight = data_dict['weights'][j]
-                for region in label:
-                    region_counts[tag][region] += weight
-        
-        # Append the results to the list
+            
+            # Loop over each tag
+            for tag in good_tags:
+                data_dict = datasets[tag]
+                
+                # will hold the regions that each event falls into. Each event will be in region A
+                data_dict['region_labels'] = ['A'] * len(data_dict[f'{obj_type}_AD_scores'])
+    
+                passHLTAD = data_dict[f'{obj_type}_AD_scores'] >= HLTAD_threshold
+                passHLT = data_dict['passHLT']
+                passL1AD = data_dict['topo2A_AD_scores'] >= L1AD_threshold
+                passL1 = data_dict['passL1']
+    
+                # Add letters to strings where conditions are met
+                for j, (l1ad, l1, hltad, hlt) in enumerate(zip(passL1AD, passL1, passHLTAD, passHLT)):
+                    if l1ad and not l1:
+                        data_dict['region_labels'][j] += 'B'
+                    if l1ad and l1:
+                        data_dict['region_labels'][j] += 'C'
+                    if not l1ad and l1:
+                        data_dict['region_labels'][j] += 'D'
+                    if l1ad and hltad and not hlt:
+                        data_dict['region_labels'][j] += 'E'
+                    if l1ad and hltad and hlt:
+                        data_dict['region_labels'][j] += 'F'
+                    if (l1 or l1ad) and not hltad and hlt:
+                        data_dict['region_labels'][j] += 'G'
+    
+                # Now keep track of the number of events in each region
+                for j, label in enumerate(data_dict['region_labels']):
+                    weight = data_dict['weights'][j]
+                    for region in label:
+                        region_counts[tag][region] += weight
         
     return datasets, region_counts
+
 
 
 

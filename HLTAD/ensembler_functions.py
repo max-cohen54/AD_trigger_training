@@ -185,46 +185,40 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     # -------------------
 
     # Load data
-    datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/02-03-2025')
+    datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/03-12-2025')
 
     # put in Kaito's fake data:
     # First event data
     event1_jets = [
-        [166.319, 0.034, 0.506], [80.189, -0.987, -1.825], [74.505, 2.859, 2.486],
-        [45.475, -1.833, -2.604], [32.059, -0.992, 0.339], [28.418, -0.021, -0.379],
-        [19.488, -2.061, 3.100], [18.555, 0.458, 1.031], [18.160, -1.457, -0.601],
-        [15.961, 1.044, -1.224], [13.110, 0.912, 0.041], [12.259, -0.073, 2.738]
+        [130.671, -0.676, 1.139], [64.401, 2.077, -1.519], [42.421, 1.028, -2.132],
+        [26.381, 0.512, -2.698], [25.568, 0.048, 0.444]
     ]
     event1_electrons = [
-        [31.109, 0.038, 0.446], [31.109, 0.038, 0.446], [31.109, 0.038, 0.446],
-        [18.804, 0.093, 0.500], [18.804, 0.093, 0.500], [18.804, 0.093, 0.500],
-        [10.456, -1.817, -2.613], [8.816, -0.834, -1.980]
+        [73.236, -0.666, 1.112]
     ]
     event1_muons = []  # No muons
-    event1_photons = [[11.828, -1.056, -1.836]]
-    event1_met = [61.036, 0, -2.830]
+    event1_photons = []
+    event1_met = [50.266, 0, -2.704]
 
     # Second event data
     event2_jets = [
-        [98.170, -0.765, 2.707], [49.267, -0.119, 0.085], [21.128, 0.891, -1.510],
-        [19.011, -1.372, 1.168], [16.770, -0.210, 1.878], [16.590, -1.377, 2.599],
-        [14.321, 0.367, -0.439], [12.261, -1.167, -2.707], [11.575, 1.938, -1.190]
+        [21.934, -0.644, -2.807], [21.268, 2.118, 1.713]
     ]
-    event2_electrons = [[64.586, -0.723, 2.695]]
+    event2_electrons = []
     event2_muons = []  # No muons
-    event2_photons = [[62.634, -0.756, 2.699]]
-    event2_met = [37.874, 0.0, -0.663]
+    event2_photons = []
+    event2_met = [16.403, 0.0, 0.000]
 
     # third event data
     event3_jets = [
-        [100, 0.5, 0.5]
+    
     ]
     event3_electrons = [
-        [100, 0.51, 0.49], [100, -0.5, -0.5]
+        
     ]
     event3_muons = []
     event3_photons = [
-        [100, -0.51, -0.49]
+        
     ]
     event3_met = [0, 0, 0]
 
@@ -339,19 +333,35 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
         [30, 0.0, 0.0]     # MET: remains unchanged.
     ], dtype=np.float32)
 
-    synthetic_events = np.stack([event1, event2, event3], axis=0)  # shape: (3, 16, 3)
-    # datasets['synthetic_events'] = {key: value for key, value in datasets['topo2A_train'].items()}
-    # datasets['synthetic_events']['HLT_data'] = synthetic_events
-    # datasets['synthetic_events']['L1_data'] = synthetic_events
+    event4 = np.array([
+        # Jets (indices 0–5)
+        [50, 0.0, 0.0],    
+        [50, 0.0, 0.0],   
+        [60, -0.5, 2.0],   
+        [52, 0.0, -1.0], 
+        [53, 0.8, 0.8], 
+        [54, -0.8, -0.8],
+        # Electrons (indices 6–8)
+        [10, 0.3, 0.0],  
+        [10, 0.3, 0.0],  
+        [11, -1.0, 0.5],  
+        # Muons (indices 9–11)
+        [8, 1.1, 1.0],   
+        [8, 1.1, 1.0],  
+        [10, -0.2, 2.0], 
+        # Photons (indices 12–14)
+        [15, 0.2, 0.0],  
+        [15, 0.2, 0.0],    
+        [14, -2.0, 0.0],  
+        # MET (index 15)
+        [30, 0.0, 0.0]     # MET: remains unchanged.
+    ], dtype=np.float32)
 
-    #remove mc23e for some preliminary testing (to remove later):
-    tags_to_remove = []
-    for tag in datasets.keys():
-        if ('qqa' in tag) or (tag=='jjJZ2') or (tag=='jjJZ1') or (tag=='jjJZ4') or ('Zprime' in tag) or ('ZZ' in tag) or ('A14' in tag) or ('HHbbtt' in tag) or ('HAHM' in tag):
-            tags_to_remove.append(tag)
+    synthetic_events = np.stack([event1, event2, event3, event4], axis=0)  # shape: (4, 16, 3)
+    #datasets['synthetic_events'] = {key: value for key, value in datasets['topo2A_train'].items()}
+    #datasets['synthetic_events']['HLT_data'] = synthetic_events
+    #datasets['synthetic_events']['L1_data'] = synthetic_events
 
-    for tag in tags_to_remove:
-        del datasets[tag]
     
    # -------------------
         
@@ -638,6 +648,145 @@ class DuplicateRemovalLayer(tf.keras.layers.Layer):
 
 
 
+# class ReorderObjectsLayer(tf.keras.layers.Layer):
+#     def __init__(self, **kwargs):
+#         super().__init__(**kwargs)
+
+#     def call(self, inputs):
+#         """
+#         inputs: a tensor of shape (N, 16, 3) with the following ordering per event:
+#            0-5:   jets
+#            6-8:   electrons
+#            9-11:  muons
+#            12-14: photons
+#            15:    MET (untouched)
+#         """
+#         def process_event(event):
+#             # Split the event into its constituent object collections.
+#             jets = event[0:6]       # shape (6, 3)
+#             electrons = event[6:9]  # shape (3, 3)
+#             muons = event[9:12]     # shape (3, 3)
+#             photons = event[12:15]  # shape (3, 3)
+#             met = event[15:16]      # shape (1, 3)
+
+#             #Helper function that reorders a collection so that non-zero objects (pt > 0)
+#             #come first, in their original order, followed by zeroed objects.
+#             def reorder_collection(collection):
+#                 # Determine which objects are non-zero (based on pt in column 0).
+#                 non_zero_mask = collection[:, 0] > 0
+#                 non_zero = tf.boolean_mask(collection, non_zero_mask)
+#                 zeros = tf.boolean_mask(collection, tf.logical_not(non_zero_mask))
+#                 return tf.concat([non_zero, zeros], axis=0)
+
+#             # def reorder_collection(collection):
+#             #     condition = tf.reduce_all(tf.equal(collection, 0))
+#             #     return tf.cond(
+#             #         condition,
+#             #         lambda: collection,  # if true, just return collection
+#             #         lambda: _do_reorder(collection)  # otherwise, perform the reordering
+#             #     )
+
+#             # def _do_reorder(collection):
+#             #     non_zero_mask = collection[:, 0] > 0
+#             #     non_zero = tf.boolean_mask(collection, non_zero_mask)
+#             #     zeros = tf.boolean_mask(collection, tf.logical_not(non_zero_mask))
+#             #     return tf.concat([non_zero, zeros], axis=0)
+
+    
+
+#             # Reorder each collection individually.
+#             jets = reorder_collection(jets)
+#             electrons = reorder_collection(electrons)
+#             muons = reorder_collection(muons)
+#             photons = reorder_collection(photons)
+
+#             output_event = tf.concat([jets, electrons, muons, photons, met], axis=0)
+#             tf.debugging.assert_equal(tf.shape(output_event)[0], 16, message="Per-event shape must be 16 rows")
+#             # tf.debugging.assert_equal(tf.shape(output_event)[0], 16)
+#             # tf.print("Output event shape:", tf.shape(output_event))
+#             #output_event.set_shape([16, 3])
+
+#             # Reassemble the event in the original overall ordering.
+#             return output_event
+
+#         # Apply the reordering to each event in the batch.
+#         outputs = tf.map_fn(process_event, inputs)
+#         return outputs
+
+#     def get_config(self):
+#         config = super().get_config()
+#         return config
+
+
+
+class ReorderObjectsLayer(tf.keras.layers.Layer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Expected sizes per object group.
+        self.expected = {
+            'jets': 6,
+            'electrons': 3,
+            'muons': 3,
+            'photons': 3,
+            'met': 1
+        }
+
+    def call(self, inputs):
+        """
+        inputs: a tensor of shape (N, 16, 3) with the following ordering per event:
+           0-5:   jets
+           6-8:   electrons
+           9-11:  muons
+           12-14: photons
+           15:    MET (untouched)
+        """
+        def pad_collection(collection, expected_size):
+            # collection: tensor of shape (n, features)
+            # Select objects with pt > 0.
+            non_zero = tf.boolean_mask(collection, collection[:, 0] > 0)
+            # Truncate if there are more than expected_size.
+            non_zero = non_zero[:expected_size]
+            # Determine how many rows we got.
+            k = tf.shape(non_zero)[0]
+            pad_size = expected_size - k
+            # Create padding of zeros.
+            zeros = tf.zeros((pad_size, tf.shape(collection)[1]), dtype=collection.dtype)
+            padded = tf.concat([non_zero, zeros], axis=0)
+            # Force the static shape.
+            padded.set_shape([expected_size, collection.shape[1]])
+            return padded
+
+        def process_event(event):
+            # Slice the event into groups.
+            jets = event[0:6]       # shape (6, 3)
+            electrons = event[6:9]  # shape (3, 3)
+            muons = event[9:12]     # shape (3, 3)
+            photons = event[12:15]  # shape (3, 3)
+            met = event[15:16]      # shape (1, 3) – assumed fixed
+            
+            # Process each collection to guarantee fixed size.
+            jets = pad_collection(jets, self.expected['jets'])
+            electrons = pad_collection(electrons, self.expected['electrons'])
+            muons = pad_collection(muons, self.expected['muons'])
+            photons = pad_collection(photons, self.expected['photons'])
+            # MET is assumed to be already fixed.
+            
+            # Concatenate the groups.
+            output_event = tf.concat([jets, electrons, muons, photons, met], axis=0)
+            # Now enforce that each event is exactly 16 rows.
+            output_event.set_shape([16, event.shape[1]])
+            return output_event
+
+        outputs = tf.map_fn(process_event, inputs)
+        # Optionally enforce the batch shape if known, e.g. (None, 16, 3)
+        outputs.set_shape([None, 16, inputs.shape[-1]])
+        return outputs
+
+    def get_config(self):
+        config = super().get_config()
+        config.update({'expected': self.expected})
+        return config
+
 
 class DeltaPhiPreprocessingLayer(tf.keras.layers.Layer):
     def call(self, data):
@@ -667,7 +816,7 @@ class METBiasMaskLayer(tf.keras.layers.Layer):
         MET_neg999 = tf.equal(MET_values[:, 0], -999)
         MET_nan = tf.math.is_nan(MET_values[:, 2])
 
-        MET_values = tf.where(tf.expand_dims(MET_zeros, axis=-1), tf.constant([[0.001, 0, 0]], dtype=data.dtype), MET_values)
+        MET_values = tf.where(tf.expand_dims(MET_zeros, axis=-1), tf.constant([[0, 0, 0]], dtype=data.dtype), MET_values)
         MET_values = tf.where(tf.expand_dims(MET_neg999 | MET_nan, axis=-1), tf.zeros_like(MET_values), MET_values)
 
         data_transformed = tf.concat([data[:, :-1, :], tf.expand_dims(MET_values, axis=1)], axis=1)
@@ -767,11 +916,13 @@ class MSEADScoreLayer(tf.keras.layers.Layer):
 
 def create_large_AE_with_preprocessed_inputs(
     num_objects, num_features, h_dim_1, h_dim_2, h_dim_3, h_dim_4, latent_dim, 
-    pt_thresholds, scale_factor, l2_reg=0.01, dropout_rate=0, pt_normalization_type='global_division', overlap_removal=False
+    pt_thresholds, scale_factor, l2_reg=0.01, dropout_rate=0, pt_normalization_type='global_division', overlap_removal=False, duplicate_removal=False
 ):
     # Preprocessing Layers
     # add a initial zero out layer with [30, 15, 15, 15]
     overlap_removal_layer = OverlapRemovalLayer()
+    duplicate_removal_layer = DuplicateRemovalLayer()
+    reorder_objects_layer = ReorderObjectsLayer()
     phi_rotation_layer = DeltaPhiPreprocessingLayer()
     met_bias_layer = METBiasMaskLayer()
     zero_out_layer = ZeroOutLowPtLayer(pt_thresholds)
@@ -785,8 +936,15 @@ def create_large_AE_with_preprocessed_inputs(
     preprocessing_inputs = layers.Input(shape=(num_objects * num_features,))
     unflattened = tf.keras.layers.Reshape((num_objects, num_features))(preprocessing_inputs)
     preprocessed = phi_rotation_layer(unflattened)
+
+    if duplicate_removal:
+        preprocessed = duplicate_removal_layer(preprocessed)
+
     if overlap_removal:
         preprocessed = overlap_removal_layer(preprocessed)
+
+    if duplicate_removal or overlap_removal:
+        preprocessed = reorder_objects_layer(preprocessed)
     
     preprocessed = met_bias_layer(preprocessed)
     preprocessed = zero_out_layer(preprocessed)
@@ -897,7 +1055,7 @@ def loss_fn(y_true, y_pred):
 # -----------------------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------------------
-def load_and_preprocess_and_preprocess(data_info: dict, overlap_removal: bool, obj_type='HLT', tag='EB_test'):
+def load_and_preprocess_and_preprocess(data_info: dict, overlap_removal: bool, duplicate_removal: bool, obj_type='HLT', tag='EB_test'):
 
     # Load the data
     datasets, data_info = load_and_preprocess(**data_info)
@@ -924,7 +1082,8 @@ def load_and_preprocess_and_preprocess(data_info: dict, overlap_removal: bool, o
         l2_reg=0.01, 
         dropout_rate=0.1,
         pt_normalization_type=data_info['pt_normalization_type'],
-        overlap_removal=overlap_removal
+        overlap_removal=overlap_removal,
+        duplicate_removal=duplicate_removal
     )
 
     # Preprocess the data
@@ -932,7 +1091,7 @@ def load_and_preprocess_and_preprocess(data_info: dict, overlap_removal: bool, o
 
     return datasets
 # -----------------------------------------------------------------------------------------
-def initialize_model(input_dim, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, dropout_p=0, L2_reg_coupling=0, latent_dim=4, saved_model_path=None, save_version=None, obj_type='HLT', pt_normalization_type='global_division', overlap_removal=False):
+def initialize_model(input_dim, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, dropout_p=0, L2_reg_coupling=0, latent_dim=4, saved_model_path=None, save_version=None, obj_type='HLT', pt_normalization_type='global_division', overlap_removal=False, duplicate_removal=False):
     '''
     Inputs:
         save_path: string of the path to save the model.
@@ -971,7 +1130,8 @@ def initialize_model(input_dim, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, d
         l2_reg=L2_reg_coupling, 
         dropout_rate=dropout_p,
         pt_normalization_type=pt_normalization_type,
-        overlap_removal=overlap_removal
+        overlap_removal=overlap_removal,
+        duplicate_removal=duplicate_removal
     )
     # -------------------
 
@@ -995,7 +1155,7 @@ def initialize_model(input_dim, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, d
 
 
 # -----------------------------------------------------------------------------------------
-def train_model(datasets: dict, model_version: str, save_path: str, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, dropout_p=0, L2_reg_coupling=0, latent_dim=4, large_network=True, training_weights=True, obj_type='HLT', pt_normalization_type='global_division', overlap_removal=False):
+def train_model(datasets: dict, model_version: str, save_path: str, pt_thresholds=[0,0,0,0], pt_scale_factor=0.05, dropout_p=0, L2_reg_coupling=0, latent_dim=4, large_network=True, training_weights=True, obj_type='HLT', pt_normalization_type='global_division', overlap_removal=False, duplicate_removal=False):
     """
     Trains, and saves an AE.
 
@@ -1014,7 +1174,8 @@ def train_model(datasets: dict, model_version: str, save_path: str, pt_threshold
         'latent_dim': latent_dim,
         'obj_type': obj_type,
         'pt_normalization_type': pt_normalization_type,
-        'overlap_removal': overlap_removal
+        'overlap_removal': overlap_removal,
+        'duplicate_removal': duplicate_removal
     }
     
     HLT_AE, HLT_encoder, HLT_MSE_AE, HLT_preprocessing_model = initialize_model(**model_args)
@@ -1061,7 +1222,7 @@ def train_model(datasets: dict, model_version: str, save_path: str, pt_threshold
 
 
 # -----------------------------------------------------------------------------------------
-def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropout_p=0, L2_reg_coupling=0, latent_dim=4, large_network=True, num_trainings=10, training_weights=True, obj_type='HLT', overlap_removal=False):
+def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropout_p=0, L2_reg_coupling=0, latent_dim=4, large_network=True, num_trainings=10, training_weights=True, obj_type='HLT', overlap_removal=False, duplicate_removal=False):
     """
     calls 'initialize_and_train' multiple times to average results across multiple trainings.
 
@@ -1101,7 +1262,8 @@ def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropo
             training_weights=training_weights,
             obj_type=obj_type,
             pt_normalization_type=data_info['pt_normalization_type'],
-            overlap_removal=overlap_removal
+            overlap_removal=overlap_removal,
+            duplicate_removal=duplicate_removal
         )
         print(f'model {i} success\n')
 
@@ -1118,7 +1280,8 @@ def train_multiple_models(datasets: dict, data_info: dict, save_path: str, dropo
         'num_trainings': num_trainings,
         'training_weights': training_weights,
         'obj_type': obj_type,
-        'overlap_removal': overlap_removal
+        'overlap_removal': overlap_removal,
+        'duplicate_removal': duplicate_removal
     }
     # -------------------
 
@@ -1186,7 +1349,10 @@ def ROC_curve_plot(datasets: dict, save_path: str, save_name: str, HLTAD_thresho
     bkg_weights = datasets[bkg_tag]['weights']
     
     # Loop over each tag
-    skip_tags = ['EB_train', 'EB_val', bkg_tag]
+    skip_tags = ['EB_train', 'EB_val', bkg_tag, 'kaito', 'HLT_noalg_eb_L1All']
+    for tag in datasets.keys():
+        if 'ZB' in tag:
+            skip_tags.append(tag)
     for tag, data_dict in datasets.items():
         if tag in skip_tags: continue
 
@@ -1228,8 +1394,15 @@ def ROC_curve_plot(datasets: dict, save_path: str, save_name: str, HLTAD_thresho
     plt.xscale('log')
     plt.yscale('log')
     plt.title(save_name, fontsize=14)
-    plt.legend(fontsize=12, bbox_to_anchor=(1, 0.5), loc='center left')
-    plt.savefig(f'{save_path}/{save_name}.png')
+    
+    # Fix the legend positioning to prevent it from being cut off
+    plt.legend(fontsize=15, bbox_to_anchor=(1.05, 0.5), loc='center left')
+    
+    # Add tight_layout with padding or adjust figure size to accommodate legend
+    plt.tight_layout()
+    plt.subplots_adjust(right=0.75)  # Make room for the legend on the right
+    
+    plt.savefig(f'{save_path}/{save_name}.png', bbox_inches='tight')
     plt.close()
 
     return signal_efficiencies
@@ -1266,6 +1439,9 @@ def raw_efficiencies_plot_from_regions(datasets: dict, save_path: str, save_name
 
     # Loop over each tag in the datasets dictionary.
     skip_tags = ['EB_train', 'EB_val']
+    for tag in datasets.keys():
+        if 'ZB' in tag:
+            skip_tags.append(tag)
     for tag, data_dict in datasets.items():
         if tag in skip_tags: continue
         region_labels = data_dict['region_labels']
@@ -1410,6 +1586,9 @@ def EoverFplusG_plot(datasets: dict, save_path: str, save_name: str):
 
     # Loop over each tag in the datasets.
     skip_tags = ['EB_train', 'EB_val']
+    for tag in datasets.keys():
+        if 'ZB' in tag:
+            skip_tags.append(tag)
     for tag, data_dict in datasets.items():
         if tag in skip_tags: continue
         region_labels = data_dict['region_labels']
@@ -1665,7 +1844,7 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
 
     pileups = datasets['EB_test']['pileups']
     leading_jet_pt = datasets['EB_test'][f'{obj_type}_data'][:, 0]
-    MET_pt = datasets['EB_test'][f'{obj_type}_preprocessed_data'][:, -3]
+    MET_pt = datasets['EB_test'][f'{obj_type}_data'][:, -3]
     jet_multiplicity = np.count_nonzero(datasets['EB_test'][f'{obj_type}_data'][:, 0:18:3], axis=1)
     el_multiplicity = np.count_nonzero(datasets['EB_test'][f'{obj_type}_data'][:, 18:27:3], axis=1)
     mu_multiplicity = np.count_nonzero(datasets['EB_test'][f'{obj_type}_data'][:, 27:36:3], axis=1)
@@ -1750,47 +1929,388 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
     # Plot efficiency vs pileup using ROOT
     if save_path is not None:
         c_pileup = ROOT.TCanvas("c_pileup", "Efficiency vs Pileup", 800, 600)
+        c_pileup.SetLogy()
         eff_pileup.SetTitle(f"Anomalous Event Efficiency vs Pileup;Pileup;Efficiency")
         eff_pileup.Draw("AP")
         c_pileup.SaveAs(f'{save_path}/{save_name}_pileup.png')
 
         # Plot efficiency vs leading jet pt using ROOT
         c_jet_pt = ROOT.TCanvas("c_jet_pt", "Efficiency vs Leading Jet Pt", 800, 600)
+        c_jet_pt.SetLogy()
         eff_jet_pt.SetTitle(f"Anomalous Event Efficiency vs Leading Jet Pt;Leading Jet Pt;Efficiency")
         eff_jet_pt.Draw("AP")
         c_jet_pt.SaveAs(f'{save_path}/{save_name}_jet_pt.png')
 
         # Plot efficiency vs MET pt using ROOT
         c_MET_pt = ROOT.TCanvas("c_MET_pt", "Efficiency vs MET Pt", 800, 600)
+        c_MET_pt.SetLogy()
         eff_MET_pt.SetTitle(f"Anomalous Event Efficiency vs MET Pt;MET Pt;Efficiency")
         eff_MET_pt.Draw("AP")
         c_MET_pt.SaveAs(f'{save_path}/{save_name}_MET.png')
 
         # Plot efficiency vs jet multiplicity using ROOT
         c_jet_multiplicity = ROOT.TCanvas("c_jet_multiplicity", "Efficiency vs Jet Multiplicity", 800, 600)
+        c_jet_multiplicity.SetLogy()
         eff_jet_multiplicity.SetTitle(f"Anomalous Event Efficiency vs Jet Multiplicity;Jet Multiplicity;Efficiency")
         eff_jet_multiplicity.Draw("AP")
         c_jet_multiplicity.SaveAs(f'{save_path}/{save_name}_jet_multiplicity.png')
 
         # Plot efficiency vs electron multiplicity using ROOT
         c_el_multiplicity = ROOT.TCanvas("c_el_multiplicity", "Efficiency vs Electron Multiplicity", 800, 600)
+        c_el_multiplicity.SetLogy()
         eff_el_multiplicity.SetTitle(f"Anomalous Event Efficiency vs Electron Multiplicity;Electron Multiplicity;Efficiency")
         eff_el_multiplicity.Draw("AP")
         c_el_multiplicity.SaveAs(f'{save_path}/{save_name}_el_multiplicity.png')
 
         # Plot efficiency vs muon multiplicity using ROOT
         c_mu_multiplicity = ROOT.TCanvas("c_mu_multiplicity", "Efficiency vs Muon Multiplicity", 800, 600)
+        c_mu_multiplicity.SetLogy()
         eff_mu_multiplicity.SetTitle(f"Anomalous Event Efficiency vs Muon Multiplicity;Muon Multiplicity;Efficiency")
         eff_mu_multiplicity.Draw("AP")
         c_mu_multiplicity.SaveAs(f'{save_path}/{save_name}_mu_multiplicity.png')
 
         # Plot efficiency vs photon multiplicity using ROOT
         c_ph_multiplicity = ROOT.TCanvas("c_ph_multiplicity", "Efficiency vs Photon Multiplicity", 800, 600)
+        c_ph_multiplicity.SetLogy()
         eff_ph_multiplicity.SetTitle(f"Anomalous Event Efficiency vs Photon Multiplicity;Photon Multiplicity;Efficiency")
         eff_ph_multiplicity.Draw("AP")
         c_ph_multiplicity.SaveAs(f'{save_path}/{save_name}_ph_multiplicity.png')
 
-def plot_individual_model_results(datasets: dict, region_counts: dict, seed_scheme, save_path, model_version, L1AD_threshold, L1AD_rate, HLTAD_threshold, target_HLTAD_rate, obj_type='HLT'):
+# -----------------------------------------------------------------------------------------
+def get_good_lbs_from_grl(grl_path, run_number):
+    """
+    Parse the GRL XML file and extract good luminosity block ranges for a specific run.
+    
+    Args:
+        grl_path (str): Path to the GRL XML file
+        run_number (int): Run number to extract good LBs for
+        
+    Returns:
+        list: List of tuples (start_lb, end_lb) representing good LB ranges
+    """
+    import xml.etree.ElementTree as ET
+    
+    # Parse the XML file
+    tree = ET.parse(grl_path)
+    root = tree.getroot()
+    
+    good_lb_ranges = []
+    
+    # Find the LumiBlockCollection for the specified run
+    for lb_collection in root.findall('.//LumiBlockCollection'):
+        run = int(lb_collection.find('Run').text)
+        
+        if run == run_number:
+            # Extract all LB ranges for this run
+            for lb_range in lb_collection.findall('LBRange'):
+                start = int(lb_range.get('Start'))
+                end = int(lb_range.get('End'))
+                good_lb_ranges.append((start, end))
+    
+    return good_lb_ranges
+
+def ZB_scores_plot(datasets: dict, save_path: str, save_name: str):
+
+    # Print for sanity check
+    for tag, data_dict in datasets.items():
+        print(f'{tag}:')
+        for key, value in data_dict.items():
+            print(f'{key}: {value}')
+        print('\n')
+
+    grl_xml = '/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/GoodRunsLists/data24_13p6TeV/20241118/physics_25ns_data24.xml'
+
+    noiseburst_LBs = {
+        474562: [906],
+        474679: [463, 464, 465],
+        474991: [893, 942, 943],
+        475052: [469]
+    }
+
+    tags = [tag for tag in datasets.keys() if 'ZB' in tag]
+
+    # Loop over each tag and split into good, bad, and noiseburst LBs
+    for tag in tags:
+        data_dict = datasets[tag]
+        run_num = data_dict['run_numbers'][0]
+        good_LBs = get_good_lbs_from_grl(grl_xml, run_num)
+
+        # Create mask for good LBs (in GRL and not in noiseburst list)
+        grlGood_mask = np.zeros_like(data_dict['lumiBlocks'], dtype=bool)
+        grl_nb_mask = np.zeros_like(data_dict['lumiBlocks'], dtype=bool)
+        for i, lb in enumerate(data_dict['lumiBlocks']):
+
+            is_in_grl = any(start <= lb <= end for start, end in good_LBs)
+            is_nb = (run_num in noiseburst_LBs and lb in noiseburst_LBs[run_num])
+            
+            grlGood_mask[i] = is_in_grl
+            grl_nb_mask[i] = is_nb
+
+        grlBad_mask = ~grlGood_mask
+
+        datasets[f'{tag}_grlGood'] = {key: np.array(value)[grlGood_mask] for key, value in data_dict.items()}
+        datasets[f'{tag}_grlBad'] = {key: np.array(value)[grlBad_mask] for key, value in data_dict.items()}
+        datasets[f'{tag}_grl_nb'] = {key: np.array(value)[grl_nb_mask] for key, value in data_dict.items()}
+
+        del datasets[tag]
+
+    # Now combine all the tags from each set
+    good_tags = [tag for tag in datasets.keys() if 'grlGood' in tag]
+    bad_tags = [tag for tag in datasets.keys() if 'grlBad' in tag]
+    nb_tags = [tag for tag in datasets.keys() if 'grl_nb' in tag]
+
+    datasets = combine_data(datasets, tags_to_combine=good_tags, new_tag='ZB_grlGood')
+    datasets = combine_data(datasets, tags_to_combine=bad_tags, new_tag='ZB_grlBad')
+    datasets = combine_data(datasets, tags_to_combine=nb_tags, new_tag='ZB_grl_nb')
+
+    # Print for sanity check
+    for tag, data_dict in datasets.items():
+        print(f'{tag}:')
+        for key, value in data_dict.items():
+            print(f'{key}: {value}')
+        print('\n')
+
+    # Plot the ZB scores
+    bins = np.linspace(0, 20, 35)
+    plt.figure(figsize=(10, 6))
+    for tag in ['ZB_grlGood', 'ZB_grlBad', 'ZB_grl_nb']:
+        data_dict = datasets[tag]
+        plt.hist(data_dict['HLT_AD_scores'], bins=bins, density=True, histtype='step', linewidth=2.5, fill=False, label=tag)
+        
+    plt.title(f'HLTAD Score Distributions for all ZeroBias events', fontsize=14)
+    plt.xlabel('HLTAD Scores', fontsize=12)
+    plt.ylabel('Frequency', fontsize=12)
+    plt.legend(fontsize=11)
+    plt.yscale('log')
+    plt.savefig(f'{save_path}/{save_name}.png')
+    plt.close()
+    
+    
+# -----------------------------------------------------------------------------------------
+def anomalous_event_display(datasets: dict, save_path: str, save_name: str):
+
+    # Data
+    # jets = [
+    #     (159.4, 2.45, 0.74),  # pt, eta, phi
+    #     (158.4, 0.95, 4.07),
+    #     (16.6, -2.6, 2.65),
+    #     (15.2, -1.05, 2.70)
+    # ]
+
+    # taus = [
+    #     (48.8, 2.45, 0.74),
+    #     (43.3, 1.05, 4.17),
+    #     (21.6, 0.75, 4.07),
+    #     (8.4, -1.95, 1.82)
+    # ]
+    E_or_F_mask = np.array(['E' in label for label in datasets['EB_test']['region_labels']]) | np.array(['F' in label for label in datasets['EB_test']['region_labels']])
+    anom_idx = np.argmax(datasets['EB_test']['HLT_AD_scores'][E_or_F_mask])
+    event = datasets['EB_test']['HLT_data'][E_or_F_mask][anom_idx].reshape(16, 3)
+    jets = event[0:6]
+    electrons = event[6:9]
+    muons = event[9:12]
+    photons = event[12:15]
+    met_pt = event[15, 0]
+    met_phi = event[15, 2]
+
+    def eta_to_theta(eta):
+        return 2 * np.arctan(np.exp(-eta))
+
+    def draw_cone(ax, pt, eta, phi, R=0.4):
+        # Logarithmic scaling to make smaller jets visible
+        scale = (0.3 + 0.7 * np.log10(1 + pt)/np.log10(1 + max(j[0] for j in jets)))*3
+        
+        t = np.linspace(0, 2*np.pi, 50)
+        eta_circle = eta + R * np.cos(t)
+        phi_circle = phi + R * np.sin(t)
+        
+        theta_circle = eta_to_theta(eta_circle)
+        x = scale * np.sin(theta_circle) * np.cos(phi_circle)
+        y = scale * np.sin(theta_circle) * np.sin(phi_circle)
+        z = scale * np.cos(theta_circle)
+        
+        for i in range(len(t)):
+            ax.plot([0, x[i]], [0, y[i]], [0, z[i]], 'b-', alpha=0.3)
+        
+        ax.plot(x, y, z, 'b-', alpha=0.8)
+
+    # Create figure
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot detector cylinder
+    R = 1
+    z_points = np.linspace(-4, 4, 100)
+    phi_points = np.linspace(0, 2*np.pi, 100)
+    Z, P = np.meshgrid(z_points, phi_points)
+    X = R * np.cos(P)
+    Y = R * np.sin(P)
+    ax.plot_surface(X, Y, Z, alpha=0.1, color='gray')
+
+    # Plot jets
+    for pt, eta, phi in jets:
+        draw_cone(ax, pt, eta, phi)
+
+    # Plot electrons as rays
+    max_electron_pt = max(t[0] for t in electrons)
+    for pt, eta, phi in electrons:
+        # Logarithmic scaling for taus
+        scale = 0.3 + 0.7 * np.log10(1 + pt)/np.log10(1 + max_electron_pt)
+        theta = eta_to_theta(eta)
+        x = scale * np.sin(theta) * np.cos(phi)
+        y = scale * np.sin(theta) * np.sin(phi)
+        z = scale * np.cos(theta)
+        ax.plot([0, x], [0, y], [0, z], 'orange', alpha=0.8, linewidth=2)
+
+    
+
+
+    # Plot muons as rays
+    max_muon_pt = max(t[0] for t in muons)
+    for pt, eta, phi in muons:
+        # Logarithmic scaling for taus
+        scale = 0.3 + 0.7 * np.log10(1 + pt)/np.log10(1 + max_muon_pt)
+        theta = eta_to_theta(eta)
+        x = scale * np.sin(theta) * np.cos(phi)
+        y = scale * np.sin(theta) * np.sin(phi)
+        z = scale * np.cos(theta)
+        ax.plot([0, x], [0, y], [0, z], 'green', alpha=0.8, linewidth=2)
+
+
+    # Plot photons as rays
+    max_photon_pt = max(t[0] for t in photons)
+    for pt, eta, phi in photons:
+        # Logarithmic scaling for taus
+        scale = 0.3 + 0.7 * np.log10(1 + pt)/np.log10(1 + max_photon_pt)
+        theta = eta_to_theta(eta)
+        x = scale * np.sin(theta) * np.cos(phi)
+        y = scale * np.sin(theta) * np.sin(phi)
+        z = scale * np.cos(theta)
+        ax.plot([0, x], [0, y], [0, z], 'red', alpha=0.8, linewidth=2)
+
+
+    # Plot MET as ray in x-y plane
+    # Scale MET separately since it's typically smaller
+    max_pt = max(max_electron_pt, max_muon_pt, max_photon_pt)
+    scale = 0.3 + 0.7 * met_pt/max_pt  # Using tau scale for reference
+    x = scale * np.cos(met_phi)
+    y = scale * np.sin(met_phi)
+    ax.plot([0, x], [0, y], [0, 0], 'k-', alpha=0.8, linewidth=2)
+
+    # Labels
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    ax.set_title('Most Anomalous Event Display')
+    ax.view_init(elev=10, azim=-60)
+    # Legend
+    from matplotlib.patches import Patch
+    legend_elements = [
+        Patch(facecolor='blue', alpha=0.3, label='Jets (ΔR=0.4)'),
+        Patch(facecolor='orange', alpha=0.8, label='Electrons'),
+        Patch(facecolor='green', alpha=0.8, label='Muons'),
+        Patch(facecolor='red', alpha=0.8, label='Photons'),
+        Patch(facecolor='k', alpha=0.8, label='MET')
+    ]
+    ax.legend(handles=legend_elements)
+
+    ax.set_box_aspect([1,1,1])
+
+    plt.savefig(f'{save_path}/{save_name}.png')
+    plt.close()
+
+# -----------------------------------------------------------------------------------------
+def plot_latent_space(datasets: dict, save_path: str, save_name: str):
+    bins = np.linspace(0, 10, 35)
+
+    zero_mask = np.all(datasets['EB_test']['HLT_preprocessed_data'] == 0, axis=1)
+
+    latent_reps = datasets['EB_test']['z'][~zero_mask]
+
+    plt.figure(figsize=(10, 6))
+    for i in range(latent_reps.shape[1]):
+        plt.hist(latent_reps[:, i], bins=bins, label=f'latent space dim {i}', density=True, histtype='step', linewidth=2.5, fill=False)
+
+
+    plt.xlabel('Latent Space Value', fontsize=12)
+    plt.ylabel('Density', fontsize=12)
+    plt.legend(fontsize=11)
+    plt.yscale('log')
+    plt.savefig(f'{save_path}/{save_name}_1.png')
+    plt.close()
+
+    bins = np.linspace(0, 1, 35)
+
+    latent_reps = datasets['EB_test']['z']
+
+    plt.figure(figsize=(10, 6))
+    for i in range(latent_reps.shape[1]):
+        plt.hist(latent_reps[:, i], bins=bins, label=f'latent space dim {i}', density=True, histtype='step', linewidth=2.5, fill=False)
+
+
+    plt.xlabel('Latent Space Value', fontsize=12)
+    plt.ylabel('Density', fontsize=12)
+    plt.legend(fontsize=11)
+    plt.yscale('log')
+    plt.savefig(f'{save_path}/{save_name}_2.png')
+    plt.close()
+
+def plot_latent_space_3d(datasets: dict, save_path: str, save_name: str):
+    """
+    Creates a 3D scatter plot of selected latent space dimensions.
+    """
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Colors for different datasets
+    colors = ['blue', 'red', 'green', 'purple', 'orange', 'brown', 'pink']
+    color_idx = 0
+    
+    # Skip certain tags that we don't want to plot
+    skip_tags = ['EB_train', 'EB_val', 'kaito']
+    
+    # Loop through datasets and plot each one
+    for tag, data in datasets.items():
+        if tag in skip_tags or 'ZB' in tag:
+            continue
+
+        zero_mask = np.all(data['HLT_preprocessed_data'] == 0, axis=1)
+        latent_reps = data['z'][~zero_mask]
+        
+        # Plot using dimensions 0, 2, and 3
+        ax.scatter(latent_reps[:10, 0], 
+                  latent_reps[:10, 2], 
+                  latent_reps[:10, 3],
+                  c=colors[color_idx % len(colors)],
+                  label=tag,
+                  alpha=0.6,
+                  s=10)
+        
+        color_idx += 1
+
+    # Set axis limits from 0 to 20
+    ax.set_xlim(0, 20)
+    ax.set_ylim(0, 20)
+    ax.set_zlim(0, 20)
+
+    ax.set_xlabel('Latent Dim 0')
+    ax.set_ylabel('Latent Dim 2') 
+    ax.set_zlabel('Latent Dim 3')
+    ax.set_title('3D Latent Space Visualization')
+    
+    # Adjust legend position and size
+    ax.legend(bbox_to_anchor=(1.15, 0.5), loc='center left', fontsize=10)
+    
+    # Adjust layout to prevent legend cutoff
+    plt.tight_layout()
+    
+    plt.savefig(f'{save_path}/{save_name}_3d.png', bbox_inches='tight', dpi=300)
+    plt.close()
+
+
+# -----------------------------------------------------------------------------------------
+        
+def plot_individual_model_results(datasets: dict, region_counts: dict, seed_scheme, save_path, model_version, L1AD_threshold, L1AD_rate, HLTAD_threshold, target_HLTAD_rate, obj_type='HLT', plot_ZB=False):
 
     if seed_scheme not in ['l1Seeded', 'l1All']:
         raise ValueError(f"Invalid seed_scheme: {seed_scheme}. Must be 'l1Seeded' or 'l1All'.")
@@ -1833,6 +2353,13 @@ def plot_individual_model_results(datasets: dict, region_counts: dict, seed_sche
     # Plot E over B plots
     EoverB = EoverB_plot(datasets, save_path=save_path, save_name=f'EoverB_{model_version}_{seed_scheme}')
     E_conditional_overB = E_conditional_overB_plot(datasets, save_path=save_path, save_name=f'E_conditional_overB_{model_version}_{seed_scheme}')
+
+    if plot_ZB:
+        ZB_scores_plot(datasets, save_path=save_path, save_name=f'ZB_scores_{model_version}_{seed_scheme}')
+
+    anomalous_event_display(datasets, save_path=save_path, save_name=f'anomalous_event_display_{model_version}_{seed_scheme}')
+    plot_latent_space(datasets, save_path=save_path, save_name=f'latent_space_{model_version}_{seed_scheme}')
+    plot_latent_space_3d(datasets, save_path=save_path, save_name=f'latent_space_3d_{model_version}_{seed_scheme}')
     return signal_efficiencies, EoverFplusG, EoverB
 
 
@@ -1946,7 +2473,8 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
             save_version=i,
             obj_type=obj_type,
             pt_normalization_type=data_info['pt_normalization_type'],
-            overlap_removal=training_info['overlap_removal']
+            overlap_removal=training_info['overlap_removal'],
+            duplicate_removal=training_info['duplicate_removal']
         )
 
         # Pass the data through the model
@@ -2148,8 +2676,61 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
 # -----------------------------------------------------------------------------------------
 
 
+# -----------------------------------------------------------------------------------------
+def process_single_model_from_loaded_datasets(datasets: dict, plots_path: str, model_version: int, target_rate=10, obj_type='HLT', L1AD_rate=1000):
 
 
+    # decode the region labels
+    for tag, data_dict in datasets.items():
+        data_dict['region_labels'] = [label.decode('utf-8') for label in data_dict['region_labels']]
+
+    L1AD_threshold, L1AD_pure_rate , L1AD_total_rate = find_threshold(
+            scores=datasets['EB_test']['topo2A_AD_scores'],
+            weights=datasets['EB_test']['weights'],
+            pass_current_trigs=datasets['EB_test']['passL1'],
+            target_rate=L1AD_rate,
+            incoming_rate=31575960
+    )
+
+
+    # L1Seeded ---------------------------------------------------------
+    pass_L1AD_mask = np.array(datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold)
+
+    HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
+        scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+        weights=datasets['EB_test']['weights'][pass_L1AD_mask],
+        pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
+        target_rate=target_rate,
+        incoming_rate=L1AD_total_rate
+    )
+    print(f'l1Seeded:::')
+    print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
+    print(f'HLTAD_total_rate: {HLTAD_total_rate}')
+    print(f'HLTAD_threshold: {HLTAD_threshold}\n')
+
+    
+
+    region_counts = {tag: {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0} for tag in datasets.keys()}
+    
+    for tag, data_dict in datasets.items():
+        for j, label in enumerate(data_dict['region_labels']):
+            weight = data_dict['weights'][j]
+            for region in label:
+                region_counts[tag][region] += weight
+
+    signal_efficiencies, EoverFplusG, EoverB = plot_individual_model_results(
+        datasets=datasets, 
+        region_counts=region_counts, 
+        seed_scheme='l1Seeded',
+        save_path=plots_path, 
+        model_version=model_version, 
+        L1AD_threshold=L1AD_threshold, 
+        L1AD_rate=L1AD_total_rate, 
+        HLTAD_threshold=HLTAD_threshold,
+        target_HLTAD_rate=target_rate,
+        obj_type=obj_type,
+        plot_ZB=True
+    )
 
 
 # -----------------------------------------------------------------------------------------
@@ -2198,7 +2779,7 @@ def load_subdicts_from_h5(save_dir):
     return main_dict
 # -----------------------------------------------------------------------------------------
 
-def load_and_inference(training_info: dict, data_info: dict, target_rate: int=10, L1AD_rate: int=1000, obj_type='HLT', save_version:int=0, tag='all', seed_scheme:str='l1Seeded'):
+def load_and_inference(training_info: dict, data_info: dict, target_rate: int=10, L1AD_rate: int=1000, obj_type='HLT', save_version:int=0, tags='all', seed_scheme:str='l1Seeded', regions=True):
 
     if seed_scheme != 'l1Seeded':
         raise ValueError(f'other seed schemes not yet implemented')
@@ -2213,10 +2794,16 @@ def load_and_inference(training_info: dict, data_info: dict, target_rate: int=10
 
     datasets, data_info = load_and_preprocess(**data_info)
 
+    # Delete datasets that are not in the tags list
+    tags_to_delete = [tag for tag in datasets.keys() if tag not in tags]
+    if tags != 'all':
+        for tag in tags_to_delete:
+                del datasets[tag]
+
 
     # Load the model
     HLT_AE, HLT_encoder, HLT_MSE_AE, HLT_preprocessing_model = initialize_model(
-        input_dim=datasets['EB_train']['HLT_data'].shape[1],
+        input_dim=datasets[list(datasets.keys())[0]]['HLT_data'].shape[1],
         pt_thresholds=data_info['pt_thresholds'],
         pt_scale_factor=data_info['pt_scale_factor'],
         dropout_p=dropout_p,
@@ -2227,21 +2814,21 @@ def load_and_inference(training_info: dict, data_info: dict, target_rate: int=10
         save_version=save_version,
         obj_type=obj_type,
         pt_normalization_type=data_info['pt_normalization_type'],
-        overlap_removal=training_info['overlap_removal']
+        overlap_removal=training_info['overlap_removal'],
+        duplicate_removal=training_info['duplicate_removal']
     )
 
     # Pass the data through the model
-    skip_tags = ['EB_train', 'EB_val']
-    if tag == 'all':
-        good_tags = [tag for tag in datasets.keys() if tag not in skip_tags]
-    else:
-        good_tags = [tag, 'EB_test']
+    
 
-    for tag in good_tags:
+    for tag in datasets.keys():
         data_dict = datasets[tag]
 
         # Preprocess the data
         data_dict[f'{obj_type}_preprocessed_data'] = HLT_preprocessing_model.predict(data_dict[f'{obj_type}_data'], verbose=0, batch_size=8)
+
+        # Calculate the latent representations
+        data_dict['z'] = HLT_encoder.predict(data_dict[f'{obj_type}_preprocessed_data'], batch_size=8, verbose=0)
 
         # Calculate the AD scores
         data_dict[f'{obj_type}_AD_scores'] = HLT_MSE_AE.predict(data_dict[f'{obj_type}_preprocessed_data'], batch_size=8, verbose=0)
@@ -2261,55 +2848,57 @@ def load_and_inference(training_info: dict, data_info: dict, target_rate: int=10
         # L1Seeded ---------------------------------------------------------
         pass_L1AD_mask = datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold
 
-        HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
-            scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
-            weights=datasets['EB_test']['weights'][pass_L1AD_mask],
-            pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
-            target_rate=target_rate,
-            incoming_rate=L1AD_total_rate
-        )
-        print(f'l1Seeded:::')
-        print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
-        print(f'HLTAD_total_rate: {HLTAD_total_rate}')
-        print(f'HLTAD_threshold: {HLTAD_threshold}\n')
+        for target_rate in [5, 20, 10]: # since the last value is 10Hz, the variables will correspond to 10Hz after the loop
+
+            HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
+                scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+                weights=datasets['EB_test']['weights'][pass_L1AD_mask],
+                pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
+                target_rate=target_rate,
+                incoming_rate=L1AD_total_rate
+            )
+            print(f'l1Seeded::: target rate: {target_rate}')
+            print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
+            print(f'HLTAD_total_rate: {HLTAD_total_rate}')
+            print(f'HLTAD_threshold: {HLTAD_threshold}\n')
 
         # Initialize the region counts for each tag
         region_counts = {tag: {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0} for tag in datasets.keys()}
         
         # Loop over each tag
-        for tag in good_tags:
-            data_dict = datasets[tag]
+        if regions:
+            for tag in datasets.keys():
+                data_dict = datasets[tag]
+                
+                # will hold the regions that each event falls into. Each event will be in region A
+                data_dict['region_labels'] = ['A'] * len(data_dict[f'{obj_type}_AD_scores'])
+    
+                passHLTAD = data_dict[f'{obj_type}_AD_scores'] >= HLTAD_threshold
+                passHLT = data_dict['passHLT']
+                passL1AD = data_dict['topo2A_AD_scores'] >= L1AD_threshold
+                passL1 = data_dict['passL1']
+    
+                # Add letters to strings where conditions are met
+                for j, (l1ad, l1, hltad, hlt) in enumerate(zip(passL1AD, passL1, passHLTAD, passHLT)):
+                    if l1ad and not l1:
+                        data_dict['region_labels'][j] += 'B'
+                    if l1ad and l1:
+                        data_dict['region_labels'][j] += 'C'
+                    if not l1ad and l1:
+                        data_dict['region_labels'][j] += 'D'
+                    if l1ad and hltad and not hlt:
+                        data_dict['region_labels'][j] += 'E'
+                    if l1ad and hltad and hlt:
+                        data_dict['region_labels'][j] += 'F'
+                    if (l1 or l1ad) and not hltad and hlt:
+                        data_dict['region_labels'][j] += 'G'
+    
+                # Now keep track of the number of events in each region
+                for j, label in enumerate(data_dict['region_labels']):
+                    weight = data_dict['weights'][j]
+                    for region in label:
+                        region_counts[tag][region] += weight
             
-            # will hold the regions that each event falls into. Each event will be in region A
-            data_dict['region_labels'] = ['A'] * len(data_dict[f'{obj_type}_AD_scores'])
-
-            passHLTAD = data_dict[f'{obj_type}_AD_scores'] >= HLTAD_threshold
-            passHLT = data_dict['passHLT']
-            passL1AD = data_dict['topo2A_AD_scores'] >= L1AD_threshold
-            passL1 = data_dict['passL1']
-
-            # Add letters to strings where conditions are met
-            for j, (l1ad, l1, hltad, hlt) in enumerate(zip(passL1AD, passL1, passHLTAD, passHLT)):
-                if l1ad and not l1:
-                    data_dict['region_labels'][j] += 'B'
-                if l1ad and l1:
-                    data_dict['region_labels'][j] += 'C'
-                if not l1ad and l1:
-                    data_dict['region_labels'][j] += 'D'
-                if l1ad and hltad and not hlt:
-                    data_dict['region_labels'][j] += 'E'
-                if l1ad and hltad and hlt:
-                    data_dict['region_labels'][j] += 'F'
-                if (l1 or l1ad) and not hltad and hlt:
-                    data_dict['region_labels'][j] += 'G'
-
-            # Now keep track of the number of events in each region
-            for j, label in enumerate(data_dict['region_labels']):
-                weight = data_dict['weights'][j]
-                for region in label:
-                    region_counts[tag][region] += weight
-        
-        # Append the results to the list
         
     return datasets, region_counts
 
@@ -2328,15 +2917,16 @@ def create_wrapper_model(preprocessing_model, mse_model):
 
 # -----------------------------------------------------------------------------------------
 def convert_to_onnx(training_info, data_info, model_version, save_dir, opset=13, input_dim=48, obj_type='HLT'):
+    # Set random seeds for reproducibility
+    tf.random.set_seed(42)
+    np.random.seed(42)
     
     # Unpack training info
     save_path = training_info['save_path']
     dropout_p = training_info['dropout_p']
     L2_reg_coupling = training_info['L2_reg_coupling']
     latent_dim = training_info['latent_dim']
-    large_network = training_info['large_network']
-    num_trainings = training_info['num_trainings']
-
+    
     # Load the model
     HLT_AE, HLT_encoder, HLT_MSE_AE, HLT_preprocessing_model = initialize_model(
         input_dim=input_dim,
@@ -2345,55 +2935,59 @@ def convert_to_onnx(training_info, data_info, model_version, save_dir, opset=13,
         dropout_p=dropout_p,
         L2_reg_coupling=L2_reg_coupling,
         latent_dim=latent_dim,
-        #large_network=large_network,
         saved_model_path=save_path,
         save_version=model_version,
         obj_type=obj_type,
         pt_normalization_type=data_info['pt_normalization_type'],
-        overlap_removal=training_info['overlap_removal']
+        overlap_removal=training_info['overlap_removal'],
+        duplicate_removal=training_info['duplicate_removal']
     )
-
-    # Next, we create a wrapper model which combines the preprocessing model with the MSE model
+    
+    # Set models to inference mode
+    HLT_preprocessing_model.trainable = False
+    HLT_MSE_AE.trainable = False
+    
+    # Create wrapper model
     wrapper_model = create_wrapper_model(HLT_preprocessing_model, HLT_MSE_AE)
-
+    wrapper_model.trainable = False
+    
+    # Print model summary for debugging
     wrapper_model.summary()
-
-    # Convert wrapper model to ONNX
-    spec = (tf.TensorSpec(wrapper_model.input_shape, tf.float32, name="input"),)
-    onnx_model, _ = tf2onnx.convert.from_keras(wrapper_model, opset=opset, input_signature=spec)
+    
+    # Get the exact input shape without batch dimension
+    input_shape = wrapper_model.input_shape[1:]
+    
+    # Convert to ONNX with explicit shape specification
+    spec = (tf.TensorSpec((None,) + input_shape, tf.float32, name="input"),)
+    onnx_model, _ = tf2onnx.convert.from_keras(
+        wrapper_model, 
+        opset=opset, 
+        input_signature=spec,
+        target=["onnxruntime"]
+    )
     
     # Save ONNX model
     onnx_file_path = f"{save_dir}/folded_MSE_AE_{model_version}.onnx"
     onnx.save(onnx_model, onnx_file_path)
-    print(f"ONNX HLT_AE model saved to: {onnx_file_path}")
-
-# -----------------------------------------------------------------------------------------
-
-
-# -----------------------------------------------------------------------------------------
-def compare_tf_with_onnx(datasets: dict, training_info: dict, data_info, model_version, onnx_path, obj_type='HLT'):
-    """
-    Compares the outputs of TensorFlow and ONNX models.
-
-    Inputs:
-        datasets: dictionary containing data to pass through the models.
-        training_info: dictionary with model training details.
-        model_version: the version of the model to load.
-        onnx_path: path where the ONNX models are stored.
-
-    Returns:
-        datasets: updated datasets with both TensorFlow and ONNX results.
-    """
+    print(f"ONNX model saved to: {onnx_file_path}")
     
+    return onnx_file_path
+
+# -----------------------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------------------
+def compare_tf_with_onnx(datasets: dict, training_info: dict, data_info, model_version, onnx_path, obj_type='HLT', tags='all'):
+    """
+    Compares the outputs of TensorFlow and ONNX models with detailed diagnostics.
+    """
     # Unpack training info
     save_path = training_info['save_path']
     dropout_p = training_info['dropout_p']
     L2_reg_coupling = training_info['L2_reg_coupling']
     latent_dim = training_info['latent_dim']
-    large_network = training_info['large_network']
-    num_trainings = training_info['num_trainings']
-
-    # Load the model
+    
+    # Load the TensorFlow model
     HLT_AE, HLT_encoder, HLT_MSE_AE, HLT_preprocessing_model = initialize_model(
         input_dim=48,
         pt_thresholds=data_info['pt_thresholds'],
@@ -2401,35 +2995,76 @@ def compare_tf_with_onnx(datasets: dict, training_info: dict, data_info, model_v
         dropout_p=dropout_p,
         L2_reg_coupling=L2_reg_coupling,
         latent_dim=latent_dim,
-        #large_network=large_network,
         saved_model_path=save_path,
         save_version=model_version,
         obj_type=obj_type,
         pt_normalization_type=data_info['pt_normalization_type'],
-        overlap_removal=training_info['overlap_removal']
+        overlap_removal=training_info['overlap_removal'],
+        duplicate_removal=training_info['duplicate_removal']
     )
-
-    # Pass the data through the TensorFlow model
+    
+    # Create the wrapper model for direct comparison
+    wrapper_model = create_wrapper_model(HLT_preprocessing_model, HLT_MSE_AE)
+    wrapper_model.trainable = False
+    
+    # Load the ONNX model
+    onnx_path = f"{onnx_path}/folded_MSE_AE_{model_version}.onnx"
+    HLT_onnx_session = rt.InferenceSession(onnx_path)
+    
+    # Determine which tags to process
     skip_tags = ['EB_train', 'EB_val']
-    for tag, data_dict in datasets.items():
-        if tag in skip_tags: continue
-
-        if tag.startswith('k'):
-
-            data_dict[f'{obj_type}_preprocessed_data'] = HLT_preprocessing_model.predict(data_dict[f'{obj_type}_data'], verbose=0)
-            data_dict[f'{obj_type}_AD_scores'] = HLT_MSE_AE.predict(data_dict[f'{obj_type}_preprocessed_data'], verbose=0)
-
-    # Load the ONNX models
-    HLT_onnx_session = rt.InferenceSession(f"{onnx_path}/folded_MSE_AE_{model_version}.onnx")
-
-    # Run inference using the ONNX models and store results
-    for tag, dict in datasets.items():
-        if tag in skip_tags: continue
-
-        # Run inference on HLT data
-        if tag.startswith('k'):
-            onnx_inputs_HLT = {HLT_onnx_session.get_inputs()[0].name: dict[f'{obj_type}_data'].astype(np.float32)}
-            dict[f'ONNX_{obj_type}_AD_scores'] = HLT_onnx_session.run(None, onnx_inputs_HLT)[0]
-
-    return datasets
+    if tags == 'all':
+        tags_to_compare = [tag for tag in datasets.keys() if tag not in skip_tags]
+    else:
+        tags_to_compare = [tag for tag in tags if tag not in skip_tags]
+    
+    # Dictionary to store comparison statistics
+    comparison_stats = {}
+    
+    for tag in tags_to_compare:
+        data_dict = datasets[tag]
+        
+        # Get raw input data
+        raw_input = data_dict[f'{obj_type}_data'].astype(np.float32)
+        
+        # Run TensorFlow inference (direct through wrapper model)
+        tf_scores = wrapper_model.predict(raw_input, verbose=0)
+        
+        # Run ONNX inference
+        onnx_inputs = {HLT_onnx_session.get_inputs()[0].name: raw_input}
+        onnx_scores = HLT_onnx_session.run(None, onnx_inputs)[0]
+        
+        # Store results in dataset
+        data_dict[f'{obj_type}_AD_scores'] = tf_scores
+        data_dict[f'ONNX_{obj_type}_AD_scores'] = onnx_scores
+        
+        # Calculate differences
+        abs_diff = np.abs(tf_scores - onnx_scores)
+        rel_diff = abs_diff / (np.abs(tf_scores) + 1e-10)  # Avoid division by zero
+        
+        # Store statistics
+        comparison_stats[tag] = {
+            'max_abs_diff': np.max(abs_diff),
+            'mean_abs_diff': np.mean(abs_diff),
+            'median_abs_diff': np.median(abs_diff),
+            'max_rel_diff': np.max(rel_diff),
+            'mean_rel_diff': np.mean(rel_diff),
+            'median_rel_diff': np.median(rel_diff),
+            'num_significant_diffs': np.sum(abs_diff > 1e-4),
+            'total_samples': len(raw_input)
+        }
+        
+        # Find indices of largest differences for inspection
+        top_diff_indices = np.argsort(abs_diff.flatten())[-5:]  # Top 5 differences
+        
+        print(f"\nComparison for {tag}:")
+        print(f"Max absolute difference: {comparison_stats[tag]['max_abs_diff']}")
+        print(f"Mean absolute difference: {comparison_stats[tag]['mean_abs_diff']}")
+        print(f"Number of significant differences: {comparison_stats[tag]['num_significant_diffs']} out of {comparison_stats[tag]['total_samples']}")
+        
+        print("\nSample of largest differences:")
+        for idx in top_diff_indices:
+            print(f"Index {idx}: TF={tf_scores.flatten()[idx]}, ONNX={onnx_scores.flatten()[idx]}, Diff={abs_diff.flatten()[idx]}")
+    
+    return datasets, comparison_stats
 # -----------------------------------------------------------------------------------------
