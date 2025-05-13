@@ -302,7 +302,7 @@ def combine_data(datasets, tags_to_combine, new_tag):
 
 
 # ---------------------------------------------------------------------
-def save_subdicts_to_h5(main_dict, save_dir):
+def save_subdicts_to_h5(main_dict, save_dir, only_save_tags=None):
     """
     Saves each sub-dictionary of NumPy arrays in the main_dict to separate HDF5 files.
     
@@ -314,10 +314,12 @@ def save_subdicts_to_h5(main_dict, save_dir):
     os.makedirs(save_dir, exist_ok=True)
     
     for sub_dict_name, sub_dict in main_dict.items():
+        if only_save_tags is not None and sub_dict_name not in only_save_tags:
+            continue
         file_path = os.path.join(save_dir, f"{sub_dict_name}.h5")
         with h5py.File(file_path, 'w') as f:
             for key, arr in sub_dict.items():
-                f.create_dataset(key, data=arr)
+                    f.create_dataset(key, data=arr)
         print(f"Saved {sub_dict_name} to {file_path}")
 # ---------------------------------------------------------------------
 
@@ -341,7 +343,7 @@ def split_data_by_run(datasets, tag_to_split):
 # ---------------------------------------------------------------------
 
 
-def load_and_match(save_path):
+def load_and_match(save_path, only_save_tags=None):
     print('Initializing loading sequence...')
     print('Beginning loading of topo2A data')
     
@@ -377,7 +379,8 @@ def load_and_match(save_path):
     topo2A_datasets = {}
 
     # Loop over all the EB h5 files in the directory and append to the lists
-    base_path = '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/'
+    #base_path = '/eos/home-m/mmcohen/ntuples/03-18-2025/EB/'
+    base_path = '/eos/home-m/mmcohen/ntuples/04-29-2025_no_TLA/EB/'
     for file_name in os.listdir(base_path):
         if file_name.startswith('N') or file_name.startswith('.'): continue
         file_path = os.path.join(base_path, file_name)
@@ -391,31 +394,34 @@ def load_and_match(save_path):
         }
     # --------------------------------------------------------------------------------------------------
 
-        
-    # Load the new topo2A MC data ----------------------------------------------------------------------
-    MC_path = '/eos/home-m/mmcohen/ntuples/MC_07-17-2024/'
-    for filename in os.listdir(MC_path):
-        if filename.startswith('N') or filename.startswith('.'): continue
-    
-        dataset_tag = filename.split('_')[0]
-    
-        Topo_2A, pass_L1 = load_and_process_anomalous_data(MC_path+filename, event_num=False)
-    
-        topo2A_datasets[dataset_tag] = {
-            'data': Topo_2A[0:100000],
-            #'event_numbers': event_number,
-            #'run_numbers': run_number
-        }
-    # --------------------------------------------------------------------------------------------------
 
 
 
     # Load the topo2A MC23e data ----------------------------------------------------------------------
-    MC_path = '/eos/home-m/mmcohen/ntuples/MC23e_12-10-2024/'
+    #MC_path = '/eos/home-m/mmcohen/ntuples/03-18-2025/MC/'
+    MC_path = '/eos/home-m/mmcohen/ntuples/04-29-2025_no_TLA/MC/'
     for filename in os.listdir(MC_path):
         if filename.startswith('N') or filename.startswith('.'): continue
     
-        dataset_tag = 'mc23e_'+(filename.split('_12')[0]).split('C_')[1]
+        dataset_tag = 'mc23e_'+filename.split('MC_')[1].split('_04')[0]
+    
+        Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(MC_path+filename, event_num=True)
+    
+        topo2A_datasets[dataset_tag] = {
+            'data': Topo_2A[0:100000],
+            'event_numbers': event_number,
+            'run_numbers': run_number
+        }
+    # --------------------------------------------------------------------------------------------------
+
+
+    # Load the topo2A new samples MC23e data ----------------------------------------------------------------------
+    # MC_path = '/eos/home-m/mmcohen/ntuples/04-03-2025_new_menu_real/MC_new_samples/'
+    MC_path = '/eos/home-m/mmcohen/ntuples/04-29-2025_no_TLA/MC_new/'
+    for filename in os.listdir(MC_path):
+        if filename.startswith('N') or filename.startswith('.'): continue
+    
+        dataset_tag = 'mc23e_new_'+filename.split('MC_')[1].split('_04')[0]
     
         Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(MC_path+filename, event_num=True)
     
@@ -428,24 +434,24 @@ def load_and_match(save_path):
 
 
     # Load the topo2A physMain data ----------------------------------------------------------------------
-    physMain_path = '/eos/home-m/mmcohen/ntuples/physMain/'
-    for filename in os.listdir(physMain_path):
-        if filename.startswith('N') or filename.startswith('.'): continue
+    # physMain_path = '/eos/home-m/mmcohen/ntuples/physMain/'
+    # for filename in os.listdir(physMain_path):
+    #     if filename.startswith('N') or filename.startswith('.'): continue
     
-        dataset_tag = 'physMain_'+(filename.split('_')[1])+(filename.split('_')[2])
+    #     dataset_tag = 'physMain_'+(filename.split('_')[1])+(filename.split('_')[2])
     
-        Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(physMain_path+filename, event_num=True)
+    #     Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(physMain_path+filename, event_num=True)
     
-        topo2A_datasets[dataset_tag] = {
-            'data': Topo_2A[0:100000],
-            'event_numbers': event_number,
-            'run_numbers': run_number
-        }
+    #     topo2A_datasets[dataset_tag] = {
+    #         'data': Topo_2A[0:100000],
+    #         'event_numbers': event_number,
+    #         'run_numbers': run_number
+    #     }
     # --------------------------------------------------------------------------------------------------
 
 
     # Load the topo2A ZB data ----------------------------------------------------------------------
-    ZB_path = '/eos/home-m/mmcohen/ntuples/02-28-2025/ZB/'
+    ZB_path = '/eos/home-m/mmcohen/ntuples/04-29-2025_no_TLA/ZB/'
     for filename in os.listdir(ZB_path):
         if filename.startswith('N') or filename.startswith('.'): continue
     
@@ -498,13 +504,13 @@ def load_and_match(save_path):
 
 
     # Load MC23e data -------------------------------------------------------------------------------------
-    data_path = '/eos/home-m/mmcohen/ntuples/02-28-2025/MC/'
-
+    #data_path = '/eos/home-m/mmcohen/ntuples/04-03-2025_new_menu_real/MC/'
+    data_path = '/eos/home-m/mmcohen/ntuples/04-29-2025_no_TLA/MC/'
     for filename in os.listdir(data_path):
     
         if filename.startswith('N') or filename.startswith('.'): continue
     
-        dataset_tag = 'mc23e_'+filename.split('MET_')[1].split('_02')[0]
+        dataset_tag = 'mc23e_'+filename.split('MC_')[1].split('_04')[0]
         
         with h5py.File(data_path+filename, 'r') as hf:
             HLT_jets = hf['HLT_jets'][:]
@@ -519,7 +525,58 @@ def load_and_match(save_path):
             L1_eFex_taus = hf['L1_eFex_taus'][:]
             L1_jFex_taus = hf['L1_jFex_taus'][:]
             HLT_photons = hf['HLT_photons'][:]
-            HLT_MET = hf['HLT_MET'][:].reshape(-1, 1, 3)  # Broadcasting MET
+            HLT_MET = hf['HLT_MET_tcpufit'][:].reshape(-1, 1, 3)
+            L1_MET = hf['L1_MET'][:].reshape(-1, 1, 3)
+            pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
+            pass_HLT_unprescaled = hf["pass_HLT_unprescaled"][:]
+            event_number = hf["event_number"][:]
+            run_number = hf["run_number"][:]
+            mu = hf["mu"][:]
+    
+            HLT_objects = np.concatenate([HLT_jets[:, :6, [0, 2, 3]], HLT_electrons[:, :3, :], HLT_muons[:, :3, :], HLT_photons[:, :3, :], HLT_MET], axis=1)
+            L1_objects = np.concatenate([L1_jFexSR_jets[:, :6, :], L1_egammas[:, :3, :], L1_muons[:, :3, :], L1_eFex_taus[:, :3, :], L1_MET], axis=1)
+            
+            datasets[dataset_tag] = {
+                'HLT_data': HLT_objects,
+                'L1_data': L1_objects,
+                'passL1': pass_L1_unprescaled==1,
+                'passHLT': pass_HLT_unprescaled==1,
+                'weights': np.ones(len(HLT_objects)),
+                'topo2A_AD_scores': topo2A_datasets[dataset_tag]['topo2A_AD_scores'],
+                'event_numbers': event_number,
+                'run_numbers': run_number,
+                'pileups': mu
+            }
+    
+            if len(HLT_objects) > 100000:
+                datasets[dataset_tag] = {key: value[:100000] for key, value in datasets[dataset_tag].items()}
+    # --------------------------------------------------------------------------------------------------
+
+
+    # Load the new samples MC23e data -------------------------------------------------------------------------------------
+    # data_path = '/eos/home-m/mmcohen/ntuples/04-03-2025_new_menu_real/MC_new_samples/'
+    data_path = '/eos/home-m/mmcohen/ntuples/04-29-2025_no_TLA/MC_new/'
+
+    for filename in os.listdir(data_path):
+    
+        if filename.startswith('N') or filename.startswith('.'): continue
+    
+        dataset_tag = 'mc23e_new_'+filename.split('MC_')[1].split('_04')[0]
+        
+        with h5py.File(data_path+filename, 'r') as hf:
+            HLT_jets = hf['HLT_jets'][:]
+            L1_jFexSR_jets = hf['L1_jFexSR_jets'][:]
+            L1_jFexLR_jets = hf['L1_jFexLR_jets'][:]
+            HLT_electrons = hf['HLT_electrons'][:]
+            LRT_electrons = hf['LRT_electrons'][:]
+            L1_egammas = hf['L1_egammas'][:]
+            HLT_muons = hf['HLT_muons'][:]
+            LRT_muons = hf['LRT_muons'][:]
+            L1_muons = hf['L1_muons'][:]
+            L1_eFex_taus = hf['L1_eFex_taus'][:]
+            L1_jFex_taus = hf['L1_jFex_taus'][:]
+            HLT_photons = hf['HLT_photons'][:]
+            HLT_MET = hf['HLT_MET_tcpufit'][:].reshape(-1, 1, 3)
             L1_MET = hf['L1_MET'][:].reshape(-1, 1, 3)
             pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
             pass_HLT_unprescaled = hf["pass_HLT_unprescaled"][:]
@@ -549,7 +606,7 @@ def load_and_match(save_path):
     
 
     # Load ZB data -------------------------------------------------------------------------------------
-    data_path = '/eos/home-m/mmcohen/ntuples/02-28-2025/ZB/'
+    data_path = '/eos/home-m/mmcohen/ntuples/04-29-2025_no_TLA/ZB/'
 
     for filename in os.listdir(data_path):
     
@@ -570,7 +627,7 @@ def load_and_match(save_path):
             L1_eFex_taus = hf['L1_eFex_taus'][:]
             L1_jFex_taus = hf['L1_jFex_taus'][:]
             HLT_photons = hf['HLT_photons'][:]
-            HLT_MET = hf['HLT_MET'][:].reshape(-1, 1, 3)  # Broadcasting MET
+            HLT_MET = hf['HLT_MET_tcpufit'][:].reshape(-1, 1, 3)
             L1_MET = hf['L1_MET'][:].reshape(-1, 1, 3)
             pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
             pass_HLT_unprescaled = hf["pass_HLT_unprescaled"][:]
@@ -649,7 +706,8 @@ def load_and_match(save_path):
 
 
     # Load my EB data ----------------------------------------------------------------------------------
-    base_path = '/eos/home-m/mmcohen/ntuples/02-28-2025/EB'
+    # base_path = '/eos/home-m/mmcohen/ntuples/04-03-2025_new_menu_real/EB/'
+    base_path = '/eos/home-m/mmcohen/ntuples/04-29-2025_no_TLA/EB/'
     
     # Iterate over all files in the directory
     for file_name in os.listdir(base_path):
@@ -674,7 +732,7 @@ def load_and_match(save_path):
             L1_jFex_taus = hf['L1_jFex_taus'][:]
             HLT_photons = hf['HLT_photons'][:]
             ofl_photons = hf['ofl_photons'][:]
-            HLT_MET = hf['HLT_MET'][:].reshape(-1, 1, 3)  # Broadcasting MET
+            HLT_MET = hf['HLT_MET_tcpufit'][:].reshape(-1, 1, 3)  # Broadcasting MET
             L1_MET = hf['L1_MET'][:].reshape(-1, 1, 3)
             pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
             pass_HLT_unprescaled = hf["pass_HLT_unprescaled"][:]
@@ -766,10 +824,13 @@ def load_and_match(save_path):
     print('phase 2 complete.')
 
     print('Begin data saving sequence...')
-    save_subdicts_to_h5(datasets, save_path)
+
+    #only_save_tags = [tag for tag in datasets.keys() if 'ZB' not in tag]
+    only_save_tags = None
+    save_subdicts_to_h5(datasets, save_path, only_save_tags=only_save_tags)
 
     os.makedirs(save_path + '/topo2A_datasets', exist_ok=True)
-    save_subdicts_to_h5(topo2A_datasets, save_path + '/topo2A_datasets')
+    save_subdicts_to_h5(topo2A_datasets, save_path + '/topo2A_datasets', only_save_tags=None)
 
     print('Data saved successfully.')
     

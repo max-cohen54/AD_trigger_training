@@ -19,9 +19,23 @@ import onnx
 import onnxruntime as rt
 import ROOT
 from sklearn.preprocessing import StandardScaler
+from matplotlib.colors import LogNorm
+
+distinct_colors = [
+        '#e41a1c',  # red
+        '#377eb8',  # blue
+        '#4daf4a',  # green
+        '#984ea3',  # purple
+        '#ff7f00',  # orange
+        '#a65628',  # brown
+        '#f781bf',  # pink
+        '#999999',  # grey
+        '#dede00',  # yellow
+        '#458b74',  # sea green
+    ]
 
 # -----------------------------------------------------------------------------------------
-def load_subdicts_from_h5(save_dir):
+def load_subdicts_from_h5(save_dir, tags_to_use=None):
     """
     Loads sub-dictionaries of NumPy arrays from HDF5 files in a directory and reconstructs the original structure.
     
@@ -34,8 +48,16 @@ def load_subdicts_from_h5(save_dir):
     main_dict = {}
     
     for filename in os.listdir(save_dir):
-        if filename.endswith(".h5"):
+        if filename.endswith(".h5") and not filename.startswith('.'):
+
+            # Make sure it’s a file (not directory!)
+            if not os.path.isfile(file_path):
+                continue
+
+            
             sub_dict_name = os.path.splitext(filename)[0]
+            if tags_to_use is not None and sub_dict_name not in tags_to_use:
+                continue
             file_path = os.path.join(save_dir, filename)
             with h5py.File(file_path, 'r') as f:
                 sub_dict = {key: np.array(f[key]) for key in f}
@@ -48,7 +70,7 @@ def load_subdicts_from_h5(save_dir):
 
 
 # -----------------------------------------------------------------------------------------
-def combine_data(datasets, tags_to_combine, new_tag):
+def combine_data(datasets, tags_to_combine, new_tag, delete_old_tags=True):
     """
     Combines subdicts of the 'datasets' dict.
     
@@ -74,8 +96,9 @@ def combine_data(datasets, tags_to_combine, new_tag):
         datasets[new_tag][key] = np.concatenate(value, axis=0)
 
     # Delete old tags
-    for tag in tags_to_combine:
-        del datasets[tag]
+    if delete_old_tags:
+        for tag in tags_to_combine:
+            del datasets[tag]
 
     # Make sure everything is an np array
     for tag, data_dict in datasets.items():
@@ -154,11 +177,210 @@ def find_threshold(scores, weights, pass_current_trigs, incoming_rate, target_ra
 
     return threshold, pure_rate, total_rate
 
+# -----------------------------------------------------------------------------------------
+def kinematic_plot(datasets: dict, obj_idx: int, plots_path: str, save_name: str, tags_to_use: list):
+    # Create figure and axes
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 8))
+    
+    # Create a color map for consistent colors
+    colors = [distinct_colors[i % len(distinct_colors)] for i in range(len(tags_to_use))]
+    
+    # Plot data for each tag with consistent colors
+    for tag, color in zip(tags_to_use, colors):
+        pts = datasets[tag]['HLT_data'][:, obj_idx, 0]
+        etas = datasets[tag]['HLT_data'][:, obj_idx, 1] 
+        phis = datasets[tag]['HLT_data'][:, obj_idx, 2]
+        weights = datasets[tag]['weights']
+
+        # Use the same color for each tag across all subplots
+        ax1.hist(pts, bins=np.linspace(0, 1000, 50), density=True, histtype='step', 
+                 linewidth=2.5, fill=False, color=color, label=tag, weights=weights)
+        ax2.hist(etas, bins=np.linspace(-5, 5, 50), density=True, histtype='step', 
+                 linewidth=2.5, fill=False, color=color, weights=weights)
+        ax3.hist(phis, bins=np.linspace(-np.pi, np.pi, 50), density=True, histtype='step', 
+                 linewidth=2.5, fill=False, color=color, weights=weights)
+
+    # Set labels and scales
+    ax1.set_xlabel(r'$p_T$ [GeV]', fontsize=14)
+    ax1.set_ylabel(r'Density', fontsize=14)
+    ax1.set_yscale('log')
+
+    ax2.set_xlabel(r'$\eta$', fontsize=14)
+    ax2.set_ylabel(r'Density', fontsize=14) 
+    ax2.set_yscale('log')
+
+    ax3.set_xlabel(r'$\phi$', fontsize=14)
+    ax3.set_ylabel(r'Density', fontsize=14)
+    ax3.set_yscale('log')
+
+    # Create a single legend using only the first subplot's handles and labels
+    handles, labels = ax1.get_legend_handles_labels()
+    fig.legend(handles, labels, fontsize=14, loc='center', bbox_to_anchor=(0.5, 0.2), 
+              ncol=1)
+    
+    plt.tight_layout()
+    # Adjust bottom margin to prevent legend overlap
+    plt.subplots_adjust(bottom=0.5)
+    
+    plt.savefig(os.path.join(plots_path, f'{save_name}.png'))
+    plt.close()
+
+def multiplicity_plot(datasets: dict, plots_path: str, save_name: str, tags_to_use: list):
+
+    plt.figure(figsize=(15, 10))
+
+    for tag in tags_to_use:
+        multiplicity = np.count_nonzero(datasets[tag]['HLT_data'], axis=(1,2)) // 3 # number of features per object
+        weights = datasets[tag]['weights']
+        plt.hist(multiplicity, bins=np.arange(0, 17, 1), density=True, histtype='step', linewidth=2.5, fill=False, label=tag, weights=weights)
+
+    plt.xlabel(r'Multiplicity', fontsize=14)
+    plt.ylabel(r'Density', fontsize=14)
+    plt.legend(fontsize=14)
+    plt.savefig(os.path.join(plots_path, f'{save_name}.png'))
+    plt.close()
+
+def leading_jet_dR_plot(datasets: dict, plots_path: str, save_name: str, tags_to_use: list):
+
+    plt.figure(figsize=(15, 8))
+
+    for tag in tags_to_use:
+        # leading jet
+        eta1 = datasets[tag]['HLT_data'][:, 0, 1]
+        phi1 = datasets[tag]['HLT_data'][:, 0, 2]
+        # subleading jet
+        eta2 = datasets[tag]['HLT_data'][:, 1, 1]
+        phi2 = datasets[tag]['HLT_data'][:, 1, 2]
+
+        # calculate dR
+        dphi = np.mod(phi1 - phi2 + np.pi, 2 * np.pi) - np.pi # accounts for periodicity of phi
+        deta = eta1 - eta2
+        dR = np.sqrt(dphi**2 + deta**2)
+        weights = datasets[tag]['weights']
+        plt.hist(dR, bins=np.linspace(0, 5, 50), density=True, histtype='step', linewidth=2.5, fill=False, label=tag, weights=weights)
+
+    plt.xlabel(r'Leading jets dR', fontsize=14)
+    plt.ylabel(r'Density', fontsize=14)
+    plt.legend(fontsize=14)
+    plt.savefig(os.path.join(plots_path, f'{save_name}.png'))
+    plt.close()
+
+def sphericity_plot(datasets: dict, plots_path: str, save_name: str, tags_to_use: list):
+
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 8))
+
+    if 'EB_val' not in tags_to_use:
+        tags_to_use.append('EB_val')
+    if 'EB_train' not in tags_to_use:
+        tags_to_use.append('EB_train')
+    if 'EB_test' not in tags_to_use:
+        tags_to_use.append('EB_test')
+
+    # Create a color map for consistent colors
+    colors = [distinct_colors[i % len(distinct_colors)] for i in range(len(tags_to_use))]
+
+    for tag, color in zip(tags_to_use, colors):
+        sphericity = []
+        aplanarity = []
+        planarity = []
+        weights = datasets[tag]['weights']
+        for i_event in range(len(datasets[tag]['HLT_data'])):
+            pts = datasets[tag]['HLT_data'][i_event, :, 0]
+            etas = datasets[tag]['HLT_data'][i_event, :, 1]
+            phis = datasets[tag]['HLT_data'][i_event, :, 2]
+
+            # Construct momenta
+            pxs = pts * np.cos(phis)
+            pys = pts * np.sin(phis)
+            pzs = pts * np.sinh(etas)
+            p2 = pxs**2 + pys**2 + pzs**2
+
+            # build the normalized tensor M
+            P2sum = np.sum(p2)
+            if P2sum == 0:
+                sphericity.append(0)
+                aplanarity.append(0)
+                planarity.append(0)
+                continue
+
+            M = np.zeros((3,3))
+            for x,y,z,w in zip(pxs,pys,pzs,p2):
+                vec = np.array([x,y,z])
+                M += np.outer(vec,vec)
+            M /= P2sum
+
+            # diagonalize
+            lam = np.linalg.eigvalsh(M)   # ascending
+            lam1, lam2, lam3 = lam[::-1]  # descending
+
+            # event‐shapes
+            sphericity.append(1.5*(lam2 + lam3))
+            aplanarity.append(1.5*lam3)
+            planarity.append(lam2 - lam3)
+        
+        datasets[tag]['sphericity'] = np.array(sphericity)
+        datasets[tag]['aplanarity'] = np.array(aplanarity)
+        datasets[tag]['planarity'] = np.array(planarity)
+    
+        # Remove EB_train and EB_val tags since we don't want to plot those
+        if tag in ['EB_train', 'EB_val']:
+            continue
+
+        ax1.hist(sphericity, bins=np.linspace(0, 1, 50), density=True, histtype='step', linewidth=2.5, fill=False, label=tag, weights=weights, color=color)
+        ax2.hist(aplanarity, bins=np.linspace(0, 1, 50), density=True, histtype='step', linewidth=2.5, fill=False, label=tag, weights=weights, color=color)
+        ax3.hist(planarity, bins=np.linspace(0, 1, 50), density=True, histtype='step', linewidth=2.5, fill=False, label=tag, weights=weights, color=color)
+
+    ax1.set_xlabel(r'Sphericity', fontsize=14)
+    ax1.set_ylabel(r'Density', fontsize=14)
+    ax1.set_yscale('log')
+
+    ax2.set_xlabel(r'Aplanarity', fontsize=14)
+    ax2.set_ylabel(r'Density', fontsize=14)
+    ax2.set_yscale('log')
+
+    ax3.set_xlabel(r'Planarity', fontsize=14)
+    ax3.set_ylabel(r'Density', fontsize=14)
+    ax3.set_yscale('log')
+
+    # Place legend below the subplots
+    #fig.legend(fontsize=14, loc='center', bbox_to_anchor=(0.5, 0.05), ncol=len(tags_to_use))
+
+    # Create a single legend using only the first subplot's handles and labels
+    handles, labels = ax1.get_legend_handles_labels()
+    fig.legend(handles, labels, fontsize=14, loc='center', bbox_to_anchor=(0.5, 0.2), 
+              ncol=1)
+    
+    plt.tight_layout()
+    # Adjust bottom margin to prevent legend overlap
+    plt.subplots_adjust(bottom=0.5)
+    
+    plt.savefig(os.path.join(plots_path, f'{save_name}.png'))
+    plt.close()
+    
+    
+    
+
+def plot_input_data(datasets: dict, plots_path: str, tags_to_use: list):
+    
+    #tags_to_use = [key for key in datasets.keys() if key != 'EB_train' and key != 'EB_val']
+
+    # Plot leading object distributions
+    kinematic_plot(datasets, 0, plots_path, save_name='input_leading_jet', tags_to_use=tags_to_use) # leading jet
+    kinematic_plot(datasets, 6, plots_path, save_name='input_leading_electron', tags_to_use=tags_to_use) # leading electron
+    kinematic_plot(datasets, 9, plots_path, save_name='input_leading_muon', tags_to_use=tags_to_use) # leading muon
+    kinematic_plot(datasets, 12, plots_path, save_name='input_leading_photon', tags_to_use=tags_to_use) # leading photon
+    
+    multiplicity_plot(datasets, plots_path, save_name='input_multiplicity', tags_to_use=tags_to_use)
+    
+    leading_jet_dR_plot(datasets, plots_path, save_name='input_leading_jet_dR', tags_to_use=tags_to_use)
+    
+    sphericity_plot(datasets, plots_path, save_name='input_sphericity', tags_to_use=tags_to_use)
+
 
 
 
 # -----------------------------------------------------------------------------------------
-def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD_rate=1000, pt_thresholds=[50, 0, 0, 0], pt_scale_factor=0.05, comments=None):
+def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD_rate=1000, pt_thresholds=[50, 0, 0, 0], pt_scale_factor=0.05, comments=None, plots_path=None):
     """
     Loads and preprocesses the training and signal data.
 
@@ -185,7 +407,12 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     # -------------------
 
     # Load data
-    datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/03-12-2025')
+    #tcpufit MET: new samples, fixed L1 menu
+    datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/04-16-2025')
+
+    # tcpufit MET: new samples, fixed L1 menu no TLA
+    #datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/04-29-2025_no_TLA')
+
 
     # put in Kaito's fake data:
     # First event data
@@ -398,6 +625,14 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
         print(f'B+C Loose number of events = {len(datasets["EB_train"]["HLT_data"])}')
         del datasets['topo2A_train']
 
+
+    # remove any datasets that are not in the list
+    #tags_to_use = ['EB_test', 'EB_train', 'EB_val', 'mc23e_new_HtoSUEP_ggH_fullhad_125_3p00_3p00_noFilter', 'mc23e_jjJZ2', 'mc23e_new_HAHM_S2Zd4e_60_25_0p1ns', 'mc23e_ttbar_2lep', 'mc23e_new_qqa_Ph25_mRp150_gASp1_qContentUDSC']
+    tags_to_use = [tag for tag in datasets.keys()]
+    tags_to_delete = [tag for tag in datasets.keys() if tag not in tags_to_use ]
+    for tag in tags_to_delete:
+        del datasets[tag]
+
     
     
     # ------------------- 
@@ -408,14 +643,6 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
     #     datasets[tag]['raw_L1_data'] = np.copy(data_dict['L1_data'])
     # # -------------------
 
-    # Flatten ndarrays for use in DNN
-    for tag, dict in datasets.items():
-        for label, data in dict.items():
-            if label.endswith('data'):
-                datasets[tag][label] = np.reshape(data, newshape=(-1, 48))
-
-    # -------------------
-
     # Split the train data into train + val
     indices = np.arange(len(datasets['EB_train']['HLT_data']))
     train_indices, val_indices = train_test_split(indices, test_size=0.15, random_state=0)
@@ -425,12 +652,37 @@ def load_and_preprocess(train_data_scheme: str, pt_normalization_type=None, L1AD
 
     # -------------------
 
+    if plots_path is not None:
+        # Make input plots
+        #tags_to_use=['EB_test', 'mc23e_new_HtoSUEP_ggH_fullhad_125_3p00_3p00_noFilter', 'mc23e_jjJZ2', 'mc23e_new_HAHM_S2Zd4e_60_25_0p1ns', 'mc23e_ttbar_2lep', 'mc23e_new_qqa_Ph25_mRp150_gASp1_qContentUDSC']
+        tags_to_use = [tag for tag in datasets.keys()]
+        plot_input_data(datasets, plots_path, tags_to_use=tags_to_use)
+
+    # construct some other discriminating varaiables
+    for tag, data_dict in datasets.items():
+        average_pt = np.mean(data_dict['HLT_data'][:, :, 0], axis=1)
+        multiplicity = np.count_nonzero(data_dict['HLT_data'], axis=(1,2)) // 3
+        data_dict['pt_mult'] = average_pt * multiplicity # This is negative someitmes because of the -999 MET values
+        data_dict['multiplicity'] = multiplicity
+        data_dict['leading_jet_pt'] = data_dict['HLT_data'][:, 0, 0]
+
+    # Flatten ndarrays for use in DNN
+    for tag, dict in datasets.items():
+        for label, data in dict.items():
+            if label.endswith('data'):
+                datasets[tag][label] = np.reshape(data, newshape=(-1, 48))
+
+    # -------------------
+
+
+
     data_info = {
         'train_data_scheme': train_data_scheme,
         'pt_normalization_type': pt_normalization_type,
         'L1AD_rate': L1AD_rate,
         'pt_thresholds': pt_thresholds,
-        'pt_scale_factor': pt_scale_factor
+        'pt_scale_factor': pt_scale_factor,
+        'plots_path': plots_path
     }
     if comments is not None:
         data_info['comments'] = comments
@@ -1399,13 +1651,143 @@ def ROC_curve_plot(datasets: dict, save_path: str, save_name: str, HLTAD_thresho
     plt.legend(fontsize=15, bbox_to_anchor=(1.05, 0.5), loc='center left')
     
     # Add tight_layout with padding or adjust figure size to accommodate legend
-    plt.tight_layout()
+    #plt.tight_layout()
     plt.subplots_adjust(right=0.75)  # Make room for the legend on the right
     
     plt.savefig(f'{save_path}/{save_name}.png', bbox_inches='tight')
     plt.close()
 
     return signal_efficiencies
+
+
+def ROC_curve_other_vars_plot(datasets: dict, save_path: str, save_name: str, HLTAD_threshold, bkg_tag='EB_test', obj_type='HLT'):
+    
+    # Check if the background tag is valid
+    if bkg_tag not in datasets.keys():
+        raise ValueError(f"Invalid bkg_tag: {bkg_tag}. Must be in the keys of the datasets dictionary.")
+
+    for var_name in ['pt_mult', 'leading_jet_pt', 'sphericity', 'planarity', 'aplanarity', 'multiplicity']:
+    
+        # Start the plot
+        plt.figure(figsize=(15, 8))
+        plt.rcParams['axes.linewidth'] = 2.4
+
+        # Get the background scores and weights
+        bkg_scores = datasets[bkg_tag][var_name]
+        bkg_weights = datasets[bkg_tag]['weights']
+        
+        # Loop over each tag
+        skip_tags = ['EB_train', 'EB_val', bkg_tag, 'kaito', 'HLT_noalg_eb_L1All']
+        for tag in datasets.keys():
+            if 'ZB' in tag:
+                skip_tags.append(tag)
+        for tag, data_dict in datasets.items():
+            if tag in skip_tags: continue
+
+            # Get the signal scores and weights
+            signal_scores = data_dict[var_name]
+            signal_weights = data_dict['weights']
+
+            # Combine the background and signal
+            combined_scores = np.concatenate((bkg_scores, signal_scores), axis=0)
+            combined_weights = np.concatenate((bkg_weights, signal_weights), axis=0)
+            combined_labels = np.concatenate((np.zeros_like(bkg_scores), np.ones_like(signal_scores)), axis=0)
+
+            # Use sklearn to calculate the ROC curve
+            FPRs, TPRs, thresholds = roc_curve(y_true=combined_labels, y_score=combined_scores, sample_weight=combined_weights)
+            AUC = auc(FPRs, TPRs)
+
+            # Add the ROC curve from this tag to the plot
+            plt.plot(FPRs, TPRs, label=f'{tag}, AUC={AUC:.3f}', linewidth=1.5)
+
+        # Plot diagonal line
+        xx = np.linspace(0, 1, 100)
+        plt.plot(xx, xx, color='grey', linestyle='dashed')
+
+
+        # Aesthetics
+        plt.xlabel('FPR', fontsize=14)
+        plt.ylabel('TPR', fontsize=14)
+        plt.xscale('log')
+        plt.yscale('log')
+        plt.title(f'ROC curves for {var_name}', fontsize=14)
+        
+        # Fix the legend positioning to prevent it from being cut off
+        plt.legend(fontsize=15, bbox_to_anchor=(1.05, 0.5), loc='center left')
+        
+        # Add tight_layout with padding or adjust figure size to accommodate legend
+        #plt.tight_layout()
+        plt.subplots_adjust(right=0.75)  # Make room for the legend on the right
+        
+        plt.savefig(f'{save_path}/{save_name}_{var_name}.png', bbox_inches='tight')
+        plt.close()
+
+def calculate_efficiencies_other_vars(datasets: dict, results_dict: dict, L1AD_rate=1000):
+
+    for var_name in ['pt_mult', 'leading_jet_pt', 'sphericity', 'planarity', 'aplanarity', 'multiplicity']:
+
+        # Calculate the L1AD threshold and rates
+        L1AD_threshold, L1AD_pure_rate , L1AD_total_rate = find_threshold(
+            scores=datasets['EB_test']['topo2A_AD_scores'],
+            weights=datasets['EB_test']['weights'],
+            pass_current_trigs=datasets['EB_test']['passL1'],
+            target_rate=L1AD_rate,
+            incoming_rate=31575960
+        )
+
+
+        # L1Seeded ---------------------------------------------------------
+        pass_L1AD_mask = datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold
+
+
+        var_threshold, var_pure_rate, var_total_rate = find_threshold(
+            scores=datasets['EB_test'][var_name][pass_L1AD_mask],
+            weights=datasets['EB_test']['weights'][pass_L1AD_mask],
+            pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
+            target_rate=10,
+            incoming_rate=L1AD_total_rate
+        )
+
+
+        for tag in datasets.keys():
+            data_dict = datasets[tag]
+            
+            # will hold the regions that each event falls into. Each event will be in region A
+            region_labels = ['A'] * len(data_dict[var_name])
+
+            pass_var = data_dict[var_name] >= var_threshold
+            passHLT = data_dict['passHLT']
+            passL1AD = data_dict['topo2A_AD_scores'] >= L1AD_threshold
+            passL1 = data_dict['passL1']
+
+            # Add letters to strings where conditions are met
+            for j, (l1ad, l1, var, hlt) in enumerate(zip(passL1AD, passL1, pass_var, passHLT)):
+                if l1ad and not l1:
+                    region_labels[j] += 'B'
+                if l1ad and l1:
+                    region_labels[j] += 'C'
+                if not l1ad and l1:
+                    region_labels[j] += 'D'
+                if l1ad and var and not hlt:
+                    region_labels[j] += 'E'
+                if l1ad and var and hlt:
+                    region_labels[j] += 'F'
+                if (l1 or l1ad) and not var and hlt:
+                    region_labels[j] += 'G'
+
+        
+            EplusF_mask = np.array([('E' in rl) or ('F' in rl) for rl in region_labels])
+            BplusC_mask = np.array([('B' in rl) or ('C' in rl) for rl in region_labels])
+            FplusG_mask = np.array([('F' in rl) or ('G' in rl) for rl in region_labels])
+            E_mask = np.array([('E' in rl) for rl in region_labels])
+            E_conditional_mask = np.array([('E' in rl) and ('B' in rl) for rl in region_labels])
+            B_mask = np.array([('B' in rl) for rl in region_labels])
+
+            results_dict[tag][f'{var_name}_raw_efficiency'] = np.sum(data_dict['weights'][EplusF_mask]) / np.sum(data_dict['weights'][BplusC_mask]) # E+F / B+C
+            results_dict[tag][f'{var_name}_E_conditional_over_B'] = np.sum(data_dict['weights'][E_conditional_mask]) / np.sum(data_dict['weights'][B_mask]) # E_B / B
+            results_dict[tag][f'{var_name}_efficiency_gain'] = np.sum(data_dict['weights'][E_mask]) / np.sum(data_dict['weights'][FplusG_mask]) # E / F+G
+
+    return results_dict
 
 def raw_efficiencies_plot_from_ROC(signal_efficiencies, save_path: str, save_name: str):
     # Start the plot
@@ -1425,9 +1807,6 @@ def raw_efficiencies_plot_from_ROC(signal_efficiencies, save_path: str, save_nam
     plt.close()
 
 def raw_efficiencies_plot_from_regions(datasets: dict, save_path: str, save_name: str, seed_scheme: str):
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import ROOT
 
     if seed_scheme not in ['l1Seeded', 'l1All']:
         raise ValueError(f"Invalid seed_scheme: {seed_scheme}. Must be 'l1Seeded' or 'l1All'.")
@@ -1505,11 +1884,108 @@ def raw_efficiencies_plot_from_regions(datasets: dict, save_path: str, save_name
     plt.yticks(y_positions, tags)
     plt.tick_params(axis='y', labelsize=12)
     plt.grid(color='gray', linestyle='-', linewidth=0.5, alpha=0.5)
+    plt.subplots_adjust(left=0.4)
     plt.savefig(f'{save_path}/{save_name}.png')
     plt.close()
 
     # Return the dictionary of efficiencies.
     return signal_efficiencies
+
+
+def raw_HLT_efficiencies_plot(datasets: dict, save_path: str, save_name: str):
+
+    # Dictionaries to store the efficiencies and their uncertainties
+    signal_efficiencies = {}
+    signal_efficiencies_up = {}
+    signal_efficiencies_down = {}
+
+    # Loop over each tag in the datasets dictionary.
+    skip_tags = ['EB_train', 'EB_val']
+    for tag in datasets.keys():
+        if 'ZB' in tag:
+            skip_tags.append(tag)
+    for tag, data_dict in datasets.items():
+        if tag in skip_tags: continue
+        region_labels = data_dict['region_labels']
+        weights = data_dict['weights']
+
+        # Define the numerator mask: regions containing 'F' or 'G'
+        num_mask = np.array([('F' in rl) or ('G' in rl) for rl in region_labels])
+
+        # Define the denominator mask
+        den_mask = np.array([('C' in rl) or ('D' in rl) for rl in region_labels])
+    
+
+        # Select the weights for numerator and denominator
+        num_weights = weights[num_mask]
+        den_weights = weights[den_mask]
+
+        # Skip if the denominator is zero.
+        if np.sum(den_weights) == 0:
+            continue
+
+        # Create one-bin histograms for numerator and denominator.
+        # We use a dummy x-range of [0, 1] and fill at x=0.5.
+        h_num = ROOT.TH1F(f"h_num_{tag}", f"Numerator for {tag}", 1, 0, 1)
+        h_den = ROOT.TH1F(f"h_den_{tag}", f"Denom for {tag}", 1, 0, 1)
+
+        # Instead of simply adding a single bin content, we fill each event individually.
+        # This way the histogram stores the correct sum of weights and also the sum of the squares.
+        for w in num_weights:
+            h_num.Fill(0.5, w)
+        for w in den_weights:
+            h_den.Fill(0.5, w)
+
+        # Create a TGraphAsymmErrors from the two histograms using the Bayesian method.
+        # The option string sets the confidence level (cl=0.683) and Bayesian prior parameters b(1,1).
+        g = ROOT.TGraphAsymmErrors(h_num, h_den, "cl=0.683 b(1,1) mode")
+
+        # Calculate the efficiency from the histograms.
+        #efficiency = h_num.GetBinContent(1) / h_den.GetBinContent(1)
+        efficiency = np.sum(num_weights) / np.sum(den_weights)
+        signal_efficiencies[tag] = efficiency
+        signal_efficiencies_up[tag] = g.GetErrorYhigh(0)
+        signal_efficiencies_down[tag] = g.GetErrorYlow(0)
+
+    # Create a plot of the efficiencies with asymmetric error bars.
+    # For the y-axis, we assign one row per tag.
+    tags = list(signal_efficiencies.keys())
+    y_positions = np.arange(len(tags))
+
+    plt.figure(figsize=(15, 8))
+    # Build the error bar array: first row for lower errors, second row for upper errors.
+    yerr = np.array([[signal_efficiencies_down[tag] for tag in tags],
+                     [signal_efficiencies_up[tag] for tag in tags]])
+
+    plt.errorbar(list(signal_efficiencies.values()), y_positions, xerr=yerr,
+                 fmt='o', color='cornflowerblue', markersize=10, alpha=0.5, capsize=5)
+
+    plt.xlabel('Efficiency', fontsize=15)
+    plt.title('Raw HLT Efficiency', fontsize=16)
+    plt.yticks(y_positions, tags)
+    plt.tick_params(axis='y', labelsize=12)
+    plt.grid(color='gray', linestyle='-', linewidth=0.5, alpha=0.5)
+    plt.subplots_adjust(left=0.4)
+    plt.savefig(f'{save_path}/{save_name}.png')
+    plt.close()
+    return signal_efficiencies
+
+def energy_scale_plot(datasets: dict, save_path: str, save_name: str):
+    skip_tags = ['EB_train', 'EB_val']
+    tags = [tag for tag in datasets.keys() if tag not in skip_tags]
+    energy_scales = np.array([np.mean(datasets[tag]['HLT_data'][:, 0]) for tag in tags]) # average of the leading jet pt
+    energy_scales /= np.max(energy_scales) # normalize to max of 1
+
+    plt.figure(figsize=(15, 8))
+    plt.scatter(energy_scales, tags, color='cornflowerblue', alpha=0.5)
+    plt.xlabel('Energy Scale', fontsize=15)
+    plt.title('Energy Scale', fontsize=16)
+    plt.subplots_adjust(left=0.4)
+    plt.grid()
+    plt.savefig(f'{save_path}/{save_name}.png')
+    plt.close()
+
+
 
 
 
@@ -1653,9 +2129,13 @@ def EoverFplusG_plot(datasets: dict, save_path: str, save_name: str):
     plt.yticks(y_positions, tags)
     plt.tick_params(axis='y', labelsize=12)
     plt.grid(color='gray', linestyle='-', linewidth=0.5, alpha=0.5)
+    plt.subplots_adjust(left=0.4)
     plt.savefig(f'{save_path}/{save_name}.png')
     plt.close()
 
+    print(f'inside EoverFplusG_plot:')
+    for key, value in EoverFplusG.items():
+        print(f'{key}: {value}')
     return EoverFplusG
 
 
@@ -1843,20 +2323,29 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
     # anomalous = (['E' in label for label in datasets['EB_test']['region_labels']] | ['F' in label for label in datasets['EB_test']['region_labels']])
 
     pileups = datasets['EB_test']['pileups']
-    leading_jet_pt = datasets['EB_test'][f'{obj_type}_data'][:, 0]
-    MET_pt = datasets['EB_test'][f'{obj_type}_data'][:, -3]
+    sphericity = datasets['EB_test']['sphericity']
+    leading_jet_pt = datasets['EB_test'][f'{obj_type}_data'][:, 0] * 20
+    MET_pt = datasets['EB_test'][f'{obj_type}_data'][:, -3] * 20
     jet_multiplicity = np.count_nonzero(datasets['EB_test'][f'{obj_type}_data'][:, 0:18:3], axis=1)
     el_multiplicity = np.count_nonzero(datasets['EB_test'][f'{obj_type}_data'][:, 18:27:3], axis=1)
     mu_multiplicity = np.count_nonzero(datasets['EB_test'][f'{obj_type}_data'][:, 27:36:3], axis=1)
     ph_multiplicity = np.count_nonzero(datasets['EB_test'][f'{obj_type}_data'][:, 36:45:3], axis=1)
     weights = datasets['EB_test']['weights']
+    planarity = datasets['EB_test']['planarity']
+    aplanarity = datasets['EB_test']['aplanarity']
+    pt_mult = datasets['EB_test']['pt_mult']
+    multiplicity = datasets['EB_test']['multiplicity']
 
     # Define bins for each variable
     pileup_bins = np.linspace(np.min(pileups[pileups != 0])-5, np.max(pileups)+5, 35)
     jet_pt_bins = np.linspace(np.min(leading_jet_pt)-5, np.percentile(leading_jet_pt, 75)+300, 35)
     MET_pt_bins = np.linspace(np.min(MET_pt)-5, np.percentile(MET_pt, 75)+300, 35)
     multiplicity_bins = np.arange(0, 7, 1, dtype=np.float32)
-
+    sphericity_bins = np.linspace(0, 1, 35)
+    aplanarity_bins = np.linspace(0, 1, 35)
+    planarity_bins = np.linspace(0, 1, 35)
+    pt_mult_bins = np.linspace(np.min(pt_mult)-5, np.percentile(pt_mult, 75)+300, 35)
+    multiplicity_bins = np.arange(0, 17, 1, dtype=np.float32)
     # Initialize TEfficiency for pileup
     h_total_pileup = ROOT.TH1F("h_total_pileup", "Total Events Pileup", len(pileup_bins)-1, pileup_bins)
     h_pass_pileup = ROOT.TH1F("h_pass_pileup", "Passed Events Pileup", len(pileup_bins)-1, pileup_bins)
@@ -1882,6 +2371,25 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
     h_total_ph_multiplicity = ROOT.TH1F("h_total_ph_multiplicity", "Total Events Photon Multiplicity", len(multiplicity_bins)-1, multiplicity_bins)
     h_pass_ph_multiplicity = ROOT.TH1F("h_pass_ph_multiplicity", "Passed Events Photon Multiplicity", len(multiplicity_bins)-1, multiplicity_bins)
 
+    h_total_multiplicity = ROOT.TH1F("h_total_multiplicity", "Total Events Multiplicity", len(multiplicity_bins)-1, multiplicity_bins)
+    h_pass_multiplicity = ROOT.TH1F("h_pass_multiplicity", "Passed Events Multiplicity", len(multiplicity_bins)-1, multiplicity_bins)
+
+    # Initialize TEfficiency for sphericity
+    h_total_sphericity = ROOT.TH1F("h_total_sphericity", "Total Events Sphericity", len(sphericity_bins)-1, sphericity_bins)
+    h_pass_sphericity = ROOT.TH1F("h_pass_sphericity", "Passed Events Sphericity", len(sphericity_bins)-1, sphericity_bins)
+
+    # Initialize TEfficiency for aplanarity
+    h_total_aplanarity = ROOT.TH1F("h_total_aplanarity", "Total Events Aplanarity", len(aplanarity_bins)-1, aplanarity_bins)
+    h_pass_aplanarity = ROOT.TH1F("h_pass_aplanarity", "Passed Events Aplanarity", len(aplanarity_bins)-1, aplanarity_bins)
+
+    # Initialize TEfficiency for planarity
+    h_total_planarity = ROOT.TH1F("h_total_planarity", "Total Events Planarity", len(planarity_bins)-1, planarity_bins)
+    h_pass_planarity = ROOT.TH1F("h_pass_planarity", "Passed Events Planarity", len(planarity_bins)-1, planarity_bins)
+
+    # Initialize TEfficiency for pt_mult
+    h_total_pt_mult = ROOT.TH1F("h_total_pt_mult", "Total Events Pt Mult", len(pt_mult_bins)-1, pt_mult_bins)
+    h_pass_pt_mult = ROOT.TH1F("h_pass_pt_mult", "Passed Events Pt Mult", len(pt_mult_bins)-1, pt_mult_bins)
+
     if seed_scheme == 'l1Seeded':
         L1Seeded_mask = np.array(['B' in label for label in datasets['EB_test']['region_labels']]) | np.array(['C' in label for label in datasets['EB_test']['region_labels']])
         HLTAD_mask = np.array(['E' in label for label in datasets['EB_test']['region_labels']]) | np.array(['F' in label for label in datasets['EB_test']['region_labels']])
@@ -1902,7 +2410,12 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
             h_total_el_multiplicity.Fill(el_multiplicity[i], datasets['EB_test']['weights'][i])
             h_total_mu_multiplicity.Fill(mu_multiplicity[i], datasets['EB_test']['weights'][i])
             h_total_ph_multiplicity.Fill(ph_multiplicity[i], datasets['EB_test']['weights'][i])
-        
+            h_total_sphericity.Fill(sphericity[i], datasets['EB_test']['weights'][i])
+            h_total_aplanarity.Fill(aplanarity[i], datasets['EB_test']['weights'][i])
+            h_total_planarity.Fill(planarity[i], datasets['EB_test']['weights'][i])
+            h_total_pt_mult.Fill(pt_mult[i], datasets['EB_test']['weights'][i])
+            h_total_multiplicity.Fill(multiplicity[i], datasets['EB_test']['weights'][i])
+
         # Fill the pass histograms with events passing HLTAD (regions E and F)
         if HLTAD_mask[i]:
             h_pass_pileup.Fill(datasets['EB_test']['pileups'][i], datasets['EB_test']['weights'][i])
@@ -1912,6 +2425,11 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
             h_pass_el_multiplicity.Fill(el_multiplicity[i], datasets['EB_test']['weights'][i])
             h_pass_mu_multiplicity.Fill(mu_multiplicity[i], datasets['EB_test']['weights'][i])
             h_pass_ph_multiplicity.Fill(ph_multiplicity[i], datasets['EB_test']['weights'][i])
+            h_pass_sphericity.Fill(sphericity[i], datasets['EB_test']['weights'][i])
+            h_pass_aplanarity.Fill(aplanarity[i], datasets['EB_test']['weights'][i])
+            h_pass_planarity.Fill(planarity[i], datasets['EB_test']['weights'][i])
+            h_pass_pt_mult.Fill(pt_mult[i], datasets['EB_test']['weights'][i])
+            h_pass_multiplicity.Fill(multiplicity[i], datasets['EB_test']['weights'][i])
 
     # Create TEfficiency objects
     # eff_pileup = ROOT.TEfficiency(h_pass_pileup, h_total_pileup)
@@ -1925,6 +2443,11 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
     eff_el_multiplicity = ROOT.TGraphAsymmErrors(h_pass_el_multiplicity, h_total_el_multiplicity, "cl=0.683 b(1,1) mode")
     eff_mu_multiplicity = ROOT.TGraphAsymmErrors(h_pass_mu_multiplicity, h_total_mu_multiplicity, "cl=0.683 b(1,1) mode")
     eff_ph_multiplicity = ROOT.TGraphAsymmErrors(h_pass_ph_multiplicity, h_total_ph_multiplicity, "cl=0.683 b(1,1) mode")
+    eff_sphericity = ROOT.TGraphAsymmErrors(h_pass_sphericity, h_total_sphericity, "cl=0.683 b(1,1) mode")
+    eff_aplanarity = ROOT.TGraphAsymmErrors(h_pass_aplanarity, h_total_aplanarity, "cl=0.683 b(1,1) mode")
+    eff_planarity = ROOT.TGraphAsymmErrors(h_pass_planarity, h_total_planarity, "cl=0.683 b(1,1) mode")
+    eff_pt_mult = ROOT.TGraphAsymmErrors(h_pass_pt_mult, h_total_pt_mult, "cl=0.683 b(1,1) mode")
+    eff_multiplicity = ROOT.TGraphAsymmErrors(h_pass_multiplicity, h_total_multiplicity, "cl=0.683 b(1,1) mode")
 
     # Plot efficiency vs pileup using ROOT
     if save_path is not None:
@@ -1976,6 +2499,113 @@ def efficiency_vs_variable_plot(datasets: dict, save_path: str, save_name: str, 
         eff_ph_multiplicity.Draw("AP")
         c_ph_multiplicity.SaveAs(f'{save_path}/{save_name}_ph_multiplicity.png')
 
+        # Plot efficiency vs sphericity using ROOT
+        c_sphericity = ROOT.TCanvas("c_sphericity", "Efficiency vs Sphericity", 800, 600)
+        c_sphericity.SetLogy()
+        eff_sphericity.SetTitle(f"Anomalous Event Efficiency vs Sphericity;Sphericity;Efficiency")
+        eff_sphericity.Draw("AP")
+        c_sphericity.SaveAs(f'{save_path}/{save_name}_sphericity.png')
+
+        # Plot efficiency vs aplanarity using ROOT
+        c_aplanarity = ROOT.TCanvas("c_aplanarity", "Efficiency vs Aplanarity", 800, 600)
+        c_aplanarity.SetLogy()
+        eff_aplanarity.SetTitle(f"Anomalous Event Efficiency vs Aplanarity;Aplanarity;Efficiency")
+        eff_aplanarity.Draw("AP")
+        c_aplanarity.SaveAs(f'{save_path}/{save_name}_aplanarity.png')
+
+        # Plot efficiency vs planarity using ROOT
+        c_planarity = ROOT.TCanvas("c_planarity", "Efficiency vs Planarity", 800, 600)
+        c_planarity.SetLogy()
+        eff_planarity.SetTitle(f"Anomalous Event Efficiency vs Planarity;Planarity;Efficiency")
+        eff_planarity.Draw("AP")
+        c_planarity.SaveAs(f'{save_path}/{save_name}_planarity.png')
+
+        # Plot efficiency vs pt_mult using ROOT
+        c_pt_mult = ROOT.TCanvas("c_pt_mult", "Efficiency vs Pt Mult", 800, 600)
+        c_pt_mult.SetLogy()
+        eff_pt_mult.SetTitle(f"Anomalous Event Efficiency vs Pt Mult;Pt Mult;Efficiency")
+        eff_pt_mult.Draw("AP")
+        c_pt_mult.SaveAs(f'{save_path}/{save_name}_pt_mult.png')
+
+        # Plot efficiency vs multiplicity using ROOT
+        c_multiplicity = ROOT.TCanvas("c_multiplicity", "Efficiency vs Multiplicity", 800, 600)
+        c_multiplicity.SetLogy()
+        eff_multiplicity.SetTitle(f"Anomalous Event Efficiency vs Multiplicity;Multiplicity;Efficiency")
+        eff_multiplicity.Draw("AP")
+        c_multiplicity.SaveAs(f'{save_path}/{save_name}_multiplicity.png')
+
+
+def AD_score_2d_hists(datasets: dict, save_path: str, save_name: str):
+
+    
+
+    for tag in datasets.keys():
+        if tag == 'EB_train' or tag == 'EB_val':
+            continue
+
+        # only use events passing L1AD (regions B and C)
+        mask = np.array(['B' in label for label in datasets[tag]['region_labels']]) | np.array(['C' in label for label in datasets[tag]['region_labels']])
+
+        pileups = datasets[tag]['pileups'][mask]
+        sphericity = datasets[tag]['sphericity'][mask]
+        leading_jet_pt = datasets[tag]['HLT_data'][:, 0][mask] * 20
+        MET_pt = datasets[tag]['HLT_data'][:, -3][mask] * 20
+        jet_multiplicity = np.count_nonzero(datasets[tag]['HLT_data'][:, 0:18:3][mask], axis=1)
+        el_multiplicity = np.count_nonzero(datasets[tag]['HLT_data'][:, 18:27:3][mask], axis=1)
+        mu_multiplicity = np.count_nonzero(datasets[tag]['HLT_data'][:, 27:36:3][mask], axis=1)
+        ph_multiplicity = np.count_nonzero(datasets[tag]['HLT_data'][:, 36:45:3][mask], axis=1)
+        total_multiplicity = np.count_nonzero(datasets[tag]['HLT_data'][:, ::3][mask], axis=1) # every third element is pt
+        weights = datasets[tag]['weights'][mask]
+        planarity = datasets[tag]['planarity'][mask]
+        aplanarity = datasets[tag]['aplanarity'][mask]
+        pt_mult = datasets[tag]['pt_mult'][mask]
+        scores = datasets[tag]['HLT_AD_scores'][mask]
+        multiplicity = datasets[tag]['multiplicity'][mask]
+        
+        # Define bins for each variable
+        sphericity_bins = np.linspace(0, 1, 35)
+        aplanarity_bins = np.linspace(0, 1, 35)
+        planarity_bins = np.linspace(0, 1, 35)
+        if len(pt_mult) == 0:
+            continue
+        pt_mult_bins = np.linspace(np.min(pt_mult)-5, np.percentile(pt_mult, 75)+300, 35)
+        pt_mult_bins = np.linspace(np.min(pt_mult)-5, np.max(pt_mult)+5, 35)
+        scores_bins = np.linspace(np.min(scores)-5, np.percentile(scores, 75), 35)
+        leading_jet_pt_bins = np.linspace(np.min(leading_jet_pt)-5, np.percentile(leading_jet_pt, 75)+300, 35)
+        MET_pt_bins = np.linspace(np.min(MET_pt)-5, np.percentile(MET_pt, 75)+300, 35)
+        jet_multiplicity_bins = np.arange(0, 7, 1, dtype=np.float32)
+        el_multiplicity_bins = np.arange(0, 4, 1, dtype=np.float32)
+        mu_multiplicity_bins = np.arange(0, 4, 1, dtype=np.float32)
+        ph_multiplicity_bins = np.arange(0, 4, 1, dtype=np.float32)
+        total_multiplicity_bins = np.arange(0, 17, 1, dtype=np.float32)
+        pileup_bins = np.arange(40, 70, 1, dtype=np.float32)
+        multiplicity_bins = np.arange(0, 17, 1, dtype=np.float32)
+        for data, bins, data_name in zip([sphericity, aplanarity, planarity, 
+                            pt_mult, leading_jet_pt, MET_pt, 
+                            jet_multiplicity, el_multiplicity, mu_multiplicity, 
+                            ph_multiplicity, total_multiplicity, pileups, multiplicity], 
+                            [sphericity_bins, aplanarity_bins, planarity_bins, 
+                            pt_mult_bins, leading_jet_pt_bins, MET_pt_bins, 
+                            jet_multiplicity_bins, el_multiplicity_bins, mu_multiplicity_bins, 
+                            ph_multiplicity_bins, total_multiplicity_bins, pileup_bins, multiplicity_bins],
+                            ['sphericity', 'aplanarity', 'planarity', 
+                            'pt_mult', 'leading_jet_pt', 'MET_pt', 
+                            'jet_multiplicity', 'el_multiplicity', 'mu_multiplicity', 
+                            'ph_multiplicity', 'total_multiplicity', 'pileup', 'multiplicity']):
+
+            plt.figure(figsize=(14, 8))
+            plt.rcParams['axes.linewidth'] = 2.4
+            
+            plt.hist2d(data, scores, bins=[bins, scores_bins], cmap='viridis', norm=LogNorm(), weights=weights)
+            plt.colorbar()
+            plt.xlabel(f'{data_name}', fontsize=16)
+            plt.ylabel(f'AD Score', fontsize=16)
+            plt.savefig(f'{save_path}/{tag}_{save_name}_{data_name}.png')
+            plt.close()
+
+
+
+
 # -----------------------------------------------------------------------------------------
 def get_good_lbs_from_grl(grl_path, run_number):
     """
@@ -2011,12 +2641,7 @@ def get_good_lbs_from_grl(grl_path, run_number):
 
 def ZB_scores_plot(datasets: dict, save_path: str, save_name: str):
 
-    # Print for sanity check
-    for tag, data_dict in datasets.items():
-        print(f'{tag}:')
-        for key, value in data_dict.items():
-            print(f'{key}: {value}')
-        print('\n')
+    ZB_datasets = load_subdicts_from_h5('/eos/home-m/mmcohen/ad_trigger_development/data/loaded_and_matched_ntuples/ZB_04-21-2025')
 
     grl_xml = '/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/GoodRunsLists/data24_13p6TeV/20241118/physics_25ns_data24.xml'
 
@@ -2027,11 +2652,9 @@ def ZB_scores_plot(datasets: dict, save_path: str, save_name: str):
         475052: [469]
     }
 
-    tags = [tag for tag in datasets.keys() if 'ZB' in tag]
-
     # Loop over each tag and split into good, bad, and noiseburst LBs
-    for tag in tags:
-        data_dict = datasets[tag]
+    for tag in ZB_datasets.keys():
+        data_dict = ZB_datasets[tag]
         run_num = data_dict['run_numbers'][0]
         good_LBs = get_good_lbs_from_grl(grl_xml, run_num)
 
@@ -2048,23 +2671,23 @@ def ZB_scores_plot(datasets: dict, save_path: str, save_name: str):
 
         grlBad_mask = ~grlGood_mask
 
-        datasets[f'{tag}_grlGood'] = {key: np.array(value)[grlGood_mask] for key, value in data_dict.items()}
-        datasets[f'{tag}_grlBad'] = {key: np.array(value)[grlBad_mask] for key, value in data_dict.items()}
-        datasets[f'{tag}_grl_nb'] = {key: np.array(value)[grl_nb_mask] for key, value in data_dict.items()}
+        ZB_datasets[f'{tag}_grlGood'] = {key: np.array(value)[grlGood_mask] for key, value in data_dict.items()}
+        ZB_datasets[f'{tag}_grlBad'] = {key: np.array(value)[grlBad_mask] for key, value in data_dict.items()}
+        ZB_datasets[f'{tag}_grl_nb'] = {key: np.array(value)[grl_nb_mask] for key, value in data_dict.items()}
 
-        del datasets[tag]
+        del ZB_datasets[tag]
 
     # Now combine all the tags from each set
-    good_tags = [tag for tag in datasets.keys() if 'grlGood' in tag]
-    bad_tags = [tag for tag in datasets.keys() if 'grlBad' in tag]
-    nb_tags = [tag for tag in datasets.keys() if 'grl_nb' in tag]
+    good_tags = [tag for tag in ZB_datasets.keys() if 'grlGood' in tag]
+    bad_tags = [tag for tag in ZB_datasets.keys() if 'grlBad' in tag]
+    nb_tags = [tag for tag in ZB_datasets.keys() if 'grl_nb' in tag]
 
-    datasets = combine_data(datasets, tags_to_combine=good_tags, new_tag='ZB_grlGood')
-    datasets = combine_data(datasets, tags_to_combine=bad_tags, new_tag='ZB_grlBad')
-    datasets = combine_data(datasets, tags_to_combine=nb_tags, new_tag='ZB_grl_nb')
+    ZB_datasets = combine_data(ZB_datasets, tags_to_combine=good_tags, new_tag='ZB_grlGood')
+    ZB_datasets = combine_data(ZB_datasets, tags_to_combine=bad_tags, new_tag='ZB_grlBad')
+    ZB_datasets = combine_data(ZB_datasets, tags_to_combine=nb_tags, new_tag='ZB_grl_nb')
 
     # Print for sanity check
-    for tag, data_dict in datasets.items():
+    for tag, data_dict in ZB_datasets.items():
         print(f'{tag}:')
         for key, value in data_dict.items():
             print(f'{key}: {value}')
@@ -2074,7 +2697,7 @@ def ZB_scores_plot(datasets: dict, save_path: str, save_name: str):
     bins = np.linspace(0, 20, 35)
     plt.figure(figsize=(10, 6))
     for tag in ['ZB_grlGood', 'ZB_grlBad', 'ZB_grl_nb']:
-        data_dict = datasets[tag]
+        data_dict = ZB_datasets[tag]
         plt.hist(data_dict['HLT_AD_scores'], bins=bins, density=True, histtype='step', linewidth=2.5, fill=False, label=tag)
         
     plt.title(f'HLTAD Score Distributions for all ZeroBias events', fontsize=14)
@@ -2309,8 +2932,90 @@ def plot_latent_space_3d(datasets: dict, save_path: str, save_name: str):
 
 
 # -----------------------------------------------------------------------------------------
+def compare_train_test_scores(datasets:dict, save_path:str, save_name:str):
+
+    train_scores = datasets['EB_train']['HLT_AD_scores']
+    test_scores = datasets['EB_test']['HLT_AD_scores']
+
+    plt.figure(figsize=(10, 6))
+    bins=np.linspace(0, 20, 100)
+    plt.hist(train_scores, bins=bins, label=f'train', density=True, histtype='step', linewidth=2.5, fill=False)
+    plt.hist(test_scores, bins=bins, label=f'test', density=True, histtype='step', linewidth=2.5, fill=False)
+
+
+    plt.xlabel('AD Score', fontsize=12)
+    plt.ylabel('Density', fontsize=12)
+    plt.legend(fontsize=11)
+    plt.yscale('log')
+    plt.savefig(f'{save_path}/{save_name}.png')
+    plt.close()
+    
+
+
+def plot_scores_per_run(datasets:dict, save_path:str, save_name:str, L1AD_threshold:float, HLTAD_threshold:float):
+    if 'EB_all' in datasets.keys():
+    
+        plt.figure(figsize=(10, 6))
+        unique_runs = np.unique(datasets['EB_all']['run_numbers'])
+        for run_num in unique_runs:
+            run_mask = datasets['EB_all']['run_numbers'] == run_num
+            plt.hist(datasets['EB_all']['HLT_AD_scores'][run_mask], bins=np.linspace(0, 20, 35), label=f'run {run_num}', density=True, histtype='step', linewidth=2.5, fill=False)
+
+        plt.xlabel('AD Score', fontsize=12)
+        plt.ylabel('Density', fontsize=12)
+        plt.yscale('log')
+        plt.legend(fontsize=11)
+        plt.title(f'AD Scores per Run, all events')
+        plt.savefig(f'{save_path}/{save_name}_all_events.png')
+        plt.close()
+
+
+        plt.figure(figsize=(10, 6))
+        unique_runs = np.unique(datasets['EB_all']['run_numbers'])
+        for run_num in unique_runs:
+            run_mask = (datasets['EB_all']['run_numbers'] == run_num)
+            passL1AD_mask = datasets['EB_all']['topo2A_AD_scores'] >= L1AD_threshold
+            plt.hist(datasets['EB_all']['HLT_AD_scores'][run_mask & passL1AD_mask], bins=np.linspace(0, 20, 35), label=f'run {run_num}', density=True, histtype='step', linewidth=2.5, fill=False)
+
+        plt.xlabel('AD Score', fontsize=12)
+        plt.ylabel('Density', fontsize=12)
+        plt.yscale('log')
+        plt.legend(fontsize=11)
+        plt.title(f'AD Scores per Run, events passing L1AD')
+        plt.savefig(f'{save_path}/{save_name}_L1AD.png')
+        plt.close()
+
+
+        plt.figure(figsize=(10, 6))
+        unique_runs = np.unique(datasets['EB_all']['run_numbers'])
+        for run_num in unique_runs:
+            run_mask = (datasets['EB_all']['run_numbers'] == run_num)
+            passL1AD_mask = datasets['EB_all']['topo2A_AD_scores'] >= L1AD_threshold
+            fail_HLT_mask = datasets['EB_all']['passHLT'] == False
+            plt.hist(datasets['EB_all']['HLT_AD_scores'][run_mask & passL1AD_mask & fail_HLT_mask], bins=np.linspace(0, 20, 35), label=f'run {run_num}', density=True, histtype='step', linewidth=2.5, fill=False)
+
+            passL1AD_mask = np.array(datasets['EB_all']['topo2A_AD_scores'][run_mask] >= L1AD_threshold)
+            passHLTAD_mask = np.array(datasets['EB_all']['HLT_AD_scores'][run_mask] >= HLTAD_threshold)
+            passHLT_mask = np.array(datasets['EB_all']['passHLT'][run_mask])
+            print(f'in the plotting fn::: {run_num}:::')
+            print(f'raw number of events passing L1AD and HLTAD: {np.sum(passL1AD_mask & passHLTAD_mask)}')
+            print(f'raw number of events passing L1AD and HLTAD and not HLT: {np.sum(passL1AD_mask & passHLTAD_mask & ~passHLT_mask)}')
+
+        plt.xlabel('AD Score', fontsize=12)
+        plt.ylabel('Density', fontsize=12)
+        plt.yscale('log')
+        plt.legend(fontsize=11)
+        plt.title(f'AD Scores per Run, events passing L1AD and failing HLT')
+        plt.savefig(f'{save_path}/{save_name}_L1AD_fail_HLT.png')
+        plt.close()
+
+        
+
+# -----------------------------------------------------------------------------------------
         
 def plot_individual_model_results(datasets: dict, region_counts: dict, seed_scheme, save_path, model_version, L1AD_threshold, L1AD_rate, HLTAD_threshold, target_HLTAD_rate, obj_type='HLT', plot_ZB=False):
+
+    results_dict = {tag : {} for tag in datasets.keys()}
 
     if seed_scheme not in ['l1Seeded', 'l1All']:
         raise ValueError(f"Invalid seed_scheme: {seed_scheme}. Must be 'l1Seeded' or 'l1All'.")
@@ -2339,12 +3044,25 @@ def plot_individual_model_results(datasets: dict, region_counts: dict, seed_sche
     # Plot the ROC curves and obtain raw signal efficiencies
     seeded_signal_efficiencies = ROC_curve_plot(seeded_datasets, save_path=save_path, save_name=f'ROC_curves_{model_version}_{seed_scheme}', HLTAD_threshold=HLTAD_threshold, obj_type=obj_type)
 
+    ROC_curve_other_vars_plot(seeded_datasets, save_path=save_path, save_name=f'ROC_curves_{model_version}_{seed_scheme}', HLTAD_threshold=HLTAD_threshold, obj_type=obj_type)
+    #calculate_efficiencies_other_vars(datasets: dict, results_dict: dict, save_path: str, save_name: str, HLTAD_threshold, bkg_tag='EB_test', obj_type='HLT', L1AD_rate=1000):
+    results_dict = calculate_efficiencies_other_vars(datasets, results_dict)
+
     # Plot the raw efficiencies
     raw_efficiencies_plot_from_ROC(seeded_signal_efficiencies, save_path=save_path, save_name=f'Efficiencies_ROC_{model_version}_{seed_scheme}')
     signal_efficiencies = raw_efficiencies_plot_from_regions(datasets, save_path=save_path, save_name=f'Efficiencies_region_counts_{model_version}_{seed_scheme}', seed_scheme=seed_scheme)
+    for tag, signal_eff in signal_efficiencies.items():
+        results_dict[tag]['HLTAD_raw_efficiency'] = signal_eff
+
+    # Plot the raw HLT efficiencies
+    HLT_efficiencies = raw_HLT_efficiencies_plot(datasets, save_path=save_path, save_name=f'HLT_raw_efficiencies_{model_version}')
+    for tag, HLT_eff in HLT_efficiencies.items():
+        results_dict[tag]['HLT_efficiency'] = HLT_eff
 
     # Plot the efficiency gains
     EoverFplusG = EoverFplusG_plot(datasets, save_path=save_path, save_name=f'EoverFplusG_{model_version}_{seed_scheme}')
+    for tag, EoverFplusG_value in EoverFplusG.items():
+        results_dict[tag]['HLTAD_efficiency_gain'] = EoverFplusG_value
     efficiency_gain_plot(region_counts, save_path=save_path, save_name=f'Efficiency_gains_{model_version}_{seed_scheme}', target_rate=target_HLTAD_rate)
 
     # Plot the efficiency vs variable
@@ -2353,14 +3071,24 @@ def plot_individual_model_results(datasets: dict, region_counts: dict, seed_sche
     # Plot E over B plots
     EoverB = EoverB_plot(datasets, save_path=save_path, save_name=f'EoverB_{model_version}_{seed_scheme}')
     E_conditional_overB = E_conditional_overB_plot(datasets, save_path=save_path, save_name=f'E_conditional_overB_{model_version}_{seed_scheme}')
+    for tag, E_conditional_overB_value in E_conditional_overB.items():
+        results_dict[tag]['HLTAD_E_conditional_overB'] = E_conditional_overB_value
 
     if plot_ZB:
         ZB_scores_plot(datasets, save_path=save_path, save_name=f'ZB_scores_{model_version}_{seed_scheme}')
 
-    anomalous_event_display(datasets, save_path=save_path, save_name=f'anomalous_event_display_{model_version}_{seed_scheme}')
-    plot_latent_space(datasets, save_path=save_path, save_name=f'latent_space_{model_version}_{seed_scheme}')
-    plot_latent_space_3d(datasets, save_path=save_path, save_name=f'latent_space_3d_{model_version}_{seed_scheme}')
-    return signal_efficiencies, EoverFplusG, EoverB
+    energy_scale_plot(datasets, save_path=save_path, save_name=f'energy_scale_{model_version}')
+
+    AD_score_2d_hists(datasets, save_path=save_path, save_name=f'AD_score_2d_hists_{model_version}_{seed_scheme}')
+
+    #compare_train_test_scores(datasets, save_path=save_path, save_name=f'train_test_scores_{model_version}_{seed_scheme}')
+    #plot_scores_per_run(datasets, save_path=save_path, save_name=f'scores_per_run_{model_version}_{seed_scheme}', L1AD_threshold=L1AD_threshold, HLTAD_threshold=HLTAD_threshold)
+
+    # anomalous_event_display(datasets, save_path=save_path, save_name=f'anomalous_event_display_{model_version}_{seed_scheme}')
+    # plot_latent_space(datasets, save_path=save_path, save_name=f'latent_space_{model_version}_{seed_scheme}')
+    # plot_latent_space_3d(datasets, save_path=save_path, save_name=f'latent_space_3d_{model_version}_{seed_scheme}')
+    
+    return signal_efficiencies, EoverFplusG, EoverB, results_dict
 
 
 def ensemble_efficiency_gain_plot(efficiency_gains: dict, save_path: str, save_name: str):
@@ -2566,7 +3294,7 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
         #target_FPR = L1Seeded_HLTAD_total_rate / L1AD_total_rate
 
         # Now let's make plots for this model
-        signal_efficiencies, EoverFplusG, EoverB = plot_individual_model_results(
+        signal_efficiencies, EoverFplusG, EoverB, results_dict = plot_individual_model_results(
             datasets=datasets, 
             region_counts=region_counts, 
             seed_scheme='l1Seeded',
@@ -2639,7 +3367,7 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
         #target_FPR = L1Seeded_HLTAD_total_rate / L1AD_total_rate
 
         # Now let's make plots for this model
-        signal_efficiencies, EoverFplusG, EoverB = plot_individual_model_results(
+        signal_efficiencies, EoverFplusG, EoverB, results_dict = plot_individual_model_results(
             datasets=datasets, 
             region_counts=region_counts, 
             seed_scheme='l1All',
@@ -2677,7 +3405,26 @@ def process_multiple_models(training_info: dict, data_info: dict, plots_path: st
 
 
 # -----------------------------------------------------------------------------------------
-def process_single_model_from_loaded_datasets(datasets: dict, plots_path: str, model_version: int, target_rate=10, obj_type='HLT', L1AD_rate=1000):
+def process_single_model_from_loaded_datasets(datasets: dict, plots_path: str, model_version: int, target_rate=10, obj_type='HLT', L1AD_rate=1000, custom_threshold=None):
+
+    #datasets['EB_482596_test'] = {key: np.array(value)[(datasets['EB_test']['run_numbers'] == 482596).astype(int)] for key, value in datasets['EB_test'].items()}
+    #datasets['EB_482596_train'] = {key: np.array(value)[(datasets['EB_train']['run_numbers'] == 482596).astype(int)] for key, value in datasets['EB_train'].items()}
+    #datasets['EB_482596_val'] = {key: np.array(value)[(datasets['EB_val']['run_numbers'] == 482596).astype(int)] for key, value in datasets['EB_val'].items()}
+    #datasets = combine_data(datasets, tags_to_combine=['EB_482596_test', 'EB_482596_train', 'EB_482596_val'], new_tag='EB_482596', delete_old_tags=False)
+    datasets = combine_data(datasets, tags_to_combine=['EB_test', 'EB_train', 'EB_val'], new_tag='EB_all', delete_old_tags=False)
+
+    print('EB_all shape:')
+    for key, value in datasets['EB_all'].items():
+        print(f'{key}: {value.shape}')
+    datasets['EB_482596'] = {key: np.array(value)[(datasets['EB_all']['run_numbers'] == 482596)] for key, value in datasets['EB_all'].items()}
+
+
+
+    # Add these print statements
+    run_482596_count = np.sum(datasets['EB_all']['run_numbers'] == 482596)
+    eb_482596_count = len(datasets['EB_482596']['run_numbers'])
+    print(f"Number of run 482596 events in EB_all: {run_482596_count}")
+    print(f"Number of events in EB_482596: {eb_482596_count}")
 
 
     # decode the region labels
@@ -2692,21 +3439,39 @@ def process_single_model_from_loaded_datasets(datasets: dict, plots_path: str, m
             incoming_rate=31575960
     )
 
+    print(f'L1AD_threshold: {L1AD_threshold}')
+    print(f'L1AD_pure_rate: {L1AD_pure_rate}')
+    print(f'L1AD_total_rate: {L1AD_total_rate}')
+
 
     # L1Seeded ---------------------------------------------------------
     pass_L1AD_mask = np.array(datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold)
 
-    HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
-        scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
-        weights=datasets['EB_test']['weights'][pass_L1AD_mask],
-        pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
-        target_rate=target_rate,
-        incoming_rate=L1AD_total_rate
-    )
-    print(f'l1Seeded:::')
-    print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
-    print(f'HLTAD_total_rate: {HLTAD_total_rate}')
-    print(f'HLTAD_threshold: {HLTAD_threshold}\n')
+    # HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
+    #     scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+    #     weights=datasets['EB_test']['weights'][pass_L1AD_mask],
+    #     pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
+    #     target_rate=target_rate,
+    #     incoming_rate=L1AD_total_rate
+    # )
+    # print(f'l1Seeded:::')
+    # print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
+    # print(f'HLTAD_total_rate: {HLTAD_total_rate}')
+    # print(f'HLTAD_threshold: {HLTAD_threshold}\n')
+
+    for target_rate in [5, 20, 10]: # since the last value is 10Hz, the variables will correspond to 10Hz after the loop
+
+        HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
+            scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+            weights=datasets['EB_test']['weights'][pass_L1AD_mask],
+            pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
+            target_rate=target_rate,
+            incoming_rate=L1AD_total_rate
+        )
+        print(f'l1Seeded::: target rate: {target_rate}')
+        print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
+        print(f'HLTAD_total_rate: {HLTAD_total_rate}')
+        print(f'HLTAD_threshold: {HLTAD_threshold}\n')
 
     
 
@@ -2718,7 +3483,7 @@ def process_single_model_from_loaded_datasets(datasets: dict, plots_path: str, m
             for region in label:
                 region_counts[tag][region] += weight
 
-    signal_efficiencies, EoverFplusG, EoverB = plot_individual_model_results(
+    signal_efficiencies, EoverFplusG, EoverB, results_dict = plot_individual_model_results(
         datasets=datasets, 
         region_counts=region_counts, 
         seed_scheme='l1Seeded',
@@ -2729,8 +3494,165 @@ def process_single_model_from_loaded_datasets(datasets: dict, plots_path: str, m
         HLTAD_threshold=HLTAD_threshold,
         target_HLTAD_rate=target_rate,
         obj_type=obj_type,
-        plot_ZB=True
+        plot_ZB=False
     )
+
+    # Now save the event numbers and run numbers of the events that passed the HLTAD trigger
+    pass_HLTAD_mask = np.array(['E' in label for label in datasets['EB_test']['region_labels']]) | np.array(['F' in label for label in datasets['EB_test']['region_labels']])
+    ev_lb_set = set(zip(datasets['EB_test']['event_numbers'][pass_HLTAD_mask], datasets['EB_test']['run_numbers'][pass_HLTAD_mask]))
+    # Save the event numbers and run numbers of events that passed HLTAD
+    
+    with open(f'{plots_path}/passing_events.txt', 'w') as f:
+        for event_num, run_num in ev_lb_set:
+            f.write(f'{event_num} {run_num}\n')
+
+    if custom_threshold is not None:
+        HLTAD_threshold = custom_threshold
+
+        # Re-calculate the pure and total rates with the custom threshold
+        _, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
+            scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+            weights=datasets['EB_test']['weights'][pass_L1AD_mask],
+            pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
+            target_rate=HLTAD_threshold+0.0001,
+            incoming_rate=L1AD_total_rate
+        )
+        print(f'l1Seeded::: with custom threshold:')
+        print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
+        print(f'HLTAD_total_rate: {HLTAD_total_rate}')
+        print(f'HLTAD_threshold: {HLTAD_threshold}\n')
+
+        # Now, re-run the analysis with the custom threshold
+        os.makedirs(f'{plots_path}/custom_threshold', exist_ok=True)
+        region_counts = {tag: {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0, 'F': 0, 'G': 0} for tag in datasets.keys()}
+        
+        skip_tags = ['EB_train', 'EB_val']
+        for tag, data_dict in datasets.items():
+            if tag in skip_tags: continue
+            
+            # will hold the regions that each event falls into. Each event will be in region A
+            data_dict['region_labels'] = ['A'] * len(data_dict[f'{obj_type}_AD_scores'])
+
+            passHLTAD = data_dict[f'{obj_type}_AD_scores'] >= HLTAD_threshold
+            passHLT = data_dict['passHLT']
+            passL1AD = data_dict['topo2A_AD_scores'] >= L1AD_threshold
+            passL1 = data_dict['passL1']
+
+            # Add letters to strings where conditions are met
+            for j, (l1ad, l1, hltad, hlt) in enumerate(zip(passL1AD, passL1, passHLTAD, passHLT)):
+                if l1ad and not l1:
+                    data_dict['region_labels'][j] += 'B'
+                if l1ad and l1:
+                    data_dict['region_labels'][j] += 'C'
+                if not l1ad and l1:
+                    data_dict['region_labels'][j] += 'D'
+                if l1ad and hltad and not hlt:
+                    data_dict['region_labels'][j] += 'E'
+                if l1ad and hltad and hlt:
+                    data_dict['region_labels'][j] += 'F'
+                if (l1 or l1ad) and not hltad and hlt:
+                    data_dict['region_labels'][j] += 'G'
+
+            # Now keep track of the number of events in each region
+            for j, label in enumerate(data_dict['region_labels']):
+                weight = data_dict['weights'][j]
+                for region in label:
+                    region_counts[tag][region] += weight
+
+        signal_efficiencies, EoverFplusG, EoverB, _ = plot_individual_model_results(
+            datasets=datasets, 
+            region_counts=region_counts, 
+            seed_scheme='l1Seeded',
+            save_path=f'{plots_path}/custom_threshold', 
+            model_version=model_version, 
+            L1AD_threshold=L1AD_threshold, 
+            L1AD_rate=L1AD_total_rate, 
+            HLTAD_threshold=HLTAD_threshold,
+            target_HLTAD_rate=target_rate,
+            obj_type=obj_type,
+            plot_ZB=False
+        )
+
+
+    print('Now starting rate calculations for all EB events as well as EB run 482596.')
+
+    def calculate_rate_from_threshold(scores, threshold, weights, pass_current_trigs, incoming_rate):
+        total_pass_mask = scores >= threshold
+        unique_pass_mask = (scores >= threshold) & (~pass_current_trigs)
+
+        total_rate = np.sum(weights[total_pass_mask]) * incoming_rate / np.sum(weights)
+        unique_rate = np.sum(weights[unique_pass_mask]) * incoming_rate / np.sum(weights)
+        return total_rate, unique_rate
+
+    print(f'testing EB_482596: {len(datasets["EB_482596"]["topo2A_AD_scores"])}')
+
+    print(f'{len(datasets["EB_482596"]["HLT_AD_scores"])}')
+    print(f'{len(datasets["EB_482596"]["weights"])}')
+    print(f'{len(datasets["EB_482596"]["passHLT"])}')
+    passL1AD_mask = np.array(datasets['EB_482596']['topo2A_AD_scores'] >= L1AD_threshold)
+    passHLTAD_mask = np.array(datasets['EB_482596']['HLT_AD_scores'] >= HLTAD_threshold)
+    passHLT_mask = np.array(datasets['EB_482596']['passHLT'])
+    print(f'raw number of events passing L1AD and HLTAD: {np.sum(passL1AD_mask & passHLTAD_mask)}')
+    print(f'raw number of events passing L1AD and HLTAD and not HLT: {np.sum(passL1AD_mask & passHLTAD_mask & ~passHLT_mask)}')
+
+    pass_L1AD_mask = np.array(datasets['EB_all']['topo2A_AD_scores'] >= L1AD_threshold)
+    total_rate, unique_rate = calculate_rate_from_threshold(
+        scores=datasets['EB_all'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+        threshold=HLTAD_threshold,
+        weights=datasets['EB_all']['weights'][pass_L1AD_mask],
+        pass_current_trigs=datasets['EB_all']['passHLT'][pass_L1AD_mask],
+        incoming_rate=L1AD_total_rate
+    )
+
+    print(f'EB ALL:')
+    print(f'total rate: {total_rate}')
+    print(f'unique rate: {unique_rate}')
+
+    pass_L1AD_mask = np.array(datasets['EB_482596']['topo2A_AD_scores'] >= L1AD_threshold)
+    total_rate, unique_rate = calculate_rate_from_threshold(
+        scores=datasets['EB_482596'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+        threshold=HLTAD_threshold,
+        weights=datasets['EB_482596']['weights'][pass_L1AD_mask],
+        pass_current_trigs=datasets['EB_482596']['passHLT'][pass_L1AD_mask],
+        incoming_rate=L1AD_total_rate
+    )
+
+    print(f'EB 482596:')
+    print(f'total rate: {total_rate}')
+    print(f'unique rate: {unique_rate}')
+
+
+    # pass_L1AD_mask = np.array(datasets['EB_all']['topo2A_AD_scores'] >= L1AD_threshold)
+    # _, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
+    #     scores=datasets['EB_all'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+    #     weights=datasets['EB_all']['weights'][pass_L1AD_mask],
+    #     pass_current_trigs=datasets['EB_all']['passHLT'][pass_L1AD_mask],
+    #     target_rate=HLTAD_threshold+0.0001,
+    #     incoming_rate=L1AD_total_rate
+    # )
+
+
+    # print(f'EB ALL:')
+    # print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
+    # print(f'HLTAD_total_rate: {HLTAD_total_rate}')
+
+
+    # pass_L1AD_mask = np.array(datasets['EB_482596']['topo2A_AD_scores'] >= L1AD_threshold)
+    # _, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
+    #     scores=datasets['EB_482596'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+    #     weights=datasets['EB_482596']['weights'][pass_L1AD_mask],
+    #     pass_current_trigs=datasets['EB_482596']['passHLT'][pass_L1AD_mask],
+    #     target_rate=HLTAD_threshold+0.0001,
+    #     incoming_rate=L1AD_total_rate
+    # )
+    # print(f'EB 482596:')
+    # print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
+    # print(f'HLTAD_total_rate: {HLTAD_total_rate}')
+
+    json.dump(results_dict, open(f'{plots_path}/results_dict.json', 'w'))
+
+    return results_dict
+    
 
 
 # -----------------------------------------------------------------------------------------
@@ -2903,7 +3825,91 @@ def load_and_inference(training_info: dict, data_info: dict, target_rate: int=10
     return datasets, region_counts
 
 
+def load_and_print_thresholds(training_info: dict, data_info: dict, target_rate: int=10, L1AD_rate: int=1000, obj_type='HLT', save_version:int=0, tags='all', seed_scheme:str='l1Seeded', regions=True):
 
+    if seed_scheme != 'l1Seeded':
+        raise ValueError(f'other seed schemes not yet implemented')
+    
+    # Unpack training info
+    save_path = training_info['save_path']
+    dropout_p = training_info['dropout_p']
+    L2_reg_coupling = training_info['L2_reg_coupling']
+    latent_dim = training_info['latent_dim']
+    #large_network = training_info['large_network']
+    num_trainings = training_info['num_trainings']
+
+    datasets, data_info = load_and_preprocess(**data_info)
+
+    # Delete datasets that are not in the tags list
+    tags_to_delete = [tag for tag in datasets.keys() if tag not in tags]
+    if tags != 'all':
+        for tag in tags_to_delete:
+                del datasets[tag]
+
+
+    # Load the model
+    HLT_AE, HLT_encoder, HLT_MSE_AE, HLT_preprocessing_model = initialize_model(
+        input_dim=datasets[list(datasets.keys())[0]]['HLT_data'].shape[1],
+        pt_thresholds=data_info['pt_thresholds'],
+        pt_scale_factor=data_info['pt_scale_factor'],
+        dropout_p=dropout_p,
+        L2_reg_coupling=L2_reg_coupling,
+        latent_dim=latent_dim,
+        #large_network=large_network,
+        saved_model_path=save_path,
+        save_version=save_version,
+        obj_type=obj_type,
+        pt_normalization_type=data_info['pt_normalization_type'],
+        overlap_removal=training_info['overlap_removal'],
+        duplicate_removal=training_info['duplicate_removal']
+    )
+
+    # Pass the data through the model
+    
+
+    for tag in datasets.keys():
+        if tag != 'EB_test':
+            continue
+        
+        data_dict = datasets[tag]
+
+        # Preprocess the data
+        data_dict[f'{obj_type}_preprocessed_data'] = HLT_preprocessing_model.predict(data_dict[f'{obj_type}_data'], verbose=0, batch_size=8)
+
+        # Calculate the latent representations
+        data_dict['z'] = HLT_encoder.predict(data_dict[f'{obj_type}_preprocessed_data'], batch_size=8, verbose=0)
+
+        # Calculate the AD scores
+        data_dict[f'{obj_type}_AD_scores'] = HLT_MSE_AE.predict(data_dict[f'{obj_type}_preprocessed_data'], batch_size=8, verbose=0)
+
+    
+    # Calculate the L1AD threshold and rates
+    L1AD_threshold, L1AD_pure_rate , L1AD_total_rate = find_threshold(
+        scores=datasets['EB_test']['topo2A_AD_scores'],
+        weights=datasets['EB_test']['weights'],
+        pass_current_trigs=datasets['EB_test']['passL1'],
+        target_rate=L1AD_rate,
+        incoming_rate=31575960
+    )
+
+
+    if seed_scheme == 'l1Seeded':
+        # L1Seeded ---------------------------------------------------------
+        pass_L1AD_mask = datasets['EB_test']['topo2A_AD_scores'] >= L1AD_threshold
+
+        for target_rate in [5, 20, 10]: # since the last value is 10Hz, the variables will correspond to 10Hz after the loop
+
+            HLTAD_threshold, HLTAD_pure_rate, HLTAD_total_rate = find_threshold(
+                scores=datasets['EB_test'][f'{obj_type}_AD_scores'][pass_L1AD_mask],
+                weights=datasets['EB_test']['weights'][pass_L1AD_mask],
+                pass_current_trigs=datasets['EB_test']['passHLT'][pass_L1AD_mask],
+                target_rate=target_rate,
+                incoming_rate=L1AD_total_rate
+            )
+            print(f'l1Seeded::: target rate: {target_rate}')
+            print(f'HLTAD_pure_rate: {HLTAD_pure_rate}')
+            print(f'HLTAD_total_rate: {HLTAD_total_rate}')
+            print(f'HLTAD_threshold: {HLTAD_threshold}\n')
 
 # -----------------------------------------------------------------------------------------
 
