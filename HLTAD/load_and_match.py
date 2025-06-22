@@ -8,9 +8,11 @@ import os
 import tensorflow as tf
 import tarfile
 from tensorflow.keras.models import load_model
-from qkeras import QActivation, QDense, QConv2D, QBatchNormalization
+from qkeras import QConv2D, QBatchNormalization
+from qkeras import QDense, QActivation, QDenseBatchnorm, quantized_relu, quantized_bits
 from qkeras.utils import _add_supported_quantized_objects
 import math
+phi_res = 128/(2*math.pi)
 
 
 # Infrastructure for loading topo2A data: ---------------------------------------------------------------------
@@ -24,72 +26,165 @@ def has_duplicates(arr):
 
 
 # ---------------------------------------------------------------------
-def load_and_process_normal_data(file_name):
-    with h5py.File(file_name, 'r') as hf:
-        nmuon, nLRjet, nSRjet, negamma, netau, njtau = 4, 6, 6, 4, 4, 4
-        phi_res = 128/(2*math.pi)
+def load_and_preprocess_data(file_path):
+    with h5py.File(file_path, 'r') as hf:
+        # check if the file is ZeroBias or not
+        if "ZeroBias" in file_path:
+            print("\nZero Bias data file detected based on filename.")
+            ZBflag = 1
+        elif "EB" in file_path:
+            print("\nEnhanced Bias data file detected based on filename.")
+            ZBflag = 0
+        else:
+            print("\nUnable to determine data type from filename. Please check file naming convention.")
+            ZBflag = None 
 
-        def load_and_scale(dataset, n_objects, scale_factor=10, eta_factor=10, phi_factor = phi_res):
+        # Define object counts
+        nmuon, nSRjet, netau = 4, 6, 4
+
+        def fix_phi_range(phi_data):
+            # Map values to [0,2pi] range
+            phi_fixed = phi_data % (2*math.pi)
+            # Scale to [0,128) range and round to nearest integer
+            phi_scaled = np.round(phi_fixed * 128/(2*math.pi))
+            
+            # Take modulo 128 to handle edge cases
+            phi_binned = phi_scaled % 128
+            return phi_binned
+        
+        # Load and reshape datasets with scaling
+        def load_and_scale(dataset, n_objects, scale_factor=10, eta_factor=40, phi_factor=phi_res):
             data = hf[dataset][:, 0:n_objects, :]
             data[:, :, 0] *= scale_factor  # Scale the pT value
             data[:, :, 1] *= eta_factor  # Scale the angle value
-            data[:, :, 2] *= phi_factor  # Scale the angle value
+            data[:, :, 2] = fix_phi_range(data[:, :, 2])
             return data.reshape(-1, 3 * n_objects)
 
         L1_jFexSR_jets = load_and_scale('L1_jFexSR_jets', nSRjet)
-        L1_jFexLR_jets = load_and_scale('L1_jFexLR_jets', nLRjet)
-        L1_egammas = load_and_scale('L1_egammas', negamma)
-        L1_muons = load_and_scale('L1_muons', nmuon, scale_factor=10000)  # Specific scaling for muons
+        L1_muons = load_and_scale('L1_muons', nmuon, scale_factor=10000)
         L1_eFex_taus = load_and_scale('L1_eFex_taus', netau)
-        L1_jFex_taus = load_and_scale('L1_jFex_taus', njtau)
 
+        # Load and process MET
         L1_MET = hf['L1_MET'][:]
         L1_MET[:, 0] *= 10
-        L1_MET[:, 2] *= phi_res
+        L1_MET[:, 2] = fix_phi_range(L1_MET[:, 2])
+        
+        
+        L1_MET_fixed = np.zeros((L1_MET.shape[0], 2))
+        L1_MET_fixed[:, 0] = L1_MET[:, 0]
+        L1_MET_fixed[:, 1] = L1_MET[:, 2]
+        L1_MET = L1_MET_fixed
 
-        pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
-        pass_HLT_unprescaled = hf["pass_HLT_unprescaled"][:]
+        L1_mu = hf['mu'][:]
+        valid_events_mask = L1_mu != 0
+        
         EB_weights = hf["EB_weights"][:]
-        event_id_signal = hf['event_number'][:]
-        run_id_signal = hf['run_number'][:]
+        event_numbers = hf["event_number"][:]
+        run_numbers = hf["run_number"][:]
+        if ZBflag == 0:
+            L1_LBmu = np.ones(len(hf['mu'][:]))*61
+        elif ZBflag == 1:
+            L1_LBmu = hf['averageInteractionsPerCrossing'][:]
+        weighted_mu_zero_fraction = np.sum(EB_weights[L1_mu == 0]) / np.sum(EB_weights)
+        print(f"Weighted fraction of events with mu=0: {weighted_mu_zero_fraction:.4f}")
 
-        # Reformat L1_MET
-        L1_MET_fixed = np.zeros((L1_MET.shape[0], 2))
-        L1_MET_fixed[:, 0] = L1_MET[:, 0]
-        L1_MET_fixed[:, 1] = L1_MET[:, 2]
-        L1_MET = L1_MET_fixed
-
-        # Combine arrays into Topo groups
+        pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
+                
+        # Combine arrays into Topo 2A
         Topo_2A = np.concatenate([L1_jFexSR_jets, L1_eFex_taus, L1_muons, L1_MET], axis=1)
-        Topo_2B = np.concatenate([L1_jFexSR_jets, L1_egammas, L1_jFex_taus, L1_MET], axis=1)
-        Topo_3A = np.concatenate([L1_jFexSR_jets, L1_egammas, L1_eFex_taus, L1_MET], axis=1)
+        print("Shape of Topo_2A:", Topo_2A.shape)
 
-        # Handle NaN values
-        def fill_median(array):
-            for i in range(array.shape[1]):
-                median_value = np.nanmedian(array[:, i])
-                array[np.isnan(array[:, i]), i] = 0#median_value
-            return array
-
-        Topo_2A = fill_median(Topo_2A)
-        Topo_2B = fill_median(Topo_2B)
-        Topo_3A = fill_median(Topo_3A)
-
-        return Topo_2A, Topo_2B, Topo_3A, pass_L1_unprescaled, pass_HLT_unprescaled, EB_weights, event_id_signal, run_id_signal
+        Topo_2A = Topo_2A[valid_events_mask]
+        pass_L1_unprescaled = pass_L1_unprescaled[valid_events_mask]
+        L1_mu = L1_mu[valid_events_mask]
+        EB_weights = EB_weights[valid_events_mask]
+        L1_LBmu = L1_LBmu[valid_events_mask]
+        event_numbers = event_numbers[valid_events_mask]
+        run_numbers = run_numbers[valid_events_mask]
+        return Topo_2A, pass_L1_unprescaled, L1_mu, EB_weights, L1_LBmu, event_numbers, run_numbers
 # ---------------------------------------------------------------------
 
 
 # ---------------------------------------------------------------------
-def load_and_process_anomalous_data(file_name):
+def load_and_preprocess_normal_multiple_files(file_paths):
+    # Initialize lists to store data from each file
+    all_Topo_2A = []
+    all_pass_L1 = []
+    all_mu = []
+    all_weights = []
+    all_LBmu = []
+    all_event_numbers = []
+    all_run_numbers = []
+    
+    # Load data from each file
+    for file_path in file_paths:
+        Topo_2A, pass_L1_unprescaled, L1_mu, L1_weights, L1_LBmu, event_numbers, run_numbers = load_and_preprocess_data(file_path)
+        if np.sum(pass_L1_unprescaled) == 0:
+            print("no L1 pass events!!!")
+        all_Topo_2A.append(Topo_2A)
+        all_pass_L1.append(pass_L1_unprescaled)
+        all_mu.append(L1_mu)
+        all_weights.append(L1_weights)
+        all_LBmu.append(L1_LBmu)
+        all_event_numbers.append(event_numbers)
+        all_run_numbers.append(run_numbers)
+    
+    # Concatenate all files' data
+    final_Topo_2A = np.concatenate(all_Topo_2A, axis=0)
+    final_pass_L1 = np.concatenate(all_pass_L1, axis=0)
+    final_mu = np.concatenate(all_mu, axis=0)
+    final_weights = np.concatenate(all_weights, axis=0)
+    final_LBmu = np.concatenate(all_LBmu, axis=0)
+    final_event_numbers = np.concatenate(all_event_numbers, axis=0)
+    final_run_numbers = np.concatenate(all_run_numbers, axis=0)
+    # Get total number of samples
+    n_samples = final_Topo_2A.shape[0]
+    
+    # Set random seed and create shuffle indices
+    np.random.seed(42)
+    shuffle_idx = np.random.permutation(n_samples)
+    
+    # Shuffle all arrays using the same indices
+    final_Topo_2A = final_Topo_2A[shuffle_idx]
+    final_pass_L1 = final_pass_L1[shuffle_idx]
+    final_mu = final_mu[shuffle_idx]
+    final_weights = final_weights[shuffle_idx]
+    final_LBmu = final_LBmu[shuffle_idx]
+    final_event_numbers = final_event_numbers[shuffle_idx]
+    final_run_numbers = final_run_numbers[shuffle_idx]
+
+    def fill_median(array):
+        for i in range(array.shape[1]):
+            array[np.isnan(array[:, i]), i] = 0#median_value
+        return array
+
+    final_Topo_2A = fill_median(final_Topo_2A)
+
+    print(f"total of {n_samples} event processed")
+    return final_Topo_2A, final_pass_L1, final_mu, final_weights, final_LBmu, final_event_numbers, final_run_numbers
+# ---------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------
+def load_and_process_anomalous_data(file_name, event_num=False):
     with h5py.File(file_name, 'r') as hf:
         nmuon, nLRjet, nSRjet, negamma, netau, njtau = 4, 6, 6, 4, 4, 4
-        phi_res = 128/(2*math.pi)
+        print(hf.keys())
+        def fix_phi_range(phi_data):
+            # Map values to [0,2pi] range
+            phi_fixed = phi_data % (2*math.pi)
+            # Scale to [0,128) range and round to nearest integer
+            phi_scaled = np.round(phi_fixed * 128/(2*math.pi))
+            
+            # Take modulo 128 to handle edge cases
+            phi_binned = phi_scaled % 128
+            return phi_binned
 
-        def load_and_scale(dataset, n_objects, scale_factor=10, eta_factor=10, phi_factor = phi_res):
+        def load_and_scale(dataset, n_objects, scale_factor=10, eta_factor=40):
             data = hf[dataset][:, 0:n_objects, :]
             data[:, :, 0] *= scale_factor  # Scale the pT value
             data[:, :, 1] *= eta_factor  # Scale the angle value
-            data[:, :, 2] *= phi_factor  # Scale the angle value
+            data[:, :, 2] = fix_phi_range(data[:, :, 2])
             return data.reshape(-1, 3 * n_objects)
 
         L1_jFexSR_jets = load_and_scale('L1_jFexSR_jets', nSRjet)
@@ -101,9 +196,12 @@ def load_and_process_anomalous_data(file_name):
 
         L1_MET = hf['L1_MET'][:]
         L1_MET[:, 0] *= 10
-        L1_MET[:, 2] *= phi_res
+        L1_MET[:, 2] = fix_phi_range(L1_MET[:, 2])
 
         pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
+        if event_num:
+            event_numbers = hf["event_number"][:]
+            run_numbers = hf["run_number"][:]
 
         # Reformat L1_MET
         L1_MET_fixed = np.zeros((L1_MET.shape[0], 2))
@@ -113,8 +211,6 @@ def load_and_process_anomalous_data(file_name):
 
         # Combine arrays into Topo groups
         Topo_2A = np.concatenate([L1_jFexSR_jets, L1_eFex_taus, L1_muons, L1_MET], axis=1)
-        Topo_2B = np.concatenate([L1_jFexSR_jets, L1_egammas, L1_jFex_taus, L1_MET], axis=1)
-        Topo_3A = np.concatenate([L1_jFexSR_jets, L1_egammas, L1_eFex_taus, L1_MET], axis=1)
 
         # Handle NaN values
         def fill_median(array):
@@ -124,16 +220,19 @@ def load_and_process_anomalous_data(file_name):
             return array
 
         Topo_2A = fill_median(Topo_2A)
-        Topo_2B = fill_median(Topo_2B)
-        Topo_3A = fill_median(Topo_3A)
 
-        return Topo_2A, Topo_2B, Topo_3A, pass_L1_unprescaled
+        if event_num:
+            return Topo_2A, pass_L1_unprescaled, event_numbers, run_numbers
+        else:
+            return Topo_2A, pass_L1_unprescaled
 # ---------------------------------------------------------------------
 
 
 # ---------------------------------------------------------------------
+
 def apply_power_of_2_scaling(X):
-    result = [8, 4, 5, 7, 3, 4, 6, 3, 3, 5, 2, 3, 4, 2, 2, 4, 1, 2, 7, 4, 5, 6, 2, 4, 4, 2, 3, 3, 1, 3, 5, 2, 4, 3, 1, 3, 1, 0, 1, -1, -2, -1, 6, 5]
+    result = [7, 5, 5, 7, 5, 5, 5, 4, 4, 5, 4, 3, 4, 3, 3, 3, 3, 2, 6, 5, 5, 5, 4, 5, 4, 3, 4, 3, 2, 3, 4, 4, 4, 2, 3, 3, 1, 1, 2, -2, -1, -1, 6, 5]
+
     # Apply the scaling using 2 raised to the power of the result
     X_scaled = X / (2.0 ** np.array(result))
     return X_scaled
@@ -141,11 +240,25 @@ def apply_power_of_2_scaling(X):
 
 
 # ---------------------------------------------------------------------
-def load_l1AD_model(model_path):
-    co = {}
-    _add_supported_quantized_objects(co)
-    model = tf.keras.models.load_model(model_path, custom_objects=co)
-    return model
+def load_l1AD_model():
+
+    # Define the custom objects dictionary for QKeras layers
+    custom_objects = {
+        'QDense': QDense,
+        'QActivation': QActivation,
+        'QDenseBatchnorm': QDenseBatchnorm,
+        'quantized_relu': quantized_relu,
+        'quantized_bits': quantized_bits
+    }
+
+    # Load the model with custom objects
+    loaded_model = tf.keras.models.load_model(
+        '/eos/home-m/mmcohen/ntuples/2A_AE_model_FDL_GAN_ALT_23e.h5',
+        custom_objects=custom_objects,
+        compile=False  # If they only need inference
+    )
+
+    return loaded_model
 # ---------------------------------------------------------------------
 
 
@@ -231,13 +344,32 @@ def split_data_by_run(datasets, tag_to_split):
 def load_and_match(save_path):
     print('Initializing loading sequence...')
     print('Beginning loading of topo2A data')
-    # Load old topo2A data and keep track of (run number, event number) pairs used for training --------
-    Topo_2A, Topo_2B, Topo_3A, pass_L1_unprescaled, pass_HLT_unprescaled, EB_weights, event_id, run_id = load_and_process_normal_data('/eos/home-m/mmcohen/ntuples/EB_ntuples_08-13-2024.h5')
+    
+    # Load Kenny's topo2A data and keep track of (event number, run number) pairs used for training --------
+    file_paths = [
+    '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/EB_473255_0_10-05-2024.h5',
+    '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/EB_475321_0_10-05-2024.h5',
+    '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/EB_482596_0_10-05-2024.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474448_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474462_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474562_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474657_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474679_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474926_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_474991_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475008_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475052_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475066_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475168_01-30-2025.h5',
+    '/eos/home-m/mmcohen/ntuples/01-30-2025/ZeroBias/ZeroBias_475192_01-30-2025.h5',
+]     
+    
+    Topo_2A, pass_L1_unprescaled, event_mu, events_weights, event_LBmu, event_numbers, run_numbers = load_and_preprocess_normal_multiple_files(file_paths)
+    
+    train_event_numbers = event_numbers[0:3000000]
+    train_run_numbers = run_numbers[0:3000000]
 
-    train_event_id = np.concatenate((event_id[0:450000], event_id[800000:]), axis=0)
-    train_run_id = np.concatenate((run_id[0:450000], run_id[800000:]), axis=0)
-
-    topo2A_train_eventNums_runNums = np.array(list(zip(train_event_id, train_run_id))) # *important variable*
+    topo2A_train_eventNums_runNums = np.array(list(zip(train_event_numbers, train_run_numbers))) # *important variable*
     # --------------------------------------------------------------------------------------------------
 
     
@@ -250,12 +382,12 @@ def load_and_match(save_path):
         if file_name.startswith('N') or file_name.startswith('.'): continue
         file_path = os.path.join(base_path, file_name)
             
-        Topo_2A, Topo_2B, Topo_3A, pass_L1_unprescaled, pass_HLT_unprescaled, EB_weights, event_id, run_id = load_and_process_normal_data(file_path)
+        Topo_2A, pass_L1_unprescaled, event_mu, events_weights, event_LBmu, event_number, run_number = load_and_preprocess_data(file_path)
         
         topo2A_datasets[file_name] = {
             'data': Topo_2A,
-            'run_numbers': run_id,
-            'event_numbers': event_id
+            'run_numbers': run_number,
+            'event_numbers': event_number
         }
     # --------------------------------------------------------------------------------------------------
 
@@ -267,10 +399,12 @@ def load_and_match(save_path):
     
         dataset_tag = filename.split('_')[0]
     
-        Topo_2A, _, _, pass_L1 = load_and_process_anomalous_data(MC_path+filename)
+        Topo_2A, pass_L1 = load_and_process_anomalous_data(MC_path+filename, event_num=False)
     
         topo2A_datasets[dataset_tag] = {
-            'data': Topo_2A[0:100000]
+            'data': Topo_2A[0:100000],
+            #'event_numbers': event_number,
+            #'run_numbers': run_number
         }
     # --------------------------------------------------------------------------------------------------
 
@@ -283,10 +417,29 @@ def load_and_match(save_path):
     
         dataset_tag = 'mc23e_'+(filename.split('_12')[0]).split('C_')[1]
     
-        Topo_2A, _, _, pass_L1 = load_and_process_anomalous_data(MC_path+filename)
+        Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(MC_path+filename, event_num=True)
     
         topo2A_datasets[dataset_tag] = {
-            'data': Topo_2A[0:100000]
+            'data': Topo_2A[0:100000],
+            'event_numbers': event_number,
+            'run_numbers': run_number
+        }
+    # --------------------------------------------------------------------------------------------------
+
+
+    # Load the topo2A physMain data ----------------------------------------------------------------------
+    physMain_path = '/eos/home-m/mmcohen/ntuples/physMain/'
+    for filename in os.listdir(physMain_path):
+        if filename.startswith('N') or filename.startswith('.'): continue
+    
+        dataset_tag = 'physMain_'+(filename.split('_')[1])+(filename.split('_')[2])
+    
+        Topo_2A, pass_L1, event_number, run_number = load_and_process_anomalous_data(physMain_path+filename, event_num=True)
+    
+        topo2A_datasets[dataset_tag] = {
+            'data': Topo_2A[0:100000],
+            'event_numbers': event_number,
+            'run_numbers': run_number
         }
     # --------------------------------------------------------------------------------------------------
     
@@ -307,8 +460,8 @@ def load_and_match(save_path):
 
     print('Initializing topo2A model...')
     # Load the topo2A network --------------------------------------------------------------------------
-    model_path = '/eos/home-m/mmcohen/ntuples/FiorDiLatte_FoldBN.keras'
-    model = load_l1AD_model(model_path)
+    #model_path = '/eos/home-m/mmcohen/ntuples/2A_AE_model_FDL_FixAll_noEmpty_FocusKL_23e_BESTOFLONGRUN.keras'
+    model = load_l1AD_model()
     # --------------------------------------------------------------------------------------------------
 
     
@@ -421,6 +574,56 @@ def load_and_match(save_path):
 
     
 
+    # Load physMain data -------------------------------------------------------------------------------------
+    data_path = '/eos/home-m/mmcohen/ntuples/physMain/'
+
+    for filename in os.listdir(data_path):
+    
+        if filename.startswith('N') or filename.startswith('.'): continue
+    
+        dataset_tag = 'physMain_'+(filename.split('_')[1])+(filename.split('_')[2])
+        
+        with h5py.File(data_path+filename, 'r') as hf:
+            HLT_jets = hf['HLT_jets'][:]
+            L1_jFexSR_jets = hf['L1_jFexSR_jets'][:]
+            L1_jFexLR_jets = hf['L1_jFexLR_jets'][:]
+            HLT_electrons = hf['HLT_electrons'][:]
+            LRT_electrons = hf['LRT_electrons'][:]
+            L1_egammas = hf['L1_egammas'][:]
+            HLT_muons = hf['HLT_muons'][:]
+            LRT_muons = hf['LRT_muons'][:]
+            L1_muons = hf['L1_muons'][:]
+            L1_eFex_taus = hf['L1_eFex_taus'][:]
+            L1_jFex_taus = hf['L1_jFex_taus'][:]
+            HLT_photons = hf['HLT_photons'][:]
+            HLT_MET = hf['HLT_MET'][:].reshape(-1, 1, 3)  # Broadcasting MET
+            L1_MET = hf['L1_MET'][:].reshape(-1, 1, 3)
+            pass_L1_unprescaled = hf["pass_L1_unprescaled"][:]
+            pass_HLT_unprescaled = hf["pass_HLT_unprescaled"][:]
+            event_number = hf["event_number"][:]
+            run_number = hf["run_number"][:]
+            mu = hf["mu"][:]
+    
+            HLT_objects = np.concatenate([HLT_jets[:, :6, [0, 2, 3]], HLT_electrons[:, :3, :], HLT_muons[:, :3, :], HLT_photons[:, :3, :], HLT_MET], axis=1)
+            L1_objects = np.concatenate([L1_jFexSR_jets[:, :6, :], L1_egammas[:, :3, :], L1_muons[:, :3, :], L1_eFex_taus[:, :3, :], L1_MET], axis=1)
+            
+            datasets[dataset_tag] = {
+                'HLT_data': HLT_objects,
+                'L1_data': L1_objects,
+                'passL1': pass_L1_unprescaled==1,
+                'passHLT': pass_HLT_unprescaled==1,
+                'weights': np.ones(len(HLT_objects)),
+                'topo2A_AD_scores': topo2A_datasets[dataset_tag]['topo2A_AD_scores'],
+                'event_numbers': event_number,
+                'run_numbers': run_number,
+                'pileups': mu
+            }
+    
+            if len(HLT_objects) > 100000:
+                datasets[dataset_tag] = {key: value[:100000] for key, value in datasets[dataset_tag].items()}
+    # --------------------------------------------------------------------------------------------------
+
+
 
     # Load my EB data ----------------------------------------------------------------------------------
     base_path = '/eos/home-m/mmcohen/ntuples/EB_h5_10-06-2024/'
@@ -477,6 +680,14 @@ def load_and_match(save_path):
     tags_to_combine = [tag for tag in datasets.keys() if tag.startswith('EB')]
     datasets = combine_data(datasets, tags_to_combine=tags_to_combine, new_tag='EB')
     # --------------------------------------------------------------------------------------------------
+
+    # Remove events with no pileup ---------------------------------------------------------------------
+    for tag, data_dict in datasets.items():
+        if 'pileups' in data_dict:
+            pileup_nonzero = data_dict['pileups'] != 0
+            datasets[tag] = {key: value[pileup_nonzero] for key, value in data_dict.items()}
+    # --------------------------------------------------------------------------------------------------
+
     print('HLT data successfully loaded.')
 
     print('Initializing data organization sequence phase 1: matching topo2A AD scores to HLT events')
